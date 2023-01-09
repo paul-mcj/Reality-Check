@@ -45,7 +45,12 @@ const Home = ({ navigation }) => {
      };
      return (
           <View style={styles.container}>
-               {isAlert &&
+               <Text style={styles.title}>Home</Text>
+               <Text style={styles.text}>
+                    Explain the app, add ability change the clock using internal
+                    permissions
+               </Text>
+               {/* {isAlert &&
                     Alert.alert("This is an alert", "no", [
                          { text: "cancel", onPress: handleOnPress },
                     ])}
@@ -68,7 +73,7 @@ const Home = ({ navigation }) => {
                          onChangeText={setInput}
                     />
                     <Text style={styles.text}>
-                         New new ipsum dolor sit amet, consectetur adipiscing
+                         wowowow ipsum dolor sit amet, consectetur adipiscing
                          elit, sed do eiusmod tempor incididunt ut labore et
                          dolore magna aliqua. Ut enim ad minim veniam, quis
                          nostrud exercitation ullamco laboris nisi ut aliquip ex
@@ -87,7 +92,7 @@ const Home = ({ navigation }) => {
                          title="Journal"
                          onPress={() => navigation.navigate("Journal")}
                     />
-               </ScrollView>
+               </ScrollView> */}
           </View>
      );
 };
@@ -95,13 +100,17 @@ const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
      container: {
           flex: 1,
-          backgroundColor: "#fff",
+          // backgroundColor: "#221b47",
+          backgroundColor: "rgb(37,40,34)",
+
+          // backgroundColor: "rgb(172,129,236)",
           alignItems: "center",
           justifyContent: "center",
      },
      title: {
           marginTop: 20,
-          fontSize: 32,
+          fontSize: 42,
+          color: "#fff",
      },
      image: {
           width: 100,
@@ -115,7 +124,8 @@ const styles = StyleSheet.create({
           padding: 10,
      },
      text: {
-          fontSize: 42,
+          fontSize: 16,
+          color: "#fff",
      },
      scrollView: {
           backgroundColor: "pink",
@@ -123,8 +133,8 @@ const styles = StyleSheet.create({
      },
 });
 
-// Home.propTypes = {
-//      navigation: PropTypes.node.isRequired,
-// }
+Home.propTypes = {
+     navigation: PropTypes.object.isRequired,
+};
 
 export default Home;
