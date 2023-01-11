@@ -1,5 +1,5 @@
 // react navigation
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 // expo
@@ -10,21 +10,36 @@ import Home from "./screens/Home";
 import Journal from "./screens/Journal";
 import NewEntry from "./screens/NewEntry";
 
-// mui vector icons
+// icons
 import HomeIcon from "react-native-vector-icons/Octicons";
 import PencilIcon from "react-native-vector-icons/Octicons";
 import BookIcon from "react-native-vector-icons/Octicons";
 
-// react native
-import { StyleSheet, ScrollView, View } from "react-native";
-
 export default function App() {
      const Tab = createMaterialTopTabNavigator();
+
+     const theme = {
+          ...DefaultTheme,
+          dark: false,
+          colors: {
+               primary: "rgba(255, 255, 255, 0)",
+               secondary: "#381b47",
+               background: "#221b47",
+               card: "",
+               white: "#fff",
+               text: "#aaa",
+               dim: "#777",
+               border: "",
+               notification: "#3f3861",
+               accent: "#1b2a47",
+          },
+     };
+     const { colors } = theme;
 
      return (
           <>
                <StatusBar style="auto" hidden={true} />
-               <NavigationContainer>
+               <NavigationContainer theme={theme}>
                     <Tab.Navigator
                          initialRouteName="Home"
                          backBehavior="none"
@@ -34,34 +49,35 @@ export default function App() {
                               swipeEnabled: true,
                               tabBarShowLabel: false,
                               tabBarStyle: {
-                                   backgroundColor: "rgb(37,40,34)",
-                                   // backgroundColor: "#221b47",
+                                   backgroundColor: colors.background,
                               },
-                              tabBarPressColor: "red",
+                              tabBarActiveTintColor: colors.white,
+                              tabBarInactiveTintColor: colors.dim,
                          }}
                     >
                          <Tab.Screen
                               name="Home"
                               component={Home}
                               options={{
-                                   tabBarIcon: () => (
+                                   tabBarIcon: (props) => (
                                         <HomeIcon
                                              name="home"
                                              size={24}
-                                             color={"#fff"}
+                                             color={props.color}
                                         />
                                    ),
                               }}
+                              tin
                          />
                          <Tab.Screen
                               name="NewEntry"
                               component={NewEntry}
                               options={{
-                                   tabBarIcon: () => (
+                                   tabBarIcon: (props) => (
                                         <PencilIcon
                                              name="pencil"
                                              size={24}
-                                             color={"#fff"}
+                                             color={props.color}
                                         />
                                    ),
                               }}
@@ -70,11 +86,11 @@ export default function App() {
                               name="Journal"
                               component={Journal}
                               options={{
-                                   tabBarIcon: () => (
+                                   tabBarIcon: (props) => (
                                         <BookIcon
                                              name="book"
                                              size={24}
-                                             color={"#fff"}
+                                             color={props.color}
                                         />
                                    ),
                               }}
@@ -84,12 +100,3 @@ export default function App() {
           </>
      );
 }
-
-const styles = StyleSheet.create({
-     container: {
-          flex: 1,
-          backgroundColor: "#221b47",
-          alignItems: "center",
-          justifyContent: "center",
-     },
-});

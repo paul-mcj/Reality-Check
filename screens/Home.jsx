@@ -1,140 +1,195 @@
 // react and misc.
-import { useState, useCallback } from "react";
-import PropTypes from "prop-types";
+import { useState } from "react";
+
+// date time picker
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+
+// react navigation
+import { useTheme } from "@react-navigation/native";
 
 // react native
 import {
-     StyleSheet,
      Text,
      View,
-     Image,
-     TextInput,
      ScrollView,
      Button,
      Switch,
-     Alert,
+     StyleSheet,
      ToastAndroid,
-     RefreshControl,
+     Modal,
+     Pressable,
 } from "react-native";
 
-const Home = ({ navigation }) => {
-     const [input, setInput] = useState("");
-     const [isAlert, setIsAlert] = useState(false);
-     const [switchValue, setSwitchValue] = useState(null);
-     const [refreshing, setRefreshing] = useState(false);
+const Home = () => {
+     // app theme deconstruction
+     const { colors } = useTheme();
 
-     const onRefresh = useCallback(() => {
-          setRefreshing(true);
-          setTimeout(() => {
-               setRefreshing(false);
-               resetSwitch();
-          }, 2000);
-     }, []);
+     // init component state
+     const [reminders, setReminders] = useState(null);
+     const [time, setTime] = useState(new Date());
+     const [modalVisible, setModalVisible] = useState(false);
 
-     const resetSwitch = () => {
-          setSwitchValue(() => false);
-          setInput(() => "");
+     // function to change time state
+     const onTimeChange = (e, selectedTime) => {
+          setTime(() => selectedTime);
      };
 
-     const handleOnPress = () => {
-          setIsAlert(() => !isAlert);
+     // opens time picker in Android module
+     const showTimePicker = () =>
+          DateTimePickerAndroid.open({
+               value: time,
+               onChange: onTimeChange,
+               mode: "time",
+               is24Hour: false,
+          });
+
+     // function used to format time into a proper string according to 12-hour clock system
+     const formatTime = (time) => {
+          let hours = time.getHours();
+          let minutes = time.getMinutes();
+          let ampm = hours >= 12 ? "pm" : "am";
+          hours %= 12;
+          hours = hours ? hours : 12; // hours "0" should be "12"
+          minutes = minutes < 10 ? `0${minutes}` : minutes;
+          return `${hours}:${minutes} ${ampm}`;
      };
 
-     const handleSwitch = () => {
-          setSwitchValue(() => !switchValue);
+     // shows toast message
+     const showToast = (bool) => {
+          bool
+               ? ToastAndroid.show(
+                      "All reminders are now on",
+                      ToastAndroid.LONG
+                 )
+               : ToastAndroid.show(
+                      "All reminders are set to off",
+                      ToastAndroid.LONG
+                 );
      };
-     return (
-          <View style={styles.container}>
-               <Text style={styles.title}>Home</Text>
-               <Text style={styles.text}>
-                    Explain the app, add ability change the clock using internal
-                    permissions
+
+     // for JSX slimming
+     const showReminders = (
+          // fixme: push notifications on a per/hour basis, or user needs to generate several??
+          <Pressable
+               style={{
+                    border: "solid",
+                    borderWidth: 2,
+                    borderColor: "#fff",
+                    borderRadius: 100,
+               }}
+               onLongPress={() => setModalVisible(() => true)}
+          >
+               <Text style={{ ...styles.reminderText, color: colors.white }}>
+                    Reality Check set for {formatTime(time)}
                </Text>
-               {/* {isAlert &&
-                    Alert.alert("This is an alert", "no", [
-                         { text: "cancel", onPress: handleOnPress },
-                    ])}
-               {switchValue && ToastAndroid.show("toast", ToastAndroid.SHORT)}
-               <ScrollView
-                    style={styles.scrollView}
-                    refreshControl={
-                         <RefreshControl
-                              refreshing={refreshing}
-                              onRefresh={onRefresh}
-                         />
-                    }
+          </Pressable>
+     );
+
+     // for JSX slimming
+     const showModal = (
+          <Modal
+               animationType="fade"
+               visible={modalVisible}
+               statusBarTranslucent={true}
+               presentationStyle="overFullScreen"
+               onRequestClose={() => setModalVisible(() => !modalVisible)}
+          >
+               <View
+                    style={{
+                         ...styles.container,
+                         margin: 0,
+                         backgroundColor: colors.background,
+                         flex: 1,
+                    }}
                >
-                    <Text style={styles.title}>Reality Check </Text>
-                    <Switch value={switchValue} onChange={handleSwitch} />
-                    <Image source={require("../assets/favicon.png")} />
-                    <TextInput
-                         style={styles.textInput}
-                         value={input}
-                         onChangeText={setInput}
-                    />
-                    <Text style={styles.text}>
-                         wowowow ipsum dolor sit amet, consectetur adipiscing
-                         elit, sed do eiusmod tempor incididunt ut labore et
-                         dolore magna aliqua. Ut enim ad minim veniam, quis
-                         nostrud exercitation ullamco laboris nisi ut aliquip ex
-                         ea commodo consequat. Duis aute irure dolor in
-                         reprehenderit in voluptate velit esse cillum dolore eu
-                         fugiat nulla pariatur. Excepteur sint occaecat
-                         cupidatat non proident, sunt in culpa qui officia
-                         deserunt mollit anim id est laborum.
+                    <Text>close button here</Text>
+                    <Text style={{ color: "red", fontSize: 30 }}>
+                         This reminder is set for {formatTime(time)}
                     </Text>
+                    <Text>remove</Text>
+                    {/* fixme: add an alert that user is about to delete it */}
+                    <Text>edit time</Text>
+               </View>
+          </Modal>
+     );
+
+     return (
+          <>
+               {modalVisible && showModal}
+               <ScrollView contentContainerStyle={styles.container}>
+                    <Text style={{ ...styles.title, color: colors.white }}>
+                         Home
+                    </Text>
+                    <Text style={{ ...styles.text, color: colors.white }}>
+                         Inducing lucid dreams takes practice.
+                    </Text>
+                    <Text style={{ ...styles.text, color: colors.white }}>
+                         This app is designed to help you perform daily "reality
+                         checks" in order to bring about lucidity during sleep.
+                    </Text>
+                    <View
+                         style={{
+                              flex: 2,
+                              flexDirection: "row",
+                              alignItems: "center",
+                         }}
+                    >
+                         <Text
+                              style={{
+                                   ...styles.reminderText,
+                                   color: colors.white,
+                              }}
+                         >
+                              {reminders ? "Shut Off" : "Turn On"} Reminders
+                         </Text>
+                         <Switch
+                              value={reminders}
+                              onValueChange={() =>
+                                   setReminders(() => !reminders)
+                              }
+                              trackColor={{
+                                   false: colors.dim,
+                                   true: colors.secondary,
+                              }}
+                              thumbColor={
+                                   reminders ? colors.notification : colors.text
+                              }
+                         />
+                    </View>
+                    {/* fixme: below logic needs to be fine tuned */}
+                    {/*  useCallback in useEffect to remember if reminders are set */}
+                    {!reminders && showToast(false)}
+                    {reminders && showReminders}
+                    {reminders && showToast(true)}
                     <Button
-                         color={"red"}
-                         title="press me!"
-                         onPress={handleOnPress}
+                         title="Add Reminder"
+                         onPress={showTimePicker}
+                         color={colors.notification}
+                         // fixme: if you want rounded buttons, turn all Button components into Pressable components
+                         // style={{ borderRadius: 100 }}
                     />
-                    <Button
-                         title="Journal"
-                         onPress={() => navigation.navigate("Journal")}
-                    />
-               </ScrollView> */}
-          </View>
+               </ScrollView>
+          </>
      );
 };
 
 const styles = StyleSheet.create({
      container: {
-          flex: 1,
-          // backgroundColor: "#221b47",
-          backgroundColor: "rgb(37,40,34)",
-
-          // backgroundColor: "rgb(172,129,236)",
           alignItems: "center",
           justifyContent: "center",
+          margin: 40,
      },
      title: {
-          marginTop: 20,
-          fontSize: 42,
-          color: "#fff",
-     },
-     image: {
-          width: 100,
-          height: 100,
-     },
-     textInput: {
-          height: 40,
-          margin: 12,
-          borderWidth: 1,
-          width: "80%",
-          padding: 10,
+          fontSize: 36,
+          marginBottom: 40,
      },
      text: {
-          fontSize: 16,
-          color: "#fff",
+          fontSize: 24,
      },
-     scrollView: {
-          backgroundColor: "pink",
-          marginHorizontal: 20,
+     reminderText: {
+          fontSize: 16,
+          padding: 10,
      },
 });
-
-Home.propTypes = {
-     navigation: PropTypes.object.isRequired,
-};
 
 export default Home;
