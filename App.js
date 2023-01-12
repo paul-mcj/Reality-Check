@@ -38,6 +38,7 @@ export default function App() {
 
      return (
           <>
+               {/* fixme: status bar should be hidden even when a modal is open in other pages!! */}
                <StatusBar style="auto" hidden={true} />
                <NavigationContainer theme={theme}>
                     <Tab.Navigator

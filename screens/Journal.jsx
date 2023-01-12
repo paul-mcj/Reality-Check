@@ -37,7 +37,7 @@ const Journal = () => {
                <Text style={{ ...styles.title, color: colors.white }}>
                     Journal
                </Text>
-               <Text>
+               <Text style={{ ...styles.text, color: colors.white }}>
                     “I love sleep. My life has the tendency to fall apart when
                     I'm awake, you know?” ― Ernest Hemingway
                </Text>

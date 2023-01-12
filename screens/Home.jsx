@@ -7,6 +7,10 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
+// icons
+import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import CloseIcon from "react-native-vector-icons/MaterialIcons";
+
 // react native
 import {
      Text,
@@ -28,6 +32,7 @@ const Home = () => {
      const [reminders, setReminders] = useState(null);
      const [time, setTime] = useState(new Date());
      const [modalVisible, setModalVisible] = useState(false);
+     const [xyz, setXyz] = useState();
 
      // function to change time state
      const onTimeChange = (e, selectedTime) => {
@@ -70,6 +75,7 @@ const Home = () => {
      // for JSX slimming
      const showReminders = (
           // fixme: push notifications on a per/hour basis, or user needs to generate several??
+          // fixme: see "exact alarm permissions" in dev.android api docs
           <Pressable
                style={{
                     border: "solid",
@@ -77,13 +83,55 @@ const Home = () => {
                     borderColor: "#fff",
                     borderRadius: 100,
                }}
-               onLongPress={() => setModalVisible(() => true)}
+               onLongPress={() => setModal("reminder")}
           >
                <Text style={{ ...styles.reminderText, color: colors.white }}>
                     Reality Check set for {formatTime(time)}
                </Text>
           </Pressable>
      );
+
+     // function changes what modal displays depending on argument
+     const setModal = (type) => {
+          if (type === "reminder") {
+               setXyz(
+                    <>
+                         <Text style={{ color: "red", fontSize: 30 }}>
+                              This reminder is set for {formatTime(time)}
+                         </Text>
+                         <Text>remove</Text>
+                         {/* fixme: add an alert that user is about to delete the reminder */}
+                         <Text>edit time</Text>
+                    </>
+               );
+               setModalVisible(() => true);
+          }
+          if (type === "more") {
+               setXyz(
+                    <>
+                         <Text style={{ ...styles.text, color: colors.white }}>
+                              During waking life: Am I dreaming? What do i look
+                              like? Look at your hands! Re-call your dreams (or
+                              read the journal!) Focus on you feet and stay
+                              grounded!
+                         </Text>
+                         <Text style={{ ...styles.text, color: colors.white }}>
+                              Just before bed: Affirmation: "I am good at
+                              experiencing lucid dreams", "I will have one
+                              tonight"; Visualize a recent lucid dream in a
+                              relaxed state and imagine the point where you
+                              became lucid
+                         </Text>
+                         <Text style={{ ...styles.text, color: colors.white }}>
+                              After lucidity : don't get too excited and wake
+                              up, ground yourself by focusing on your feet and
+                              stabilize the dream
+                         </Text>
+                    </>
+               );
+               setModalVisible(() => true);
+          }
+     };
 
      // for JSX slimming
      const showModal = (
@@ -102,20 +150,36 @@ const Home = () => {
                          flex: 1,
                     }}
                >
-                    <Text>close button here</Text>
-                    <Text style={{ color: "red", fontSize: 30 }}>
-                         This reminder is set for {formatTime(time)}
-                    </Text>
-                    <Text>remove</Text>
-                    {/* fixme: add an alert that user is about to delete it */}
-                    <Text>edit time</Text>
+                    <CloseIcon
+                         name="close"
+                         size={24}
+                         color={colors.white}
+                         onPress={() => setModalVisible(() => false)}
+                    />
+                    {xyz}
                </View>
           </Modal>
      );
 
      return (
-          <>
+          <View>
                {modalVisible && showModal}
+               <Pressable
+                    onPress={() => setModal("more")}
+                    style={{
+                         top: 0,
+                         right: 0,
+                         padding: 20,
+                         position: "absolute",
+                         zIndex: 1,
+                    }}
+               >
+                    <DotsIcon
+                         name="dots-vertical"
+                         size={24}
+                         color={colors.white}
+                    />
+               </Pressable>
                <ScrollView contentContainerStyle={styles.container}>
                     <Text style={{ ...styles.title, color: colors.white }}>
                          Home
@@ -165,11 +229,10 @@ const Home = () => {
                          title="Add Reminder"
                          onPress={showTimePicker}
                          color={colors.notification}
-                         // fixme: if you want rounded buttons, turn all Button components into Pressable components
-                         // style={{ borderRadius: 100 }}
+                         // fixme: if you want rounded buttons, turn all Button components into Pressable components with: style={{ borderRadius: 100 }}
                     />
                </ScrollView>
-          </>
+          </View>
      );
 };
 
@@ -178,6 +241,7 @@ const styles = StyleSheet.create({
           alignItems: "center",
           justifyContent: "center",
           margin: 40,
+          backgroundColor: "red",
      },
      title: {
           fontSize: 36,

@@ -30,7 +30,14 @@ const NewEntry = () => {
                     New Entry
                </Text>
                <TextInput
-                    style={{ ...styles.text, color: colors.white }}
+                    style={{
+                         ...styles.text,
+                         color: colors.white,
+                         borderColor: colors.white,
+                         borderStyle: "solid",
+                         borderWidth: 2,
+                         padding: 10,
+                    }}
                     placeholder="What did you dream of?"
                     placeholderTextColor={colors.text}
                     value={input}
