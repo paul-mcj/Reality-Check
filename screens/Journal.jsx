@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
      text: {
           fontSize: 24,
      },
+     smallText: {
+          fontSize: 16,
+          padding: 10,
+     },
 });
 
 export default Journal;

@@ -7,6 +7,9 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
+// components
+import TextButton from "../components/TextButton";
+
 // icons
 import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
@@ -16,12 +19,9 @@ import {
      Text,
      View,
      ScrollView,
-     Button,
      Switch,
      StyleSheet,
      ToastAndroid,
-     Modal,
-     Pressable,
 } from "react-native";
 
 const Home = () => {
@@ -29,17 +29,17 @@ const Home = () => {
      const { colors } = useTheme();
 
      // init component state
-     const [reminders, setReminders] = useState(null);
+     const [reminders, setReminders] = useState(null); // fixme: should be an array to be filled?
      const [time, setTime] = useState(new Date());
      const [modalVisible, setModalVisible] = useState(false);
-     const [xyz, setXyz] = useState();
+     const [modalOutput, setModalOutput] = useState();
 
-     // function to change time state
+     // function changes state for time picker
      const onTimeChange = (e, selectedTime) => {
           setTime(() => selectedTime);
      };
 
-     // opens time picker in Android module
+     // opens time picker modal in Android module
      const showTimePicker = () =>
           DateTimePickerAndroid.open({
                value: time,
@@ -59,7 +59,7 @@ const Home = () => {
           return `${hours}:${minutes} ${ampm}`;
      };
 
-     // shows toast message
+     // show toast message
      const showToast = (bool) => {
           bool
                ? ToastAndroid.show(
@@ -74,40 +74,57 @@ const Home = () => {
 
      // for JSX slimming
      const showReminders = (
-          // fixme: push notifications on a per/hour basis, or user needs to generate several??
+          // fixme: can app push notifications on a per/hour basis (using android alarm permissions), or does user need to generate individually??
           // fixme: see "exact alarm permissions" in dev.android api docs
-          <Pressable
-               style={{
-                    border: "solid",
-                    borderWidth: 2,
-                    borderColor: "#fff",
-                    borderRadius: 100,
-               }}
-               onLongPress={() => setModal("reminder")}
+          <TextButton
+               backgroundColor={colors.notification}
+               onPress={() => setModal("reminder")}
           >
-               <Text style={{ ...styles.reminderText, color: colors.white }}>
+               <Text style={{ ...styles.smallText, color: colors.white }}>
                     Reality Check set for {formatTime(time)}
                </Text>
-          </Pressable>
+          </TextButton>
      );
 
      // function changes what modal displays depending on argument
      const setModal = (type) => {
           if (type === "reminder") {
-               setXyz(
+               setModalOutput(
                     <>
-                         <Text style={{ color: "red", fontSize: 30 }}>
+                         <Text style={{ ...styles.text, color: colors.white }}>
                               This reminder is set for {formatTime(time)}
                          </Text>
-                         <Text>remove</Text>
-                         {/* fixme: add an alert that user is about to delete the reminder */}
-                         <Text>edit time</Text>
+                         <TextButton
+                              backgroundColor={colors.notification}
+                              onPress={() => Alert.alert("Title")}
+                         >
+                              {/* fixme: add an alert that user is about to delete the reminder */}
+                              <Text
+                                   style={{
+                                        ...styles.smallText,
+                                        color: colors.white,
+                                   }}
+                              >
+                                   Delete
+                              </Text>
+                         </TextButton>
+                         <TextButton backgroundColor={colors.notification}>
+                              {/* fixme: open android time dialog */}
+                              <Text
+                                   style={{
+                                        ...styles.smallText,
+                                        color: colors.white,
+                                   }}
+                              >
+                                   Edit
+                              </Text>
+                         </TextButton>
                     </>
                );
                setModalVisible(() => true);
           }
           if (type === "more") {
-               setXyz(
+               setModalOutput(
                     <>
                          <Text style={{ ...styles.text, color: colors.white }}>
                               During waking life: Am I dreaming? What do i look
@@ -135,51 +152,52 @@ const Home = () => {
 
      // for JSX slimming
      const showModal = (
-          <Modal
-               animationType="fade"
-               visible={modalVisible}
-               statusBarTranslucent={true}
-               presentationStyle="overFullScreen"
-               onRequestClose={() => setModalVisible(() => !modalVisible)}
+          <View
+               style={{
+                    ...styles.container,
+                    margin: 0,
+                    backgroundColor: colors.background,
+                    flex: 1,
+                    zIndex: 1,
+                    position: "absolute",
+               }}
           >
-               <View
-                    style={{
-                         ...styles.container,
-                         margin: 0,
-                         backgroundColor: colors.background,
-                         flex: 1,
-                    }}
-               >
-                    <CloseIcon
-                         name="close"
-                         size={24}
-                         color={colors.white}
-                         onPress={() => setModalVisible(() => false)}
-                    />
-                    {xyz}
-               </View>
-          </Modal>
+               <CloseIcon
+                    name="close"
+                    size={24}
+                    color={colors.white}
+                    onPress={() => setModalVisible(() => false)}
+               />
+               {modalOutput}
+          </View>
      );
 
      return (
           <View>
                {modalVisible && showModal}
-               <Pressable
-                    onPress={() => setModal("more")}
-                    style={{
-                         top: 0,
-                         right: 0,
-                         padding: 20,
-                         position: "absolute",
-                         zIndex: 1,
-                    }}
-               >
-                    <DotsIcon
-                         name="dots-vertical"
-                         size={24}
-                         color={colors.white}
-                    />
-               </Pressable>
+               {!modalVisible && (
+                    <View
+                         style={{
+                              right: 20,
+                              top: 20,
+                              position: "absolute",
+                              zIndex: 1,
+                              padding: 10,
+                         }}
+                    >
+                         <TextButton
+                              borderWidth={0}
+                              backgroundColor={colors.background}
+                              onPress={() => setModal("more")}
+                         >
+                              <DotsIcon
+                                   name="dots-vertical"
+                                   size={24}
+                                   color={colors.white}
+                              />
+                         </TextButton>
+                    </View>
+               )}
                <ScrollView contentContainerStyle={styles.container}>
                     <Text style={{ ...styles.title, color: colors.white }}>
                          Home
@@ -200,7 +218,7 @@ const Home = () => {
                     >
                          <Text
                               style={{
-                                   ...styles.reminderText,
+                                   ...styles.smallText,
                                    color: colors.white,
                               }}
                          >
@@ -220,17 +238,16 @@ const Home = () => {
                               }
                          />
                     </View>
-                    {/* fixme: below logic needs to be fine tuned */}
-                    {/*  useCallback in useEffect to remember if reminders are set */}
-                    {!reminders && showToast(false)}
+                    {/* fixme: below logic needs to be fine tuned useCallback in a useEffect to remember if reminders are set */}
+                    {/* {!reminders && showToast(false)} */}
                     {reminders && showReminders}
-                    {reminders && showToast(true)}
-                    <Button
-                         title="Add Reminder"
+                    {/* {reminders && showToast(true)} */}
+                    <TextButton
                          onPress={showTimePicker}
-                         color={colors.notification}
-                         // fixme: if you want rounded buttons, turn all Button components into Pressable components with: style={{ borderRadius: 100 }}
-                    />
+                         backgroundColor={colors.white}
+                    >
+                         <Text style={styles.smallText}>Add Reminder</Text>
+                    </TextButton>
                </ScrollView>
           </View>
      );
@@ -241,7 +258,7 @@ const styles = StyleSheet.create({
           alignItems: "center",
           justifyContent: "center",
           margin: 40,
-          backgroundColor: "red",
+          // backgroundColor: "red",
      },
      title: {
           fontSize: 36,
@@ -250,7 +267,7 @@ const styles = StyleSheet.create({
      text: {
           fontSize: 24,
      },
-     reminderText: {
+     smallText: {
           fontSize: 16,
           padding: 10,
      },

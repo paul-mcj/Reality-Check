@@ -16,8 +16,10 @@ import PencilIcon from "react-native-vector-icons/Octicons";
 import BookIcon from "react-native-vector-icons/Octicons";
 
 export default function App() {
+     // initialize creator function for navigation bar
      const Tab = createMaterialTopTabNavigator();
 
+     // define app theme
      const theme = {
           ...DefaultTheme,
           dark: false,
@@ -38,9 +40,8 @@ export default function App() {
 
      return (
           <>
-               {/* fixme: status bar should be hidden even when a modal is open in other pages!! */}
-               <StatusBar style="auto" hidden={true} />
                <NavigationContainer theme={theme}>
+                    <StatusBar hidden={true} />
                     <Tab.Navigator
                          initialRouteName="Home"
                          backBehavior="none"
