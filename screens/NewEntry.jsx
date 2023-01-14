@@ -9,7 +9,10 @@ import {
 } from "react-native";
 
 // react and misc
-import { useState, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
+
+// react native progress
+import ProgressBar from "react-native-progress/Bar";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
@@ -17,22 +20,32 @@ import { useTheme } from "@react-navigation/native";
 // components
 import TextButton from "../components/TextButton";
 
+// hooks
+import usePrevious from "../hooks/use-previous";
+
 const NewEntry = () => {
-     // init component state
+     // init component state/hooks
      const [input, setInput] = useState("");
      const [undo, setUndo] = useState(false);
-     const inputRef = useRef();
+     const prevInput = usePrevious(input);
+     const [progress, setProgress] = useState(1);
 
      // app theme deconstruction
      const { colors } = useTheme();
 
      // erase text input state
+     // fixme: put in use effect with return function to wipe previous subscription (otherwise timeout will continue until 5 secs is met regardless of if the undo is pressed multiple times in a row, which is not intended functionality)
      const handleErase = () => {
           setInput(() => "");
           setUndo(() => true);
-          setTimeout(() => {
-               setUndo(() => false);
-          }, 5000);
+
+          // setTimeout(() => {
+          //      setInterval(() => {
+          //           setProgress((prev) => prev - 0.2);
+          //      }, 1000);
+          //      setProgress(() => 1);
+          // }, 6000);
+          // setUndo(() => false);
      };
 
      // add text input to journal
@@ -40,7 +53,11 @@ const NewEntry = () => {
      // fixme: add timestamp
      const handleSave = () => {};
 
-     const handleUndo = () => {};
+     const handleUndo = () => {
+          setInput(() => prevInput);
+          setUndo(() => false);
+          // fixme: cnacel timer?
+     };
 
      // for JSX slimming
      const showButtons = (
@@ -97,7 +114,6 @@ const NewEntry = () => {
                          borderWidth: 2,
                          padding: 10,
                     }}
-                    ref={inputRef}
                     placeholder="What did you dream of?"
                     placeholderTextColor={colors.text}
                     value={input}
@@ -107,19 +123,27 @@ const NewEntry = () => {
                {input.trim().length !== 0 && showButtons}
                {/* fixme: margin fixes; show time meter ticking down for 5 secs; replace last inputRef current back into the field!! */}
                {undo && (
-                    <TextButton
-                         backgroundColor={colors.notification}
-                         onPress={handleUndo}
-                    >
-                         <Text
-                              style={{
-                                   ...styles.smallText,
-                                   color: colors.white,
-                              }}
+                    <View style={{ flex: 1 }}>
+                         <TextButton
+                              backgroundColor={colors.notification}
+                              onPress={handleUndo}
                          >
-                              Undo
-                         </Text>
-                    </TextButton>
+                              <Text
+                                   style={{
+                                        ...styles.smallText,
+                                        color: colors.white,
+                                   }}
+                              >
+                                   Undo
+                              </Text>
+                         </TextButton>
+                         <ProgressBar
+                              progress={progress}
+                              animationType="timing"
+                              width={null}
+                              color={colors.white}
+                         />
+                    </View>
                )}
           </ScrollView>
      );
