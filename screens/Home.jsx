@@ -1,6 +1,9 @@
 // react and misc.
 import { useState } from "react";
 
+// expo notifications
+import * as Notifications from "expo-notifications";
+
 // date time picker
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
@@ -23,6 +26,14 @@ import {
      StyleSheet,
      ToastAndroid,
 } from "react-native";
+
+// run notification in foreground
+Notifications.setNotificationHandler({
+     handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+     }),
+});
 
 const Home = () => {
      // app theme deconstruction
@@ -70,6 +81,18 @@ const Home = () => {
                       "All reminders are set to off",
                       ToastAndroid.LONG
                  );
+     };
+
+     // shows notification
+     const triggerNotification = async () => {
+          await Notifications.scheduleNotificationAsync({
+               content: {
+                    title: "You've got mail",
+                    body: "Here is the notification body",
+                    data: { data: "goes here" },
+               },
+               trigger: { seconds: 7 },
+          });
      };
 
      // for JSX slimming
@@ -247,6 +270,14 @@ const Home = () => {
                          backgroundColor={colors.white}
                     >
                          <Text style={styles.smallText}>Add Reminder</Text>
+                    </TextButton>
+                    <TextButton
+                         onPress={triggerNotification}
+                         backgroundColor={colors.white}
+                    >
+                         <Text style={styles.smallText}>
+                              test notification button
+                         </Text>
                     </TextButton>
                </ScrollView>
           </View>
