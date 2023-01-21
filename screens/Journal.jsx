@@ -41,7 +41,7 @@ const Journal = () => {
                     “I love sleep. My life has the tendency to fall apart when
                     I'm awake, you know?” ― Ernest Hemingway
                </Text>
-               {/* fixme: loop through entries and sort by timestamp */}
+               {/* fixme: loop through entries and sort by timestamp  in a FlatList! */}
                {/* fixme: edit or delete any entry*/}
                {/* fixme: useContext to grab from NewEntry page */}
           </ScrollView>
