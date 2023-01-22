@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 // react and misc
-import { useEffect, useState, useCallback, useContext } from "react";
+import { useState, useCallback, useContext } from "react";
 
 // react native progress
 import ProgressBar from "react-native-progress/Bar";
@@ -34,7 +34,7 @@ const NewEntry = () => {
      const [progress, setProgress] = useState(1);
 
      // init context
-     const addEntry = useContext(JournalContext);
+     const { addEntry } = useContext(JournalContext);
 
      // app theme deconstruction
      const { colors } = useTheme();
@@ -60,7 +60,7 @@ const NewEntry = () => {
           // add new timestamp, unique id and input data to new entry object
           const entry = { input, id: timestamp.getTime(), timestamp };
           // add object to context
-          console.log(addEntry);
+          addEntry(entry);
           // reset text input
           setInput(() => "");
      };

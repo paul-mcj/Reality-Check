@@ -1,10 +1,31 @@
 // react and misc
-import { createContext } from "react";
+import { useState, createContext } from "react";
+import PropTypes from "prop-types";
 
-const addEntry = (input) => console.log(input);
+// define context
+const JournalContext = createContext();
 
-const JournalContext = createContext({ addEntry });
+export const JournalProvider = ({ children }) => {
+     // init state
+     const [entries, setEntries] = useState([]);
 
-export const JournalProvider = JournalContext.Provider;
+     // function to add new entries to context
+     const addEntry = (inputObj) => {
+          setEntries((prev) => [...prev, inputObj]);
+          console.log(inputObj);
+     };
+
+     // fixme: fns to edit and delete an entry (as well as undo capabilities)
+
+     return (
+          <JournalContext.Provider value={{ entries, addEntry }}>
+               {children}
+          </JournalContext.Provider>
+     );
+};
+
+JournalProvider.propTypes = {
+     children: PropTypes.node.isRequired,
+};
 
 export default JournalContext;

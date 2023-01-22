@@ -4,6 +4,7 @@ import {
      FlatList,
      Button,
      ScrollView,
+     View,
      StyleSheet,
      RefreshControl,
 } from "react-native";
@@ -17,6 +18,9 @@ import "react-native-get-random-values";
 // context
 import JournalContext from "../context/JournalContext";
 
+// components
+import JournalEntry from "../components/JournalEntry";
+
 // react and misc.
 import { useState, useCallback, useEffect, useContext } from "react";
 
@@ -25,7 +29,7 @@ const Journal = () => {
      const [refreshing, setRefreshing] = useState(false);
 
      // init context
-     const content = useContext(JournalContext);
+     const { entries } = useContext(JournalContext);
 
      // app theme deconstruction
      const { colors } = useTheme();
@@ -39,22 +43,31 @@ const Journal = () => {
      // }, []);
 
      useEffect(() => {
-          console.log(content);
-     }, []);
+          console.log(entries);
+     }, [entries]);
 
      return (
-          <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.container}>
                <Text style={{ ...styles.title, color: colors.white }}>
                     Journal
                </Text>
-               <Text style={{ ...styles.text, color: colors.white }}>
+               {/* <Text style={{ ...styles.text, color: colors.white }}>
                     “I love sleep. My life has the tendency to fall apart when
                     I'm awake, you know?” ― Ernest Hemingway
-               </Text>
+               </Text> */}
                {/* fixme: loop through entries and sort by timestamp in a FlatList! */}
-               {/* fixme: edit or delete any entry*/}
-               {/* fixme: useContext to grab from NewEntry page */}
-          </ScrollView>
+               <FlatList
+                    style={{ marginBottom: 80 }}
+                    data={entries}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                         <JournalEntry
+                              input={item.input}
+                              timestamp={item.timestamp}
+                         />
+                    )}
+               />
+          </View>
      );
 };
 
