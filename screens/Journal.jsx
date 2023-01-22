@@ -11,15 +11,21 @@ import {
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
-// uuid
-// import { v4 as uuidv4 } from 'uuid';
+// random values npm
+import "react-native-get-random-values";
+
+// context
+import JournalContext from "../context/JournalContext";
 
 // react and misc.
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 
 const Journal = () => {
      // init component state
      const [refreshing, setRefreshing] = useState(false);
+
+     // init context
+     const content = useContext(JournalContext);
 
      // app theme deconstruction
      const { colors } = useTheme();
@@ -32,6 +38,10 @@ const Journal = () => {
      //      }, 2000);
      // }, []);
 
+     useEffect(() => {
+          console.log(content);
+     }, []);
+
      return (
           <ScrollView contentContainerStyle={styles.container}>
                <Text style={{ ...styles.title, color: colors.white }}>
@@ -41,7 +51,7 @@ const Journal = () => {
                     “I love sleep. My life has the tendency to fall apart when
                     I'm awake, you know?” ― Ernest Hemingway
                </Text>
-               {/* fixme: loop through entries and sort by timestamp  in a FlatList! */}
+               {/* fixme: loop through entries and sort by timestamp in a FlatList! */}
                {/* fixme: edit or delete any entry*/}
                {/* fixme: useContext to grab from NewEntry page */}
           </ScrollView>

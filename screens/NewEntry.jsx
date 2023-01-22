@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 // react and misc
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 
 // react native progress
 import ProgressBar from "react-native-progress/Bar";
@@ -20,6 +20,9 @@ import { useTheme } from "@react-navigation/native";
 // components
 import TextButton from "../components/TextButton";
 
+// context
+import JournalContext from "../context/JournalContext";
+
 // hooks
 import usePrevious from "../hooks/use-previous";
 
@@ -29,6 +32,9 @@ const NewEntry = () => {
      const [undo, setUndo] = useState(false);
      const prevInput = usePrevious(input);
      const [progress, setProgress] = useState(1);
+
+     // init context
+     const addEntry = useContext(JournalContext);
 
      // app theme deconstruction
      const { colors } = useTheme();
@@ -48,10 +54,16 @@ const NewEntry = () => {
           // setUndo(() => false);
      };
 
-     // add text input to journal
-     // fixme: need to useContext
-     // fixme: add timestamp
-     const handleSave = () => {};
+     // add new entry to journal context
+     const handleSave = () => {
+          const timestamp = new Date();
+          // add new timestamp, unique id and input data to new entry object
+          const entry = { input, id: timestamp.getTime(), timestamp };
+          // add object to context
+          console.log(addEntry);
+          // reset text input
+          setInput(() => "");
+     };
 
      const handleUndo = () => {
           setInput(() => prevInput);

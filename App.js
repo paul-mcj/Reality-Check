@@ -10,6 +10,9 @@ import Home from "./screens/Home";
 import Journal from "./screens/Journal";
 import NewEntry from "./screens/NewEntry";
 
+// context
+import { JournalProvider } from "./context/JournalContext";
+
 // icons
 import HomeIcon from "react-native-vector-icons/Octicons";
 import PencilIcon from "react-native-vector-icons/Octicons";
@@ -18,6 +21,9 @@ import BookIcon from "react-native-vector-icons/Octicons";
 export default function App() {
      // initialize creator function for navigation bar
      const Tab = createMaterialTopTabNavigator();
+
+     // fixme: fetch all journal entries in local memory and fill the context when App.js loads (useEffect?)
+     const content = { data: [] };
 
      // define app theme
      const theme = {
@@ -39,7 +45,7 @@ export default function App() {
      const { colors } = theme;
 
      return (
-          <>
+          <JournalProvider value={content}>
                <NavigationContainer theme={theme}>
                     <StatusBar hidden={true} />
                     <Tab.Navigator
@@ -99,6 +105,6 @@ export default function App() {
                          />
                     </Tab.Navigator>
                </NavigationContainer>
-          </>
+          </JournalProvider>
      );
 }
