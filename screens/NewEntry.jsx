@@ -1,5 +1,5 @@
 // react native
-import { TextInput, Text, StyleSheet, ScrollView, View } from "react-native";
+import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
 import { useState, useContext } from "react";
@@ -26,7 +26,8 @@ const NewEntry = () => {
      const { addEntry } = useContext(JournalContext);
 
      // app theme deconstruction
-     const { colors } = useTheme();
+     const { colors, smallTextWhite, container, title, text, border } =
+          useTheme();
 
      // erase text input state
      const handleErase = () => {
@@ -68,46 +69,25 @@ const NewEntry = () => {
                          backgroundColor={colors.notification}
                          onPress={handleErase}
                     >
-                         <Text
-                              style={{
-                                   ...styles.smallText,
-                                   color: colors.white,
-                              }}
-                         >
-                              Erase
-                         </Text>
+                         <Text style={smallTextWhite}>Erase</Text>
                     </TextButton>
                </View>
                <TextButton
                     backgroundColor={colors.notification}
                     onPress={handleSave}
                >
-                    <Text
-                         style={{
-                              ...styles.smallText,
-                              color: colors.white,
-                         }}
-                    >
-                         Save
-                    </Text>
+                    <Text style={smallTextWhite}>Save</Text>
                </TextButton>
           </View>
      );
 
      return (
-          <ScrollView contentContainerStyle={styles.container}>
-               <Text style={{ ...styles.title, color: colors.white }}>
-                    New Entry
-               </Text>
+          <ScrollView contentContainerStyle={container}>
+               <Text style={title}>New Entry</Text>
                <TextInput
                     style={{
-                         ...styles.text,
-                         color: colors.white,
-                         borderColor: colors.white,
-                         borderRadius: 10,
-                         borderStyle: "solid",
-                         borderWidth: 2,
-                         padding: 10,
+                         ...text,
+                         ...border,
                     }}
                     placeholder="What did you dream of?"
                     placeholderTextColor={colors.text}
@@ -122,38 +102,12 @@ const NewEntry = () => {
                               backgroundColor={colors.notification}
                               onPress={handleUndo}
                          >
-                              <Text
-                                   style={{
-                                        ...styles.smallText,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   Undo
-                              </Text>
+                              <Text style={smallTextWhite}>Undo</Text>
                          </TextButton>
                     </View>
                )}
           </ScrollView>
      );
 };
-
-const styles = StyleSheet.create({
-     container: {
-          alignItems: "center",
-          justifyContent: "center",
-          margin: 40,
-     },
-     title: {
-          fontSize: 36,
-          marginBottom: 40,
-     },
-     text: {
-          fontSize: 24,
-     },
-     smallText: {
-          fontSize: 16,
-          padding: 10,
-     },
-});
 
 export default NewEntry;

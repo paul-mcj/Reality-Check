@@ -4,7 +4,6 @@ import {
      FlatList,
      ScrollView,
      View,
-     StyleSheet,
      TextInput,
      RefreshControl,
      Pressable,
@@ -43,7 +42,8 @@ const Journal = () => {
      const { entries, editEntry, deleteEntry } = useContext(JournalContext);
 
      // app theme deconstruction
-     const { colors } = useTheme();
+     const { colors, container, text, title, border, smallTextWhite } =
+          useTheme();
 
      const handleOnDelete = (content) => {
           // fixme: add alert/warning before doing the following logic:
@@ -65,7 +65,7 @@ const Journal = () => {
           setModalVisible(() => true);
 
           showModal = (
-               <View style={styles.container}>
+               <View style={container}>
                     {/* fixme: BackHandler to go to Home page should be allowed */}
                     <CloseIcon
                          name="close"
@@ -78,15 +78,7 @@ const Journal = () => {
                     {editing && (
                          <>
                               <TextInput
-                                   style={{
-                                        ...styles.text,
-                                        color: colors.white,
-                                        borderColor: colors.white,
-                                        borderRadius: 10,
-                                        borderStyle: "solid",
-                                        borderWidth: 2,
-                                        padding: 10,
-                                   }}
+                                   style={{ ...text, ...border }}
                                    value={content.input}
                                    onChangeText={(text) => setInput(() => text)}
                               />
@@ -97,45 +89,19 @@ const Journal = () => {
                     {!editing && (
                          <>
                               <Pressable
-                                   style={{
-                                        borderColor: colors.white,
-                                        borderRadius: 10,
-                                        borderStyle: "solid",
-                                        borderWidth: 2,
-                                        padding: 10,
-                                   }}
+                                   style={border}
                                    onPress={() => setEditing(() => true)}
                               >
-                                   <Text
-                                        style={{
-                                             ...styles.smallText,
-                                             color: colors.white,
-                                             marginBottom: 10,
-                                        }}
-                                   >
+                                   <Text style={smallTextWhite}>
                                         {content.timestamp.toDateString()}
                                    </Text>
-                                   <Text
-                                        style={{
-                                             ...styles.text,
-                                             color: colors.white,
-                                        }}
-                                   >
-                                        {content.input}
-                                   </Text>
+                                   <Text style={text}>{content.input}</Text>
                               </Pressable>
                               <TextButton
                                    backgroundColor={colors.notification}
                                    onPress={() => handleOnDelete(content)}
                               >
-                                   <Text
-                                        style={{
-                                             ...styles.smallText,
-                                             color: colors.white,
-                                        }}
-                                   >
-                                        Delete
-                                   </Text>
+                                   <Text style={smallTextWhite}>Delete</Text>
                               </TextButton>
                          </>
                     )}
@@ -158,35 +124,22 @@ const Journal = () => {
      return (
           <>
                {modalVisible && showModal}
-               {/* <ScrollView contentContainerStyle={styles.container}> */}
+               {/* <ScrollView contentContainerStyle={container}> */}
                {!modalVisible && (
-                    <View style={styles.container}>
-                         <Text
-                              style={{
-                                   ...styles.title,
-                                   color: colors.white,
-                              }}
-                         >
-                              Journal
-                         </Text>
+                    <View style={container}>
+                         <Text style={title}>Journal</Text>
                          {entries.length === 0 && (
                               <>
                                    <Text
                                         style={{
-                                             ...styles.text,
-                                             color: colors.white,
+                                             ...text,
                                              fontStyle: "italic",
                                         }}
                                    >
                                         “I love sleep. My life has the tendency
                                         to fall apart when I'm awake, you know?”
                                    </Text>
-                                   <Text
-                                        style={{
-                                             ...styles.smallText,
-                                             color: colors.white,
-                                        }}
-                                   >
+                                   <Text style={smallTextWhite}>
                                         ― Ernest Hemingway
                                    </Text>
                               </>
@@ -210,24 +163,5 @@ const Journal = () => {
           </>
      );
 };
-
-const styles = StyleSheet.create({
-     container: {
-          alignItems: "center",
-          justifyContent: "center",
-          margin: 40,
-     },
-     title: {
-          fontSize: 36,
-          marginBottom: 40,
-     },
-     text: {
-          fontSize: 24,
-     },
-     smallText: {
-          fontSize: 16,
-          padding: 10,
-     },
-});
 
 export default Journal;

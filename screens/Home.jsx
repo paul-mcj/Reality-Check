@@ -1,5 +1,5 @@
 // react and misc.
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 // expo notifications
 import * as Notifications from "expo-notifications";
@@ -14,6 +14,10 @@ import { useTheme } from "@react-navigation/native";
 // components
 import TextButton from "../components/TextButton";
 import HomeInfoList from "../components/HomeInfoList";
+import Modal from "../components/Modal";
+
+// context
+import ModalContext from "../context/ModalContext";
 
 // icons
 import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,14 +28,15 @@ import {
      Text,
      View,
      ScrollView,
+     Button,
      Switch,
-     StyleSheet,
      ToastAndroid,
 } from "react-native";
 
 // global variable to always get current time
 const now = new Date();
 
+// fixme: put all timepicker and Notification stuff in custom hook??
 // run notifications in background
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 TaskManager.defineTask(
@@ -63,7 +68,14 @@ Notifications.setNotificationHandler({
 
 const Home = () => {
      // app theme deconstruction
-     const { colors } = useTheme();
+     const {
+          colors,
+          smallTextWhite,
+          smallTextNotification,
+          container,
+          title,
+          text,
+     } = useTheme();
 
      // init component state
      const [reminders, setReminders] = useState(null);
@@ -71,6 +83,9 @@ const Home = () => {
      const [modalVisible, setModalVisible] = useState(false);
      const [modalOutput, setModalOutput] = useState();
      const [first, setFirst] = useState(false);
+
+     // init context
+     const { modal, setModal } = useContext(ModalContext);
 
      // function changes state for time picker
      const onTimeChange = (e, selectedTime) => {
@@ -127,20 +142,20 @@ const Home = () => {
           // fixme: see "exact alarm permissions" in dev.android api docs
           <TextButton
                backgroundColor={colors.notification}
-               onPress={() => setModal("reminder")}
+               onPress={() => setX("reminder")}
           >
-               <Text style={{ ...styles.smallText, color: colors.white }}>
+               <Text style={smallTextWhite}>
                     Reality Check set for {formatTime(time)}
                </Text>
           </TextButton>
      );
 
      // function changes what modal displays depending on argument
-     const setModal = (type) => {
+     const setX = (type) => {
           if (type === "reminder") {
                setModalOutput(
                     <>
-                         <Text style={{ ...styles.text, color: colors.white }}>
+                         <Text style={text}>
                               This reminder is set for {formatTime(time)}
                          </Text>
                          <TextButton
@@ -148,25 +163,11 @@ const Home = () => {
                               onPress={() => Alert.alert("Title")}
                          >
                               {/* fixme: add an alert that user is about to delete the reminder */}
-                              <Text
-                                   style={{
-                                        ...styles.smallText,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   Delete
-                              </Text>
+                              <Text style={smallTextWhite}>Delete</Text>
                          </TextButton>
                          <TextButton backgroundColor={colors.notification}>
                               {/* fixme: open android time dialog */}
-                              <Text
-                                   style={{
-                                        ...styles.smallText,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   Edit
-                              </Text>
+                              <Text style={smallTextWhite}>Edit</Text>
                          </TextButton>
                     </>
                );
@@ -180,7 +181,7 @@ const Home = () => {
 
      // for JSX slimming
      const showModal = (
-          <View style={styles.container}>
+          <View style={container}>
                {/* fixme: BackHandler to go to Home page should be allowed */}
                <CloseIcon
                     name="close"
@@ -195,9 +196,10 @@ const Home = () => {
 
      return (
           <>
-               {modalVisible && showModal}
-               <ScrollView contentContainerStyle={styles.container}>
-                    {!modalVisible && (
+               {/* {modalVisible && showModal} */}
+               {modal && <Modal></Modal>}
+               {!modal && (
+                    <ScrollView contentContainerStyle={container}>
                          <>
                               <View
                                    style={{
@@ -211,7 +213,7 @@ const Home = () => {
                                    <TextButton
                                         borderWidth={0}
                                         backgroundColor={colors.background}
-                                        onPress={() => setModal("more")}
+                                        onPress={() => setX("more")}
                                    >
                                         <DotsIcon
                                              name="dots-vertical"
@@ -222,28 +224,11 @@ const Home = () => {
                               </View>
 
                               <ScrollView>
-                                   <Text
-                                        style={{
-                                             ...styles.title,
-                                             color: colors.white,
-                                        }}
-                                   >
-                                        Home
-                                   </Text>
-                                   <Text
-                                        style={{
-                                             ...styles.text,
-                                             color: colors.white,
-                                        }}
-                                   >
+                                   <Text style={title}>Home</Text>
+                                   <Text style={text}>
                                         Inducing lucid dreams takes practice.
                                    </Text>
-                                   <Text
-                                        style={{
-                                             ...styles.text,
-                                             color: colors.white,
-                                        }}
-                                   >
+                                   <Text style={text}>
                                         This app is designed to help you perform
                                         daily "reality checks" in order to bring
                                         about lucidity during sleep.
@@ -255,12 +240,7 @@ const Home = () => {
                                              alignItems: "center",
                                         }}
                                    >
-                                        <Text
-                                             style={{
-                                                  ...styles.smallText,
-                                                  color: colors.white,
-                                             }}
-                                        >
+                                        <Text style={smallTextWhite}>
                                              {reminders
                                                   ? "Shut Off"
                                                   : "Turn On"}{" "}
@@ -291,7 +271,7 @@ const Home = () => {
                                         onPress={showTimePicker}
                                         backgroundColor={colors.white}
                                    >
-                                        <Text style={styles.smallText}>
+                                        <Text style={smallTextNotification}>
                                              Add Reminder
                                         </Text>
                                    </TextButton>
@@ -299,35 +279,20 @@ const Home = () => {
                                         onPress={() => triggerNotification(3)}
                                         backgroundColor={colors.white}
                                    >
-                                        <Text style={styles.smallText}>
+                                        <Text style={smallTextNotification}>
                                              test notification button
                                         </Text>
                                    </TextButton>
+                                   <Button
+                                        title="open test modal button"
+                                        onPress={() => setModal(() => true)}
+                                   />
                               </ScrollView>
                          </>
-                    )}
-               </ScrollView>
+                    </ScrollView>
+               )}
           </>
      );
 };
-
-const styles = StyleSheet.create({
-     container: {
-          alignItems: "center",
-          justifyContent: "center",
-          margin: 40,
-     },
-     title: {
-          fontSize: 36,
-          marginBottom: 40,
-     },
-     text: {
-          fontSize: 24,
-     },
-     smallText: {
-          fontSize: 16,
-          padding: 10,
-     },
-});
 
 export default Home;

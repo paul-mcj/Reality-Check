@@ -8,49 +8,24 @@ import JournalContext from "../context/JournalContext";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { StyleSheet, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 
 const JournalEntry = ({ input, openModal }) => {
      // app theme deconstruction
-     const { colors } = useTheme();
+     const { border, smallTextWhite } = useTheme();
 
      return (
           <Pressable
                style={{
-                    borderColor: colors.white,
-                    borderRadius: 10,
-                    borderStyle: "solid",
-                    borderWidth: 2,
-                    padding: 10,
+                    ...border,
                     marginBottom: 10,
                }}
                onPress={openModal}
           >
-               <Text style={{ ...styles.smallText, color: colors.white }}>
-                    {input}
-               </Text>
+               <Text style={smallTextWhite}>{input}</Text>
           </Pressable>
      );
 };
-
-const styles = StyleSheet.create({
-     container: {
-          alignItems: "center",
-          justifyContent: "center",
-          margin: 40,
-     },
-     title: {
-          fontSize: 36,
-          marginBottom: 40,
-     },
-     text: {
-          fontSize: 24,
-     },
-     smallText: {
-          fontSize: 16,
-          padding: 10,
-     },
-});
 
 JournalEntry.propTypes = {
      input: PropTypes.string.isRequired,

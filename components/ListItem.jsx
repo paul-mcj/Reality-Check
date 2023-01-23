@@ -6,14 +6,14 @@ import PropTypes from "prop-types";
 import TextButton from "./TextButton";
 
 // react native
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
-const ListItem = ({ title, text }) => {
+const ListItem = ({ title, message }) => {
      // app theme deconstruction
-     const { colors } = useTheme();
+     const { colors, text, smallTextNotification } = useTheme();
 
      // component state
      const [showContent, setShowContent] = useState(false);
@@ -24,41 +24,16 @@ const ListItem = ({ title, text }) => {
                     backgroundColor={colors.white}
                     onPress={() => setShowContent(() => !showContent)}
                >
-                    <Text
-                         style={{
-                              ...styles.smallText,
-                         }}
-                    >
-                         {title}
-                    </Text>
+                    <Text style={smallTextNotification}>{title}</Text>
                </TextButton>
-               {showContent && (
-                    <Text
-                         style={{
-                              ...styles.text,
-                              color: colors.white,
-                         }}
-                    >
-                         {text}
-                    </Text>
-               )}
+               {showContent && <Text style={text}>{message}</Text>}
           </>
      );
 };
 
-const styles = StyleSheet.create({
-     text: {
-          fontSize: 24,
-     },
-     smallText: {
-          fontSize: 16,
-          padding: 10,
-     },
-});
-
 ListItem.propTypes = {
      title: PropTypes.string.isRequired,
-     text: PropTypes.string.isRequired,
+     message: PropTypes.string.isRequired,
 };
 
 export default ListItem;

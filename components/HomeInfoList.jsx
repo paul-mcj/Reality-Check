@@ -39,7 +39,7 @@ const HomeInfoList = () => {
                data={CONTENT}
                keyExtractor={(item) => item.id}
                renderItem={({ item }) => (
-                    <ListItem title={item.title} text={item.text} />
+                    <ListItem title={item.title} message={item.text} />
                )}
           />
      );
