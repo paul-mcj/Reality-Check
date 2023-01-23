@@ -1,18 +1,8 @@
 // react native
-import {
-     TextInput,
-     Text,
-     StyleSheet,
-     ScrollView,
-     View,
-     ToastAndroid,
-} from "react-native";
+import { TextInput, Text, StyleSheet, ScrollView, View } from "react-native";
 
 // react and misc
-import { useState, useCallback, useContext } from "react";
-
-// react native progress
-import ProgressBar from "react-native-progress/Bar";
+import { useState, useContext } from "react";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
@@ -31,7 +21,6 @@ const NewEntry = () => {
      const [input, setInput] = useState("");
      const [undo, setUndo] = useState(false);
      const prevInput = usePrevious(input);
-     const [progress, setProgress] = useState(1);
 
      // init context
      const { addEntry } = useContext(JournalContext);
@@ -40,25 +29,20 @@ const NewEntry = () => {
      const { colors } = useTheme();
 
      // erase text input state
-     // fixme: put in use effect with return function to wipe previous subscription (otherwise timeout will continue until 5 secs is met regardless of if the undo is pressed multiple times in a row, which is not intended functionality)
      const handleErase = () => {
           setInput(() => "");
           setUndo(() => true);
-
-          // setTimeout(() => {
-          //      setInterval(() => {
-          //           setProgress((prev) => prev - 0.2);
-          //      }, 1000);
-          //      setProgress(() => 1);
-          // }, 6000);
-          // setUndo(() => false);
      };
 
      // add new entry to journal context
      const handleSave = () => {
           const timestamp = new Date();
-          // add new timestamp, unique id and input data to new entry object
-          const entry = { input, id: timestamp.getTime(), timestamp };
+          // add timestamp, unique id and input data to new entry object
+          const entry = {
+               input: input.trim(),
+               id: timestamp.getTime(),
+               timestamp,
+          };
           // add object to context
           addEntry(entry);
           // reset text input
@@ -68,7 +52,6 @@ const NewEntry = () => {
      const handleUndo = () => {
           setInput(() => prevInput);
           setUndo(() => false);
-          // fixme: cnacel timer?
      };
 
      // for JSX slimming
@@ -133,9 +116,8 @@ const NewEntry = () => {
                     multiline
                />
                {input.trim().length !== 0 && showButtons}
-               {/* fixme: margin fixes; show time meter ticking down for 5 secs; replace last inputRef current back into the field!! */}
                {undo && (
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, marginTop: 40 }}>
                          <TextButton
                               backgroundColor={colors.notification}
                               onPress={handleUndo}
@@ -149,12 +131,6 @@ const NewEntry = () => {
                                    Undo
                               </Text>
                          </TextButton>
-                         <ProgressBar
-                              progress={progress}
-                              animationType="timing"
-                              width={null}
-                              color={colors.white}
-                         />
                     </View>
                )}
           </ScrollView>

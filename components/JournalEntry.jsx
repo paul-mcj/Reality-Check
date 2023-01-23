@@ -1,5 +1,4 @@
 // react and misc
-import { useState } from "react";
 import PropTypes from "prop-types";
 
 // context
@@ -11,13 +10,9 @@ import { useTheme } from "@react-navigation/native";
 // react native
 import { StyleSheet, Pressable, Text } from "react-native";
 
-const JournalEntry = ({ input, timestamp }) => {
+const JournalEntry = ({ input, openModal }) => {
      // app theme deconstruction
      const { colors } = useTheme();
-
-     // fixme: onPress, open the modal
-     // fixme: edit or delete any entry in modal mode (use context fns!!) */
-     // fixme: add alert upon delete
 
      return (
           <Pressable
@@ -29,7 +24,7 @@ const JournalEntry = ({ input, timestamp }) => {
                     padding: 10,
                     marginBottom: 10,
                }}
-               onPress={() => console.log(timestamp)}
+               onPress={openModal}
           >
                <Text style={{ ...styles.smallText, color: colors.white }}>
                     {input}
@@ -59,7 +54,7 @@ const styles = StyleSheet.create({
 
 JournalEntry.propTypes = {
      input: PropTypes.string.isRequired,
-     timestamp: PropTypes.object.isRequired,
+     openModal: PropTypes.func.isRequired,
 };
 
 export default JournalEntry;

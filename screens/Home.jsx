@@ -66,7 +66,7 @@ const Home = () => {
      const { colors } = useTheme();
 
      // init component state
-     const [reminders, setReminders] = useState(null); // fixme: should be an array to be filled?
+     const [reminders, setReminders] = useState(null);
      const [time, setTime] = useState(new Date());
      const [modalVisible, setModalVisible] = useState(false);
      const [modalOutput, setModalOutput] = useState();
@@ -80,8 +80,8 @@ const Home = () => {
      // fixme: this useEffect should be skipped on initial render of app??
      useEffect(() => {
           let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
-          console.log(`now: ${now}`);
-          console.log(`trigger is now: ${nextTrigger}`);
+          // console.log(`now: ${now}`);
+          // console.log(`trigger is now: ${nextTrigger}`);
           // note: additional logic ensures that there will be at least one min before setting off future notification
           if (nextTrigger >= 60) {
                triggerNotification(nextTrigger);
@@ -198,109 +198,113 @@ const Home = () => {
                {modalVisible && showModal}
                <ScrollView contentContainerStyle={styles.container}>
                     {!modalVisible && (
-                         <View
-                              style={{
-                                   right: 20,
-                                   top: 20,
-                                   position: "absolute",
-                                   zIndex: 1,
-                                   padding: 10,
-                              }}
-                         >
-                              <TextButton
-                                   borderWidth={0}
-                                   backgroundColor={colors.background}
-                                   onPress={() => setModal("more")}
-                              >
-                                   <DotsIcon
-                                        name="dots-vertical"
-                                        size={24}
-                                        color={colors.white}
-                                   />
-                              </TextButton>
-                         </View>
-                    )}
-                    {!modalVisible && (
-                         <ScrollView>
-                              <Text
-                                   style={{
-                                        ...styles.title,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   Home
-                              </Text>
-                              <Text
-                                   style={{
-                                        ...styles.text,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   Inducing lucid dreams takes practice.
-                              </Text>
-                              <Text
-                                   style={{
-                                        ...styles.text,
-                                        color: colors.white,
-                                   }}
-                              >
-                                   This app is designed to help you perform
-                                   daily "reality checks" in order to bring
-                                   about lucidity during sleep.
-                              </Text>
+                         <>
                               <View
                                    style={{
-                                        flex: 2,
-                                        flexDirection: "row",
-                                        alignItems: "center",
+                                        right: 20,
+                                        top: 20,
+                                        position: "absolute",
+                                        zIndex: 1,
+                                        padding: 10,
                                    }}
                               >
+                                   <TextButton
+                                        borderWidth={0}
+                                        backgroundColor={colors.background}
+                                        onPress={() => setModal("more")}
+                                   >
+                                        <DotsIcon
+                                             name="dots-vertical"
+                                             size={24}
+                                             color={colors.white}
+                                        />
+                                   </TextButton>
+                              </View>
+
+                              <ScrollView>
                                    <Text
                                         style={{
-                                             ...styles.smallText,
+                                             ...styles.title,
                                              color: colors.white,
                                         }}
                                    >
-                                        {reminders ? "Shut Off" : "Turn On"}{" "}
-                                        Reminders
+                                        Home
                                    </Text>
-                                   <Switch
-                                        value={reminders}
-                                        onValueChange={() =>
-                                             setReminders(() => !reminders)
-                                        }
-                                        trackColor={{
-                                             false: colors.dim,
-                                             true: colors.secondary,
+                                   <Text
+                                        style={{
+                                             ...styles.text,
+                                             color: colors.white,
                                         }}
-                                        thumbColor={
-                                             reminders
-                                                  ? colors.notification
-                                                  : colors.text
-                                        }
-                                   />
-                              </View>
-                              {/* fixme: below logic needs to be fine tuned useCallback in a useEffect to remember if reminders are set */}
-                              {/* {!reminders && showToast(false)} */}
-                              {reminders && showReminders}
-                              {/* {reminders && showToast(true)} */}
-                              <TextButton
-                                   onPress={showTimePicker}
-                                   backgroundColor={colors.white}
-                              >
-                                   <Text style={styles.smallText}>
-                                        Add Reminder
+                                   >
+                                        Inducing lucid dreams takes practice.
                                    </Text>
-                              </TextButton>
-                              <TextButton
-                                   onPress={() => triggerNotification(3)}
-                                   backgroundColor={colors.white}
-                              >
-                                   <Text style={styles.smallText}>
-                                        test notification button
+                                   <Text
+                                        style={{
+                                             ...styles.text,
+                                             color: colors.white,
+                                        }}
+                                   >
+                                        This app is designed to help you perform
+                                        daily "reality checks" in order to bring
+                                        about lucidity during sleep.
                                    </Text>
-                              </TextButton>
-                         </ScrollView>
+                                   <View
+                                        style={{
+                                             flex: 2,
+                                             flexDirection: "row",
+                                             alignItems: "center",
+                                        }}
+                                   >
+                                        <Text
+                                             style={{
+                                                  ...styles.smallText,
+                                                  color: colors.white,
+                                             }}
+                                        >
+                                             {reminders
+                                                  ? "Shut Off"
+                                                  : "Turn On"}{" "}
+                                             Reminders
+                                        </Text>
+                                        <Switch
+                                             value={reminders}
+                                             onValueChange={() =>
+                                                  setReminders(() => !reminders)
+                                             }
+                                             trackColor={{
+                                                  false: colors.dim,
+                                                  true: colors.secondary,
+                                             }}
+                                             thumbColor={
+                                                  reminders
+                                                       ? colors.notification
+                                                       : colors.text
+                                             }
+                                        />
+                                   </View>
+                                   {/* fixme: below logic needs to be fine tuned useCallback in a useEffect to remember if reminders are set */}
+                                   {/* // fixme: all reminders should be an array that is looped thorugh. instead of having one Switch to turn all reminders off/on, EACH reminder has a switch option for off/on logic*/}
+                                   {/* {!reminders && showToast(false)} */}
+                                   {reminders && showReminders}
+                                   {/* {reminders && showToast(true)} */}
+                                   <TextButton
+                                        onPress={showTimePicker}
+                                        backgroundColor={colors.white}
+                                   >
+                                        <Text style={styles.smallText}>
+                                             Add Reminder
+                                        </Text>
+                                   </TextButton>
+                                   <TextButton
+                                        onPress={() => triggerNotification(3)}
+                                        backgroundColor={colors.white}
+                                   >
+                                        <Text style={styles.smallText}>
+                                             test notification button
+                                        </Text>
+                                   </TextButton>
+                              </ScrollView>
+                         </>
                     )}
                </ScrollView>
           </>

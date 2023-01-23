@@ -12,13 +12,24 @@ export const JournalProvider = ({ children }) => {
      // function to add new entries to context
      const addEntry = (inputObj) => {
           setEntries((prev) => [...prev, inputObj]);
-          console.log(inputObj);
      };
 
-     // fixme: fns to edit and delete an entry (as well as undo capabilities)
+     // function to delete an entry
+     const deleteEntry = (inputObj) => {
+          setEntries(() =>
+               [...entries].filter((item) => item.id !== inputObj.id)
+          );
+     };
+
+     // fixme: fn to edit an entry
+     const editEntry = (inputObj) => {
+          // console.log(inputObj);
+     };
 
      return (
-          <JournalContext.Provider value={{ entries, addEntry }}>
+          <JournalContext.Provider
+               value={{ entries, addEntry, editEntry, deleteEntry }}
+          >
                {children}
           </JournalContext.Provider>
      );

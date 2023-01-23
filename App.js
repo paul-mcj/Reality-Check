@@ -5,6 +5,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 // expo
 import { StatusBar } from "expo-status-bar";
 
+// fixme: how to optimize react native apps? fells very slow...
+
 // components
 import Home from "./screens/Home";
 import Journal from "./screens/Journal";
@@ -24,6 +26,8 @@ export default function App() {
 
      // fixme: fetch all journal entries in local memory and fill the context when App.js loads (useEffect?)
      const content = { data: [] };
+
+     // fixme: go though all components, and reduce StyleSheet to be imported!
 
      // define app theme
      const theme = {
@@ -48,6 +52,7 @@ export default function App() {
           <JournalProvider value={content}>
                <NavigationContainer theme={theme}>
                     <StatusBar hidden={true} />
+                    {/* fixme: all purpose modal here? it would have its own css properties and a use context hook, and any time in the entire app a modal needs to be used, put it here, and usereducer logic to pass in a string type to differentiate ?? */}
                     <Tab.Navigator
                          initialRouteName="Home"
                          backBehavior="none"
