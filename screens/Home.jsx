@@ -13,7 +13,6 @@ import { useTheme } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
-import HomeInfoList from "../components/HomeInfoList";
 import Modal from "../components/Modal";
 
 // context
@@ -24,14 +23,7 @@ import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
 
 // react native
-import {
-     Text,
-     View,
-     ScrollView,
-     Button,
-     Switch,
-     ToastAndroid,
-} from "react-native";
+import { Text, View, ScrollView, Switch, ToastAndroid } from "react-native";
 
 // global variable to always get current time
 const now = new Date();
@@ -80,28 +72,16 @@ const Home = () => {
      // init component state
      const [reminders, setReminders] = useState(null);
      const [time, setTime] = useState(new Date());
-     const [modalVisible, setModalVisible] = useState(false);
      const [modalOutput, setModalOutput] = useState();
-     const [first, setFirst] = useState(false);
 
      // init context
-     const { modal, setModal } = useContext(ModalContext);
+     const { modal, setModal, reducerType, setReducerType } =
+          useContext(ModalContext);
 
      // function changes state for time picker
      const onTimeChange = (e, selectedTime) => {
           setTime(() => selectedTime);
      };
-
-     // fixme: this useEffect should be skipped on initial render of app??
-     useEffect(() => {
-          let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
-          // console.log(`now: ${now}`);
-          // console.log(`trigger is now: ${nextTrigger}`);
-          // note: additional logic ensures that there will be at least one min before setting off future notification
-          if (nextTrigger >= 60) {
-               triggerNotification(nextTrigger);
-          }
-     }, [time]);
 
      // opens time picker modal in Android module
      const showTimePicker = () =>
@@ -122,6 +102,19 @@ const Home = () => {
           minutes = minutes < 10 ? `0${minutes}` : minutes;
           return `${hours}:${minutes} ${ampm}`;
      };
+
+     // fixme: this useEffect should be skipped on initial render of app??
+     // useEffect(() => {
+     //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
+     // console.log(`now: ${now}`);
+     // console.log(`trigger is now: ${nextTrigger}`);
+     // note: additional logic ensures that there will be at least one min before setting off future notification
+     //      if (nextTrigger >= 60) {
+     //           triggerNotification(nextTrigger);
+     //      }
+     // }, [time]);
+
+     // fixme: useEffect here or in App.js to make sure all reminders are applied with notifications?
 
      // show toast message
      const showToast = (bool) => {
@@ -150,6 +143,11 @@ const Home = () => {
           </TextButton>
      );
 
+     const moreInfo = () => {
+          setReducerType(() => "MORE");
+          setModal(() => true);
+     };
+
      // function changes what modal displays depending on argument
      const setX = (type) => {
           if (type === "reminder") {
@@ -174,7 +172,7 @@ const Home = () => {
                setModalVisible(() => true);
           }
           if (type === "more") {
-               setModalOutput(<HomeInfoList />);
+               setModalOutput();
                setModalVisible(() => true);
           }
      };
@@ -196,24 +194,23 @@ const Home = () => {
 
      return (
           <>
-               {/* {modalVisible && showModal} */}
-               {modal && <Modal></Modal>}
+               {modal && <Modal />}
                {!modal && (
-                    <ScrollView contentContainerStyle={container}>
+                    <ScrollView>
                          <>
                               <View
                                    style={{
                                         right: 20,
                                         top: 20,
                                         position: "absolute",
-                                        zIndex: 1,
+                                        zIndex: 2,
                                         padding: 10,
                                    }}
                               >
                                    <TextButton
                                         borderWidth={0}
                                         backgroundColor={colors.background}
-                                        onPress={() => setX("more")}
+                                        onPress={moreInfo}
                                    >
                                         <DotsIcon
                                              name="dots-vertical"
@@ -222,12 +219,8 @@ const Home = () => {
                                         />
                                    </TextButton>
                               </View>
-
-                              <ScrollView>
+                              <ScrollView contentContainerStyle={container}>
                                    <Text style={title}>Home</Text>
-                                   <Text style={text}>
-                                        Inducing lucid dreams takes practice.
-                                   </Text>
                                    <Text style={text}>
                                         This app is designed to help you perform
                                         daily "reality checks" in order to bring
@@ -283,10 +276,6 @@ const Home = () => {
                                              test notification button
                                         </Text>
                                    </TextButton>
-                                   <Button
-                                        title="open test modal button"
-                                        onPress={() => setModal(() => true)}
-                                   />
                               </ScrollView>
                          </>
                     </ScrollView>

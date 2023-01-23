@@ -8,9 +8,12 @@ const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
      // init state
      const [modal, setModal] = useState(false);
+     const [reducerType, setReducerType] = useState("");
 
      return (
-          <ModalContext.Provider value={{ modal, setModal }}>
+          <ModalContext.Provider
+               value={{ modal, setModal, reducerType, setReducerType }}
+          >
                {children}
           </ModalContext.Provider>
      );

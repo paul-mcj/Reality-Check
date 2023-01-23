@@ -33,7 +33,8 @@ export default function App() {
      // app theme deconstruction
      const { colors } = theme;
 
-     // fixme: fetch all journal entries in local storage and fill the journal context when App.js loads (useEffect?)
+     // fixme: fetch all journal entries in local storage and fill the journal context when App.js loads (useEffect?) goes here or in Journal component?
+     // fixme: same with all reminders, does that go in useEffect here or in Home component??
 
      return (
           <ModalProvider>
