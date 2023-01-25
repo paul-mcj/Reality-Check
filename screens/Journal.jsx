@@ -20,6 +20,8 @@ import "react-native-get-random-values";
 
 // context
 import JournalContext from "../context/JournalContext";
+import ModalContext from "../context/ModalContext";
+import ToastContext from "../context/ToastContext";
 
 // components
 import JournalEntry from "../components/JournalEntry";
@@ -35,11 +37,14 @@ const Journal = () => {
      // init component state
      const [refreshing, setRefreshing] = useState(false);
      const [modalVisible, setModalVisible] = useState(false);
-     const [editing, setEditing] = useState(false);
      const [input, setInput] = useState("");
 
      // init context
-     const { entries, editEntry, deleteEntry } = useContext(JournalContext);
+     const { entries, deleteEntry } = useContext(JournalContext);
+     //fixme: when entry is deleted, update toast context
+     const { isToast, setIsToast } = useContext(ToastContext);
+     //fixme: use modal to display currently selected entry
+     const { modal, setModal, setReducerType } = useContext(ModalContext);
 
      // app theme deconstruction
      const { colors, container, text, title, border, smallTextWhite } =
@@ -49,16 +54,6 @@ const Journal = () => {
           // fixme: add alert/warning before doing the following logic:
           deleteEntry(content);
           setModalVisible(() => false);
-     };
-
-     const handleOnEdit = (content) => {
-          // editEntry(content);
-          // setModalVisible(() => false);
-     };
-
-     const handleCloseModal = () => {
-          setModalVisible(() => false);
-          setEditing(() => false);
      };
 
      const showEntry = (content) => {
@@ -71,7 +66,7 @@ const Journal = () => {
                          name="close"
                          size={24}
                          color={colors.white}
-                         onPress={() => handleCloseModal}
+                         onPress={() => setModalVisible(() => false)}
                          style={{ marginBottom: 40 }}
                     />
                     {/* fixme: editing state should be its own component?? */}
@@ -123,42 +118,39 @@ const Journal = () => {
 
      return (
           <>
-               {modalVisible && showModal}
                {/* <ScrollView contentContainerStyle={container}> */}
-               {!modalVisible && (
-                    <View style={container}>
-                         <Text style={title}>Journal</Text>
-                         {entries.length === 0 && (
-                              <>
-                                   <Text
-                                        style={{
-                                             ...text,
-                                             fontStyle: "italic",
-                                        }}
-                                   >
-                                        “I love sleep. My life has the tendency
-                                        to fall apart when I'm awake, you know?”
-                                   </Text>
-                                   <Text style={smallTextWhite}>
-                                        ― Ernest Hemingway
-                                   </Text>
-                              </>
+               <View style={container}>
+                    <Text style={title}>Journal</Text>
+                    {entries.length === 0 && (
+                         <>
+                              <Text
+                                   style={{
+                                        ...text,
+                                        fontStyle: "italic",
+                                   }}
+                              >
+                                   “I love sleep. My life has the tendency to
+                                   fall apart when I'm awake, you know?”
+                              </Text>
+                              <Text style={smallTextWhite}>
+                                   ― Ernest Hemingway
+                              </Text>
+                         </>
+                    )}
+                    {/* fixme: sort by timestamp by default! */}
+                    <FlatList
+                         style={{ marginBottom: 80 }}
+                         data={entries}
+                         keyExtractor={(item) => item.id}
+                         renderItem={({ item }) => (
+                              <JournalEntry
+                                   id={item.id}
+                                   input={item.input}
+                                   timestamp={item.timestamp}
+                              />
                          )}
-                         {/* fixme: sort by timestamp by default! */}
-                         <FlatList
-                              style={{ marginBottom: 80 }}
-                              data={entries}
-                              keyExtractor={(item) => item.id}
-                              renderItem={({ item }) => (
-                                   <JournalEntry
-                                        input={item.input}
-                                        timestamp={item.timestamp}
-                                        openModal={() => showEntry(item)}
-                                   />
-                              )}
-                         />
-                    </View>
-               )}
+                    />
+               </View>
                {/* </ScrollView> */}
           </>
      );

@@ -1,5 +1,5 @@
 // react and misc
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // define context
@@ -8,6 +8,7 @@ const JournalContext = createContext();
 export const JournalProvider = ({ children }) => {
      // init state
      const [entries, setEntries] = useState([]);
+     const [entryIds, setEntryIds] = useState([]);
 
      // function to add new entries to context
      const addEntry = (inputObj) => {
@@ -21,14 +22,16 @@ export const JournalProvider = ({ children }) => {
           );
      };
 
-     // fixme: fn to edit an entry
-     const editEntry = (inputObj) => {
-          // console.log(inputObj);
-     };
+     // any time entries is changed, an array of all entry id props (used in Modal component for dynamic output) is updated
+     useEffect(() => {
+          const ids = [];
+          entries.forEach((item) => ids.push(item.id));
+          setEntryIds(() => ids);
+     }, [entries]);
 
      return (
           <JournalContext.Provider
-               value={{ entries, addEntry, editEntry, deleteEntry }}
+               value={{ entries, entryIds, addEntry, deleteEntry }}
           >
                {children}
           </JournalContext.Provider>

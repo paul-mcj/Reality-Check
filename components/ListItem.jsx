@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import TextButton from "./TextButton";
 
 // react native
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
@@ -19,15 +19,16 @@ const ListItem = ({ title, message }) => {
      const [showContent, setShowContent] = useState(false);
 
      return (
-          <>
+          <View style={{ marginBottom: 10 }}>
                <TextButton
                     backgroundColor={colors.white}
                     onPress={() => setShowContent(() => !showContent)}
+                    minWidth="100%"
                >
                     <Text style={smallTextNotification}>{title}</Text>
                </TextButton>
                {showContent && <Text style={text}>{message}</Text>}
-          </>
+          </View>
      );
 };
 

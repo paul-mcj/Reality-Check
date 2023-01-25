@@ -1,5 +1,5 @@
 // react and misc.
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 
 // expo notifications
 import * as Notifications from "expo-notifications";
@@ -13,20 +13,19 @@ import { useTheme } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
-import Modal from "../components/Modal";
+import Reminder from "../components/Reminder";
+import Toast from "../components/Toast";
 
 // context
+import ReminderContext from "../context/ReminderContext";
 import ModalContext from "../context/ModalContext";
+import ToastContext from "../context/ToastContext";
 
 // icons
 import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import CloseIcon from "react-native-vector-icons/MaterialIcons";
 
 // react native
-import { Text, View, ScrollView, Switch, ToastAndroid } from "react-native";
-
-// global variable to always get current time
-const now = new Date();
+import { Text, View, ScrollView, FlatList } from "react-native";
 
 // fixme: put all timepicker and Notification stuff in custom hook??
 // run notifications in background
@@ -69,218 +68,125 @@ const Home = () => {
           text,
      } = useTheme();
 
-     // init component state
-     const [reminders, setReminders] = useState(null);
-     const [time, setTime] = useState(new Date());
-     const [modalOutput, setModalOutput] = useState();
-
      // init context
-     const { modal, setModal, reducerType, setReducerType } =
-          useContext(ModalContext);
+     const { modal, setModal, setReducerType } = useContext(ModalContext);
+     const { reminders, addReminder } = useContext(ReminderContext);
+     const { isToast } = useContext(ToastContext);
 
-     // function changes state for time picker
-     const onTimeChange = (e, selectedTime) => {
-          setTime(() => selectedTime);
-     };
-
-     // opens time picker modal in Android module
-     const showTimePicker = () =>
-          DateTimePickerAndroid.open({
-               value: time,
-               onChange: onTimeChange,
-               mode: "time",
-               is24Hour: false,
-          });
-
-     // function used to format time into a proper string according to 12-hour clock system
-     const formatTime = (time) => {
-          let hours = time.getHours();
-          let minutes = time.getMinutes();
-          let ampm = hours >= 12 ? "pm" : "am";
-          hours %= 12;
-          hours = hours ? hours : 12; // hours "0" should be "12"
-          minutes = minutes < 10 ? `0${minutes}` : minutes;
-          return `${hours}:${minutes} ${ampm}`;
-     };
-
-     // fixme: this useEffect should be skipped on initial render of app??
-     // useEffect(() => {
-     //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
-     // console.log(`now: ${now}`);
-     // console.log(`trigger is now: ${nextTrigger}`);
-     // note: additional logic ensures that there will be at least one min before setting off future notification
-     //      if (nextTrigger >= 60) {
-     //           triggerNotification(nextTrigger);
-     //      }
-     // }, [time]);
-
-     // fixme: useEffect here or in App.js to make sure all reminders are applied with notifications?
-
-     // show toast message
-     const showToast = (bool) => {
-          bool
-               ? ToastAndroid.show(
-                      "All reminders are now on",
-                      ToastAndroid.LONG
-                 )
-               : ToastAndroid.show(
-                      "All reminders are set to off",
-                      ToastAndroid.LONG
-                 );
-     };
-
-     // for JSX slimming
-     const showReminders = (
-          // fixme: can app push notifications on a per/hour basis (using android alarm permissions), or does user need to generate individually??
-          // fixme: see "exact alarm permissions" in dev.android api docs
-          <TextButton
-               backgroundColor={colors.notification}
-               onPress={() => setX("reminder")}
-          >
-               <Text style={smallTextWhite}>
-                    Reality Check set for {formatTime(time)}
-               </Text>
-          </TextButton>
-     );
-
+     // open modal and display additional static app information
      const moreInfo = () => {
           setReducerType(() => "MORE");
           setModal(() => true);
      };
 
-     // function changes what modal displays depending on argument
-     const setX = (type) => {
-          if (type === "reminder") {
-               setModalOutput(
-                    <>
-                         <Text style={text}>
-                              This reminder is set for {formatTime(time)}
-                         </Text>
-                         <TextButton
-                              backgroundColor={colors.notification}
-                              onPress={() => Alert.alert("Title")}
-                         >
-                              {/* fixme: add an alert that user is about to delete the reminder */}
-                              <Text style={smallTextWhite}>Delete</Text>
-                         </TextButton>
-                         <TextButton backgroundColor={colors.notification}>
-                              {/* fixme: open android time dialog */}
-                              <Text style={smallTextWhite}>Edit</Text>
-                         </TextButton>
-                    </>
-               );
-               setModalVisible(() => true);
-          }
-          if (type === "more") {
-               setModalOutput();
-               setModalVisible(() => true);
+     // opens time picker modal in Android module
+     const showTimePicker = () =>
+          DateTimePickerAndroid.open({
+               value: new Date(),
+               // when the selected time is confirmed by user, make a new reminder obj
+               onChange: createNewReminder,
+               mode: "time",
+               is24Hour: false,
+          });
+
+     // function changes local time state, creates a new reminder with the time, and adds it to reminder context
+     const createNewReminder = (e, selectedTime) => {
+          // fixme: go though reminder context: if selectedTime is already in the state then cancel below logic, and set an alert or toast that the reminder for that time is already set!!
+          // if (e.type === "set" && NOT_ALREADY_IN_REMINDER_CONTEXT)
+          if (e.type === "set") {
+               // add time, unique id and an active state (true by default) to new reminder object
+               const newReminder = {
+                    time: selectedTime,
+                    id: selectedTime.getTime(),
+                    active: true,
+               };
+               // add new object to context
+               addReminder(newReminder);
           }
      };
 
      // for JSX slimming
-     const showModal = (
-          <View style={container}>
-               {/* fixme: BackHandler to go to Home page should be allowed */}
-               <CloseIcon
-                    name="close"
-                    size={24}
-                    color={colors.white}
-                    onPress={() => setModalVisible(() => false)}
-                    style={{ marginBottom: 40 }}
-               />
-               {modalOutput}
-          </View>
+     const showReminders = (
+          <FlatList
+               style={{ marginBottom: 80 }}
+               data={reminders}
+               keyExtractor={(item) => item.id}
+               renderItem={({ item }) => (
+                    <Reminder
+                         id={item.id}
+                         time={item.time}
+                         active={item.active}
+                    />
+               )}
+          />
      );
 
      return (
-          <>
-               {modal && <Modal />}
-               {!modal && (
-                    <ScrollView>
-                         <>
-                              <View
+          <ScrollView>
+               <>
+                    <View
+                         style={{
+                              right: 20,
+                              top: 20,
+                              position: "absolute",
+                              zIndex: 2,
+                              padding: 10,
+                         }}
+                    >
+                         <TextButton
+                              minWidth={0}
+                              borderWidth={0}
+                              backgroundColor={colors.background}
+                              onPress={moreInfo}
+                         >
+                              <DotsIcon
+                                   name="dots-vertical"
+                                   size={24}
+                                   color={colors.white}
+                              />
+                         </TextButton>
+                    </View>
+                    <View
+                         style={{
+                              ...container,
+                         }}
+                    >
+                         <Text style={title}>Home</Text>
+                         <Text style={{ ...text, marginBottom: 80 }}>
+                              This app is designed to help you perform daily
+                              "reality checks" in order to bring about lucidity
+                              during sleep.
+                         </Text>
+                         {reminders.length === 0 ? (
+                              <Text
                                    style={{
-                                        right: 20,
-                                        top: 20,
-                                        position: "absolute",
-                                        zIndex: 2,
-                                        padding: 10,
+                                        ...smallTextWhite,
+                                        marginBottom: 40,
                                    }}
                               >
-                                   <TextButton
-                                        borderWidth={0}
-                                        backgroundColor={colors.background}
-                                        onPress={moreInfo}
-                                   >
-                                        <DotsIcon
-                                             name="dots-vertical"
-                                             size={24}
-                                             color={colors.white}
-                                        />
-                                   </TextButton>
-                              </View>
-                              <ScrollView contentContainerStyle={container}>
-                                   <Text style={title}>Home</Text>
-                                   <Text style={text}>
-                                        This app is designed to help you perform
-                                        daily "reality checks" in order to bring
-                                        about lucidity during sleep.
-                                   </Text>
-                                   <View
-                                        style={{
-                                             flex: 2,
-                                             flexDirection: "row",
-                                             alignItems: "center",
-                                        }}
-                                   >
-                                        <Text style={smallTextWhite}>
-                                             {reminders
-                                                  ? "Shut Off"
-                                                  : "Turn On"}{" "}
-                                             Reminders
-                                        </Text>
-                                        <Switch
-                                             value={reminders}
-                                             onValueChange={() =>
-                                                  setReminders(() => !reminders)
-                                             }
-                                             trackColor={{
-                                                  false: colors.dim,
-                                                  true: colors.secondary,
-                                             }}
-                                             thumbColor={
-                                                  reminders
-                                                       ? colors.notification
-                                                       : colors.text
-                                             }
-                                        />
-                                   </View>
-                                   {/* fixme: below logic needs to be fine tuned useCallback in a useEffect to remember if reminders are set */}
-                                   {/* // fixme: all reminders should be an array that is looped thorugh. instead of having one Switch to turn all reminders off/on, EACH reminder has a switch option for off/on logic*/}
-                                   {/* {!reminders && showToast(false)} */}
-                                   {reminders && showReminders}
-                                   {/* {reminders && showToast(true)} */}
-                                   <TextButton
-                                        onPress={showTimePicker}
-                                        backgroundColor={colors.white}
-                                   >
-                                        <Text style={smallTextNotification}>
-                                             Add Reminder
-                                        </Text>
-                                   </TextButton>
-                                   <TextButton
+                                   No reminders currently set
+                              </Text>
+                         ) : (
+                              showReminders
+                         )}
+                         <TextButton
+                              onPress={showTimePicker}
+                              backgroundColor={colors.notification}
+                              minWidth={150}
+                         >
+                              <Text style={smallTextWhite}>Add Reminder</Text>
+                         </TextButton>
+                         {/* <TextButton
                                         onPress={() => triggerNotification(3)}
                                         backgroundColor={colors.white}
                                    >
                                         <Text style={smallTextNotification}>
                                              test notification button
                                         </Text>
-                                   </TextButton>
-                              </ScrollView>
-                         </>
-                    </ScrollView>
-               )}
-          </>
+                                   </TextButton> */}
+                    </View>
+               </>
+          </ScrollView>
      );
 };
 

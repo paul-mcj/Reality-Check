@@ -7,7 +7,14 @@ import { Pressable } from "react-native";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
-const TextButton = ({ borderWidth, backgroundColor, onPress, children }) => {
+const TextButton = ({
+     minWidth,
+     borderWidth,
+     backgroundColor,
+     borderColor,
+     onPress,
+     children,
+}) => {
      // app theme deconstruction
      const { colors } = useTheme();
 
@@ -16,10 +23,10 @@ const TextButton = ({ borderWidth, backgroundColor, onPress, children }) => {
                style={{
                     borderRadius: 100,
                     borderWidth: borderWidth ?? 2,
-                    borderColor: colors.white,
+                    borderColor: borderColor ?? colors.white,
                     borderStyle: "solid",
                     backgroundColor: backgroundColor,
-                    minWidth: borderWidth ?? 100,
+                    minWidth: minWidth ?? 250,
                     alignItems: "center",
                     justifyContent: "center",
                }}
@@ -31,8 +38,10 @@ const TextButton = ({ borderWidth, backgroundColor, onPress, children }) => {
 };
 
 TextButton.propTypes = {
+     minWidth: PropTypes.any,
      borderWidth: PropTypes.number,
      backgroundColor: PropTypes.string.isRequired,
+     borderColor: PropTypes.string,
      onPress: PropTypes.func,
      children: PropTypes.node.isRequired,
 };

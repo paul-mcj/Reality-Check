@@ -1,8 +1,10 @@
 // react and misc
+import { useContext } from "react";
 import PropTypes from "prop-types";
 
 // context
 import JournalContext from "../context/JournalContext";
+import ModalContext from "../context/ModalContext";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
@@ -10,9 +12,18 @@ import { useTheme } from "@react-navigation/native";
 // react native
 import { Pressable, Text } from "react-native";
 
-const JournalEntry = ({ input, openModal }) => {
+const JournalEntry = ({ id, input }) => {
      // app theme deconstruction
      const { border, smallTextWhite } = useTheme();
+
+     // init context
+     const { setModal, setReducerType } = useContext(ModalContext);
+
+     // open modal and display options related to specific journal entry
+     const openEntry = () => {
+          setReducerType(() => id);
+          setModal(() => true);
+     };
 
      return (
           <Pressable
@@ -20,7 +31,7 @@ const JournalEntry = ({ input, openModal }) => {
                     ...border,
                     marginBottom: 10,
                }}
-               onPress={openModal}
+               onPress={openEntry}
           >
                <Text style={smallTextWhite}>{input}</Text>
           </Pressable>
@@ -28,8 +39,8 @@ const JournalEntry = ({ input, openModal }) => {
 };
 
 JournalEntry.propTypes = {
+     id: PropTypes.number.isRequired,
      input: PropTypes.string.isRequired,
-     openModal: PropTypes.func.isRequired,
 };
 
 export default JournalEntry;

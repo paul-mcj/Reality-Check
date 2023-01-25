@@ -12,6 +12,7 @@ import TextButton from "../components/TextButton";
 
 // context
 import JournalContext from "../context/JournalContext";
+import ToastContext from "../context/ToastContext";
 
 // hooks
 import usePrevious from "../hooks/use-previous";
@@ -24,6 +25,8 @@ const NewEntry = () => {
 
      // init context
      const { addEntry } = useContext(JournalContext);
+     // fixme: toast when new entry is made
+     const { isToast, setIsToast } = useContext(ToastContext);
 
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text, border } =
@@ -67,6 +70,7 @@ const NewEntry = () => {
                <View style={{ paddingRight: 50 }}>
                     <TextButton
                          backgroundColor={colors.notification}
+                         minWidth={100}
                          onPress={handleErase}
                     >
                          <Text style={smallTextWhite}>Erase</Text>
@@ -74,6 +78,7 @@ const NewEntry = () => {
                </View>
                <TextButton
                     backgroundColor={colors.notification}
+                    minWidth={100}
                     onPress={handleSave}
                >
                     <Text style={smallTextWhite}>Save</Text>
@@ -100,6 +105,7 @@ const NewEntry = () => {
                     <View style={{ flex: 1, marginTop: 40 }}>
                          <TextButton
                               backgroundColor={colors.notification}
+                              minWidth={100}
                               onPress={handleUndo}
                          >
                               <Text style={smallTextWhite}>Undo</Text>

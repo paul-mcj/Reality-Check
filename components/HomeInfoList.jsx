@@ -35,7 +35,6 @@ const CONTENT = [
 const HomeInfoList = () => {
      return (
           <FlatList
-               style={{ marginBottom: 80 }}
                data={CONTENT}
                keyExtractor={(item) => item.id}
                renderItem={({ item }) => (
