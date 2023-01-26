@@ -2,6 +2,10 @@
 // fixme: how to optimize react native apps? fells very slow...
 // fixme: google fonts??
 // fixme: add app-wide functionality for backHandler
+// fixme: check linter and all unused things in entire app for deletion
+{
+     /* fixme: toast and alerts all needs to be properly called when something is deleted (ie. journal entry, reminder obj), when a reminder is turned off/on, etc!*/
+}
 
 // react navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -20,6 +24,7 @@ import { ToastProvider } from "./context/ToastContext";
 import { JournalProvider } from "./context/JournalContext";
 import { ModalProvider } from "./context/ModalContext";
 import { ReminderProvider } from "./context/ReminderContext";
+import { AlertProvider } from "./context/AlertContext";
 
 export default function App() {
      // fixme: reminders, notifications, and journal entries loaded in App.js (look into local storage). use callback, too ?
@@ -34,17 +39,19 @@ export default function App() {
      // }, [time]);
 
      return (
-          <ModalProvider>
-               <ToastProvider>
-                    <ReminderProvider>
-                         <JournalProvider>
-                              <NavigationContainer theme={theme}>
-                                   <StatusBar hidden={true} />
-                                   <MainScreens />
-                              </NavigationContainer>
-                         </JournalProvider>
-                    </ReminderProvider>
-               </ToastProvider>
-          </ModalProvider>
+          <AlertProvider>
+               <ModalProvider>
+                    <ToastProvider>
+                         <ReminderProvider>
+                              <JournalProvider>
+                                   <NavigationContainer theme={theme}>
+                                        <StatusBar hidden={true} />
+                                        <MainScreens />
+                                   </NavigationContainer>
+                              </JournalProvider>
+                         </ReminderProvider>
+                    </ToastProvider>
+               </ModalProvider>
+          </AlertProvider>
      );
 }

@@ -11,7 +11,9 @@ export const ToastProvider = ({ children }) => {
      const [message, setMessage] = useState("");
 
      return (
-          <ToastContext.Provider value={{ isToast, setIsToast, setMessage }}>
+          <ToastContext.Provider
+               value={{ isToast, setIsToast, setMessage, message }}
+          >
                {children}
           </ToastContext.Provider>
      );

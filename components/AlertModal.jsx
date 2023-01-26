@@ -2,36 +2,33 @@
 import { Alert } from "react-native";
 
 // react and misc
-import PropTypes from "prop-types";
+import { useContext } from "react";
 
-const AlertModal = ({
-     title,
-     message,
-     firstButtonTitle,
-     firstOnPress,
-     secondButtonTitle,
-     secondOnPress,
-}) => {
+// context
+import AlertContext from "../context/AlertContext";
+
+const AlertModal = () => {
+     // init context
+     const { title, message, handleOnConfirm, handleOnCancel, setAlert } =
+          useContext(AlertContext);
+
      return Alert.alert(
           title,
           message,
           [
-               { text: firstButtonTitle, onPress: firstOnPress },
-               { text: secondButtonTitle, onPress: secondOnPress },
+               {
+                    text: "Cancel",
+                    // onPress: () => handleOnCancel,
+               },
+               {
+                    text: "confirm",
+                    // onPress: () => handleOnConfirm,
+               },
           ],
           {
                cancelable: false,
           }
      );
-};
-
-AlertModal.propTypes = {
-     title: PropTypes.string.isRequired,
-     message: PropTypes.string.isRequired,
-     firstButtonTitle: PropTypes.string,
-     firstOnPress: PropTypes.func,
-     secondButtonTitle: PropTypes.string,
-     secondOnPress: PropTypes.func,
 };
 
 export default AlertModal;

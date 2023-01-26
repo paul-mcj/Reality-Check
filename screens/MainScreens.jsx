@@ -10,12 +10,16 @@ import NewEntry from "./NewEntry";
 
 // context
 import ModalContext from "../context/ModalContext";
+import ToastContext from "../context/ToastContext";
+import AlertContext from "../context/AlertContext";
 
 // react and misc.
 import { useContext } from "react";
 
 // components
 import Modal from "../components/Modal";
+import Toast from "../components/Toast";
+import AlertModal from "../components/AlertModal";
 
 // style
 import theme from "../style";
@@ -28,16 +32,19 @@ const MainScreens = () => {
      const Tab = createMaterialTopTabNavigator();
 
      // context
-     const { modal, setModal, setReducerType } = useContext(ModalContext);
+     const { modal } = useContext(ModalContext);
+     const { isToast } = useContext(ToastContext);
+     const { alert } = useContext(AlertContext);
 
      // app theme deconstruction
      const { colors } = theme;
 
      return (
           <>
-               {/* fixme: all toasts go here! toast when something is deleted (ie. journal entry, reminder obj), and also toast when a reminder is turned off/on!*/}
-               {/* {isToast && <Toast />} */}
+               {isToast && <Toast />}
                {modal && <Modal />}
+               {alert && <AlertModal />}
+               {/* fixme: does the navigato always wanna be shown even if modal is open?? */}
                {!modal && (
                     <Tab.Navigator
                          initialRouteName="Home"

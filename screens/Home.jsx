@@ -14,18 +14,21 @@ import { useTheme } from "@react-navigation/native";
 // components
 import TextButton from "../components/TextButton";
 import Reminder from "../components/Reminder";
-import Toast from "../components/Toast";
 
 // context
 import ReminderContext from "../context/ReminderContext";
 import ModalContext from "../context/ModalContext";
 import ToastContext from "../context/ToastContext";
+import AlertContext from "../context/AlertContext";
 
 // icons
 import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
+// utils
+import { formatTime } from "../utils/helperFunctions";
+
 // react native
-import { Text, View, FlatList } from "react-native";
+import { Text, View, FlatList, Alert, SectionList } from "react-native";
 
 // fixme: put all timepicker and Notification stuff in custom hook??
 // run notifications in background
@@ -71,7 +74,18 @@ const Home = () => {
      // init context
      const { modal, setModal, setReducerType } = useContext(ModalContext);
      const { reminders, addReminder } = useContext(ReminderContext);
-     const { isToast } = useContext(ToastContext);
+     const {
+          isToast,
+          setIsToast,
+          setMessage: setToastMessage,
+     } = useContext(ToastContext);
+     const {
+          setAlert,
+          setTitle,
+          setMessage: setAlertMessage,
+          setHandleOnCancel,
+          setHandleOnConfirm,
+     } = useContext(AlertContext);
 
      // open modal and display additional static app information
      const moreInfo = () => {
@@ -91,9 +105,24 @@ const Home = () => {
 
      // function changes local time state, creates a new reminder with the time, and adds it to reminder context
      const createNewReminder = (e, selectedTime) => {
-          // fixme: go though reminder context: if selectedTime is already in the state then cancel below logic, and set an alert or toast that the reminder for that time is already set!!
-          // if (e.type === "set" && NOT_ALREADY_IN_REMINDER_CONTEXT)
-          if (e.type === "set") {
+          // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Toast users they cannot make the reminder time
+          let timeAlreadyInContext = false;
+          reminders.forEach((item) => {
+               if (formatTime(selectedTime) === formatTime(item.time)) {
+                    timeAlreadyInContext = true;
+                    setTitle(() => "Error");
+                    setAlertMessage(
+                         () =>
+                              `There is already a reminder set for ${formatTime(
+                                   selectedTime
+                              )}!`
+                    );
+                    setAlert(() => true);
+                    setAlert(() => false);
+               }
+          });
+          // if this reminder time is unique in the context:
+          if (e.type === "set" && !timeAlreadyInContext) {
                // add time, unique id and an active state (true by default) to new reminder object
                const newReminder = {
                     time: selectedTime,
@@ -102,15 +131,24 @@ const Home = () => {
                };
                // add new object to context
                addReminder(newReminder);
+               // Toast that new reminder has been created
+               setToastMessage(() => "New reminder created!");
+               setIsToast(() => true);
+               setIsToast(() => false);
           }
+          // console.log(reminders);
      };
 
      // for JSX slimming
      const showReminders = (
-          <FlatList
-               style={{ marginBottom: 80 }}
-               data={reminders}
+          <SectionList
+               contentContainerStyle={{ marginBottom: 80 }}
+               sections={reminders}
                keyExtractor={(item) => item.id}
+               extraData
+               /*
+               This is a PureComponent which means that it will not re-render if props remain shallow-equal. Make sure that everything your renderItem function depends on is passed as a prop (e.g. extraData) that is not === after updates, otherwise your UI may not update on changes. This includes the data prop and parent component state.
+               */
                renderItem={({ item }) => (
                     <Reminder
                          id={item.id}
