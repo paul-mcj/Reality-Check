@@ -10,11 +10,11 @@ import ModalContext from "../context/ModalContext";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
-const JournalEntry = ({ id, input }) => {
+const JournalEntry = ({ id, input, timestamp }) => {
      // app theme deconstruction
-     const { border, smallTextWhite } = useTheme();
+     const { border, smallTextWhite, container, colors } = useTheme();
 
      // init context
      const { setModal, setReducerType } = useContext(ModalContext);
@@ -26,21 +26,36 @@ const JournalEntry = ({ id, input }) => {
      };
 
      return (
-          <Pressable
-               style={{
-                    ...border,
-                    marginBottom: 10,
-               }}
-               onPress={openEntry}
-          >
-               <Text style={smallTextWhite}>{input}</Text>
-          </Pressable>
+          <>
+               <Text
+                    style={{
+                         ...smallTextWhite,
+                         paddingBottom: 0,
+                    }}
+               >
+                    {timestamp.toDateString()}
+               </Text>
+               <Pressable
+                    onPress={openEntry}
+                    style={{
+                         ...border,
+                         borderColor: colors.text,
+                         marginBottom: 10,
+                         minWidth: "100%",
+                    }}
+               >
+                    <View style={{ minHeight: 100 }}>
+                         <Text style={smallTextWhite}>{input}</Text>
+                    </View>
+               </Pressable>
+          </>
      );
 };
 
 JournalEntry.propTypes = {
      id: PropTypes.number.isRequired,
      input: PropTypes.string.isRequired,
+     timestamp: PropTypes.object.isRequired,
 };
 
 export default JournalEntry;

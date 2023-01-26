@@ -52,8 +52,8 @@ const Reminder = ({ id, time, active }) => {
                }}
           >
                <TextButton
-                    backgroundColor={active ? colors.white : colors.dim}
-                    borderColor={active ? colors.white : colors.dim}
+                    backgroundColor={active ? colors.white : colors.text}
+                    borderColor={active ? colors.white : colors.text}
                     onPress={openReminder}
                     minWidth={"80%"}
                >

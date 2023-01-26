@@ -25,7 +25,7 @@ import ToastContext from "../context/ToastContext";
 import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // react native
-import { Text, View, ScrollView, FlatList } from "react-native";
+import { Text, View, FlatList } from "react-native";
 
 // fixme: put all timepicker and Notification stuff in custom hook??
 // run notifications in background
@@ -122,61 +122,44 @@ const Home = () => {
      );
 
      return (
-          <ScrollView>
-               <>
-                    <View
-                         style={{
-                              right: 20,
-                              top: 20,
-                              position: "absolute",
-                              zIndex: 2,
-                              padding: 10,
-                         }}
+          <>
+               <View
+                    style={{
+                         right: 20,
+                         top: 20,
+                         position: "absolute",
+                         zIndex: 2,
+                         padding: 10,
+                    }}
+               >
+                    <TextButton
+                         minWidth={0}
+                         borderWidth={0}
+                         backgroundColor={colors.background}
+                         onPress={moreInfo}
                     >
-                         <TextButton
-                              minWidth={0}
-                              borderWidth={0}
-                              backgroundColor={colors.background}
-                              onPress={moreInfo}
-                         >
-                              <DotsIcon
-                                   name="dots-vertical"
-                                   size={24}
-                                   color={colors.white}
-                              />
-                         </TextButton>
-                    </View>
-                    <View
-                         style={{
-                              ...container,
-                         }}
+                         <DotsIcon
+                              name="dots-vertical"
+                              size={24}
+                              color={colors.white}
+                         />
+                    </TextButton>
+               </View>
+               <View style={container}>
+                    <Text style={title}>Home</Text>
+                    <Text style={{ ...text, marginBottom: 80 }}>
+                         This app is designed to help you perform daily "reality
+                         checks" in order to bring about lucidity during sleep.
+                    </Text>
+                    <TextButton
+                         onPress={showTimePicker}
+                         backgroundColor={colors.notification}
+                         minWidth={150}
                     >
-                         <Text style={title}>Home</Text>
-                         <Text style={{ ...text, marginBottom: 80 }}>
-                              This app is designed to help you perform daily
-                              "reality checks" in order to bring about lucidity
-                              during sleep.
-                         </Text>
-                         {reminders.length === 0 ? (
-                              <Text
-                                   style={{
-                                        ...smallTextWhite,
-                                        marginBottom: 40,
-                                   }}
-                              >
-                                   No reminders currently set
-                              </Text>
-                         ) : (
-                              showReminders
-                         )}
-                         <TextButton
-                              onPress={showTimePicker}
-                              backgroundColor={colors.notification}
-                              minWidth={150}
-                         >
-                              <Text style={smallTextWhite}>Add Reminder</Text>
-                         </TextButton>
-                         {/* <TextButton
+                         {/* fixme: have another button that can turn on/off ALL reminders in one swoop??*/}
+                         <Text style={smallTextWhite}>Add Reminder</Text>
+                    </TextButton>
+                    {/* <TextButton
                                         onPress={() => triggerNotification(3)}
                                         backgroundColor={colors.white}
                                    >
@@ -184,9 +167,20 @@ const Home = () => {
                                              test notification button
                                         </Text>
                                    </TextButton> */}
-                    </View>
-               </>
-          </ScrollView>
+                    {reminders.length === 0 ? (
+                         <Text
+                              style={{
+                                   ...smallTextWhite,
+                                   marginBottom: 40,
+                              }}
+                         >
+                              No reminders currently set
+                         </Text>
+                    ) : (
+                         showReminders
+                    )}
+               </View>
+          </>
      );
 };
 

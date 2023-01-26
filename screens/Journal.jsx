@@ -2,7 +2,6 @@
 import {
      Text,
      FlatList,
-     ScrollView,
      View,
      TextInput,
      RefreshControl,
@@ -117,42 +116,35 @@ const Journal = () => {
      }, [entries]);
 
      return (
-          <>
-               {/* <ScrollView contentContainerStyle={container}> */}
-               <View style={container}>
-                    <Text style={title}>Journal</Text>
-                    {entries.length === 0 && (
-                         <>
-                              <Text
-                                   style={{
-                                        ...text,
-                                        fontStyle: "italic",
-                                   }}
-                              >
-                                   “I love sleep. My life has the tendency to
-                                   fall apart when I'm awake, you know?”
-                              </Text>
-                              <Text style={smallTextWhite}>
-                                   ― Ernest Hemingway
-                              </Text>
-                         </>
+          <View style={container}>
+               <Text style={title}>Journal</Text>
+               {entries.length === 0 && (
+                    <>
+                         <Text
+                              style={{
+                                   ...text,
+                                   fontStyle: "italic",
+                              }}
+                         >
+                              “I love sleep. My life has the tendency to fall
+                              apart when I'm awake, you know?”
+                         </Text>
+                         <Text style={smallTextWhite}>― Ernest Hemingway</Text>
+                    </>
+               )}
+               {/* fixme: sort by timestamp by default! */}
+               <FlatList
+                    data={entries}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                         <JournalEntry
+                              id={item.id}
+                              input={item.input}
+                              timestamp={item.timestamp}
+                         />
                     )}
-                    {/* fixme: sort by timestamp by default! */}
-                    <FlatList
-                         style={{ marginBottom: 80 }}
-                         data={entries}
-                         keyExtractor={(item) => item.id}
-                         renderItem={({ item }) => (
-                              <JournalEntry
-                                   id={item.id}
-                                   input={item.input}
-                                   timestamp={item.timestamp}
-                              />
-                         )}
-                    />
-               </View>
-               {/* </ScrollView> */}
-          </>
+               />
+          </View>
      );
 };
 

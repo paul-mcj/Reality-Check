@@ -21,7 +21,8 @@ const ListItem = ({ title, message }) => {
      return (
           <View style={{ marginBottom: 10 }}>
                <TextButton
-                    backgroundColor={colors.white}
+                    backgroundColor={showContent ? colors.white : colors.text}
+                    borderColor={showContent ? colors.white : colors.text}
                     onPress={() => setShowContent(() => !showContent)}
                     minWidth="100%"
                >

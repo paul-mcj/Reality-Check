@@ -16,7 +16,7 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { ScrollView, View, Text } from "react-native";
+import { View, Text } from "react-native";
 
 const Modal = () => {
      const [found, setFound] = useState(null);
@@ -60,8 +60,8 @@ const Modal = () => {
                          style={{ marginBottom: 20, marginTop: 20 }}
                     />
                </View>
-               <ScrollView
-                    contentContainerStyle={{
+               <View
+                    style={{
                          backgroundColor: colors.background,
                          minHeight: "100%",
                     }}
@@ -69,6 +69,7 @@ const Modal = () => {
                     <View
                          style={{
                               ...container,
+                              marginBottom: 60,
                          }}
                     >
                          {/* fixme: depending on reducer type, show different modal content */}
@@ -78,7 +79,7 @@ const Modal = () => {
                               console.log(found) && <Text>{found.id}</Text>} */}
                          {reducerType !== "MORE" && <Text>{found?.input}</Text>}
                     </View>
-               </ScrollView>
+               </View>
           </>
      );
 };
