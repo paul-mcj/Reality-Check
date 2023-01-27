@@ -1,5 +1,5 @@
 // react and misc.
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState, useRef } from "react";
 
 // expo notifications
 import * as Notifications from "expo-notifications";
@@ -9,7 +9,7 @@ import * as TaskManager from "expo-task-manager";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 // react navigation
-import { useTheme } from "@react-navigation/native";
+import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
@@ -28,7 +28,7 @@ import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatTime } from "../utils/helperFunctions";
 
 // react native
-import { Text, View, FlatList, Alert, SectionList } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 
 // fixme: put all timepicker and Notification stuff in custom hook??
 // run notifications in background
@@ -36,7 +36,10 @@ const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 TaskManager.defineTask(
      BACKGROUND_NOTIFICATION_TASK,
      ({ data, error, executionInfo }) => {
-          triggerNotification(3);
+          console.log(data);
+          console.log(error);
+          console.log(executionInfo);
+          triggerNotification(trigger);
      }
 );
 Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
@@ -48,8 +51,14 @@ const triggerNotification = async (trigger) => {
                title: "Reality Check",
                body: "Perform scheduled reality check!",
           },
-          trigger: { seconds: trigger },
+          trigger: {
+               hour: trigger.getHours(),
+               minute: trigger.getMinutes(),
+               repeats: true,
+          },
      });
+     //fixme: should this be called here also?:
+     // Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 };
 
 // run notification in foreground
@@ -61,6 +70,9 @@ Notifications.setNotificationHandler({
 });
 
 const Home = () => {
+     // local state
+     const [not, setNot] = useState();
+
      // app theme deconstruction
      const {
           colors,
@@ -76,7 +88,7 @@ const Home = () => {
      const { reminders, addReminder } = useContext(ReminderContext);
      const {
           isToast,
-          setIsToast,
+          invokeToast,
           setMessage: setToastMessage,
      } = useContext(ToastContext);
      const {
@@ -86,6 +98,10 @@ const Home = () => {
           setHandleOnCancel,
           setHandleOnConfirm,
      } = useContext(AlertContext);
+
+     // hooks
+     const ref = useRef(null);
+     useScrollToTop(ref);
 
      // open modal and display additional static app information
      const moreInfo = () => {
@@ -129,38 +145,25 @@ const Home = () => {
                     id: selectedTime.getTime(),
                     active: true,
                };
-               // add new object to context
+               // add new object to reminder context
                addReminder(newReminder);
                // Toast that new reminder has been created
                setToastMessage(() => "New reminder created!");
-               setIsToast(() => true);
-               setIsToast(() => false);
+               invokeToast();
+               // fixme: app will now make a notification at the scheduled time everyday
+               triggerNotification(selectedTime);
+               // note: this will erase all notifications in the use effect state, as long as there is no triggering of notifications like above!
+               // Notifications.cancelAllScheduledNotificationsAsync();
+               setNot(() => Notifications.getAllScheduledNotificationsAsync());
           }
-          // console.log(reminders);
      };
 
-     // for JSX slimming
-     const showReminders = (
-          <SectionList
-               contentContainerStyle={{ marginBottom: 80 }}
-               sections={reminders}
-               keyExtractor={(item) => item.id}
-               extraData
-               /*
-               This is a PureComponent which means that it will not re-render if props remain shallow-equal. Make sure that everything your renderItem function depends on is passed as a prop (e.g. extraData) that is not === after updates, otherwise your UI may not update on changes. This includes the data prop and parent component state.
-               */
-               renderItem={({ item }) => (
-                    <Reminder
-                         id={item.id}
-                         time={item.time}
-                         active={item.active}
-                    />
-               )}
-          />
-     );
+     useEffect(() => {
+          console.log(not);
+     });
 
      return (
-          <>
+          <ScrollView ref={ref}>
                <View
                     style={{
                          right: 20,
@@ -185,7 +188,7 @@ const Home = () => {
                </View>
                <View style={container}>
                     <Text style={title}>Home</Text>
-                    <Text style={{ ...text, marginBottom: 80 }}>
+                    <Text style={{ ...text, marginBottom: 40 }}>
                          This app is designed to help you perform daily "reality
                          checks" in order to bring about lucidity during sleep.
                     </Text>
@@ -197,15 +200,9 @@ const Home = () => {
                          {/* fixme: have another button that can turn on/off ALL reminders in one swoop??*/}
                          <Text style={smallTextWhite}>Add Reminder</Text>
                     </TextButton>
-                    {/* <TextButton
-                                        onPress={() => triggerNotification(3)}
-                                        backgroundColor={colors.white}
-                                   >
-                                        <Text style={smallTextNotification}>
-                                             test notification button
-                                        </Text>
-                                   </TextButton> */}
-                    {reminders.length === 0 ? (
+               </View>
+               <View style={container}>
+                    {reminders.length === 0 && (
                          <Text
                               style={{
                                    ...smallTextWhite,
@@ -214,11 +211,18 @@ const Home = () => {
                          >
                               No reminders currently set
                          </Text>
-                    ) : (
-                         showReminders
                     )}
+                    {reminders.length !== 0 &&
+                         reminders.map((item) => (
+                              <Reminder
+                                   id={item.id}
+                                   key={item.id}
+                                   time={item.time}
+                                   active={item.active}
+                              />
+                         ))}
                </View>
-          </>
+          </ScrollView>
      );
 };
 

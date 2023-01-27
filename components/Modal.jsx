@@ -1,5 +1,5 @@
 // react and misc
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
@@ -16,9 +16,12 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 const Modal = () => {
+     // local reducer logic
+     // fixme: use reducer
+     // const [state, dispatch] = useReducer(reducer, init)
      const [found, setFound] = useState(null);
 
      // init context
@@ -27,20 +30,54 @@ const Modal = () => {
      const { entries, entryIds } = useContext(JournalContext);
 
      // app theme deconstruction
-     const { colors, container } = useTheme();
+     const { colors, container, smallTextWhite, border } = useTheme();
 
      useEffect(() => {
           reminders.forEach((item) => {
                if (item.id === reducerType) {
                     setFound(() => item);
+                    // setSource(() => reminders);
                }
           });
           entries.forEach((item) => {
                if (item.id === reducerType) {
                     setFound(() => item);
+                    // setSource(() => entries);
                }
           });
      }, [reminders, entries]);
+
+     // fixme: (temporary) for JSX slimming
+     const showEntry = (
+          <ScrollView>
+               <Text
+                    style={{
+                         ...smallTextWhite,
+                         paddingBottom: 0,
+                    }}
+               >
+                    {found?.timestamp.toDateString()}
+               </Text>
+               <View
+                    style={{
+                         ...border,
+                         borderColor: colors.text,
+                         marginBottom: 10,
+                         minWidth: "100%",
+                    }}
+               >
+                    <View style={{ minHeight: 100 }}>
+                         <Text style={smallTextWhite}>{found?.input}</Text>
+                    </View>
+               </View>
+               {/* const handleOnDelete = (content) => { */}
+               {/* // fixme: add alert/warning before doing the following logic: // */}
+               {/* deleteEntry(content); */}
+               {/* setModalVisible(() => false); */}
+               {/* }; */}
+               <Text>delete button with alert here</Text>
+          </ScrollView>
+     );
 
      return (
           <>
@@ -57,7 +94,7 @@ const Modal = () => {
                          size={24}
                          color={colors.white}
                          onPress={() => setModal(() => false)}
-                         style={{ marginBottom: 20, marginTop: 20 }}
+                         style={{ marginTop: 20 }}
                     />
                </View>
                <View
@@ -69,15 +106,20 @@ const Modal = () => {
                     <View
                          style={{
                               ...container,
-                              marginBottom: 60,
+                              marginTop: 20,
+                              marginBottom: 80,
                          }}
                     >
-                         {/* fixme: depending on reducer type, show different modal content */}
+                         {/* fixme: depending on usereducer type, show different modal content */}
                          {reducerType === "MORE" && <HomeInfoList />}
-                         {/* {reducerType !== "MORE" &&
-                              found?.active &&
-                              console.log(found) && <Text>{found.id}</Text>} */}
-                         {reducerType !== "MORE" && <Text>{found?.input}</Text>}
+                         {/* {reducerType !== "MORE" && source === entries
+                              ? source
+                                     .filter((item) => item.id === found.id)
+                                     .map((element) => (
+                                          <Text>{element.active}</Text>
+                                     ))
+                              : console.log("nope")} */}
+                         {reducerType !== "MORE" && showEntry}
                     </View>
                </View>
           </>

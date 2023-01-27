@@ -2,10 +2,10 @@
 import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 
 // react navigation
-import { useTheme } from "@react-navigation/native";
+import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
@@ -26,11 +26,15 @@ const NewEntry = () => {
      // init context
      const { addEntry } = useContext(JournalContext);
      // fixme: toast when new entry is made
-     const { isToast, setIsToast } = useContext(ToastContext);
+     const { isToast, invokeToast } = useContext(ToastContext);
 
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text, border } =
           useTheme();
+
+     // hooks
+     const ref = useRef(null);
+     useScrollToTop(ref);
 
      // erase text input state
      const handleErase = () => {
@@ -87,7 +91,7 @@ const NewEntry = () => {
      );
 
      return (
-          <ScrollView contentContainerStyle={container}>
+          <ScrollView contentContainerStyle={container} ref={ref}>
                <Text style={title}>New Entry</Text>
                <TextInput
                     style={{

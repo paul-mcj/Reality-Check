@@ -16,6 +16,7 @@ const theme = {
           border: "",
           notification: "#3f3861",
           accent: "#1b2a47",
+          transparent: "transparent",
      },
      container: {
           alignItems: "center",

@@ -10,9 +10,17 @@ export const ToastProvider = ({ children }) => {
      const [isToast, setIsToast] = useState(false);
      const [message, setMessage] = useState("");
 
+     // encapsulate setIsToast state (setting it from true to false after a setTimeout function internally helps navigate unnecessary re-renders in components that use the Toast component )
+     const invokeToast = () => {
+          setIsToast(() => true);
+          setTimeout(() => {
+               setIsToast(() => false);
+          }, 1);
+     };
+
      return (
           <ToastContext.Provider
-               value={{ isToast, setIsToast, setMessage, message }}
+               value={{ isToast, invokeToast, setMessage, message }}
           >
                {children}
           </ToastContext.Provider>

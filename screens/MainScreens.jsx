@@ -44,64 +44,63 @@ const MainScreens = () => {
                {isToast && <Toast />}
                {modal && <Modal />}
                {alert && <AlertModal />}
-               {/* fixme: does the navigato always wanna be shown even if modal is open?? */}
-               {!modal && (
-                    <Tab.Navigator
-                         initialRouteName="Home"
-                         backBehavior="none"
-                         tabBarPosition="bottom"
-                         screenOptions={{
-                              headerShown: false,
-                              swipeEnabled: true,
-                              tabBarShowLabel: false,
-                              tabBarStyle: {
-                                   backgroundColor: colors.background,
-                              },
-                              tabBarActiveTintColor: colors.white,
-                              tabBarInactiveTintColor: colors.dim,
+               <Tab.Navigator
+                    initialRouteName="Home"
+                    backBehavior="order"
+                    tabBarPosition="bottom"
+                    screenOptions={{
+                         headerShown: false,
+                         swipeEnabled: true,
+                         tabBarShowLabel: false,
+                         tabBarStyle: {
+                              backgroundColor: colors.background,
+                         },
+                         tabBarActiveTintColor: colors.white,
+                         tabBarInactiveTintColor: colors.dim,
+                         tabBarScrollEnabled: false,
+                         tabBarPressColor: colors.transparent,
+                    }}
+               >
+                    <Tab.Screen
+                         name="Home"
+                         component={Home}
+                         options={{
+                              tabBarIcon: (props) => (
+                                   <HomeIcon
+                                        name="home"
+                                        size={24}
+                                        color={props.color}
+                                   />
+                              ),
                          }}
-                    >
-                         <Tab.Screen
-                              name="Home"
-                              component={Home}
-                              options={{
-                                   tabBarIcon: (props) => (
-                                        <HomeIcon
-                                             name="home"
-                                             size={24}
-                                             color={props.color}
-                                        />
-                                   ),
-                              }}
-                         />
-                         <Tab.Screen
-                              name="NewEntry"
-                              component={NewEntry}
-                              options={{
-                                   tabBarIcon: (props) => (
-                                        <PencilIcon
-                                             name="pencil"
-                                             size={24}
-                                             color={props.color}
-                                        />
-                                   ),
-                              }}
-                         />
-                         <Tab.Screen
-                              name="Journal"
-                              component={Journal}
-                              options={{
-                                   tabBarIcon: (props) => (
-                                        <BookIcon
-                                             name="book"
-                                             size={24}
-                                             color={props.color}
-                                        />
-                                   ),
-                              }}
-                         />
-                    </Tab.Navigator>
-               )}
+                    />
+                    <Tab.Screen
+                         name="NewEntry"
+                         component={NewEntry}
+                         options={{
+                              tabBarIcon: (props) => (
+                                   <PencilIcon
+                                        name="pencil"
+                                        size={24}
+                                        color={props.color}
+                                   />
+                              ),
+                         }}
+                    />
+                    <Tab.Screen
+                         name="Journal"
+                         component={Journal}
+                         options={{
+                              tabBarIcon: (props) => (
+                                   <BookIcon
+                                        name="book"
+                                        size={24}
+                                        color={props.color}
+                                   />
+                              ),
+                         }}
+                    />
+               </Tab.Navigator>
           </>
      );
 };

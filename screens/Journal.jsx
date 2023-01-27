@@ -1,7 +1,7 @@
 // react native
 import {
      Text,
-     FlatList,
+     ScrollView,
      View,
      TextInput,
      RefreshControl,
@@ -12,10 +12,7 @@ import {
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
 
 // react navigation
-import { useTheme } from "@react-navigation/native";
-
-// random values npm
-import "react-native-get-random-values";
+import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // context
 import JournalContext from "../context/JournalContext";
@@ -27,7 +24,7 @@ import JournalEntry from "../components/JournalEntry";
 import TextButton from "../components/TextButton";
 
 // react and misc.
-import { useState, useCallback, useEffect, useContext } from "react";
+import { useState, useCallback, useEffect, useRef, useContext } from "react";
 
 // global variable for later assignment (for JSX slimming)
 let showModal;
@@ -41,7 +38,7 @@ const Journal = () => {
      // init context
      const { entries, deleteEntry } = useContext(JournalContext);
      //fixme: when entry is deleted, update toast context
-     const { isToast, setIsToast } = useContext(ToastContext);
+     const { isToast, invokeToast } = useContext(ToastContext);
      //fixme: use modal to display currently selected entry
      const { modal, setModal, setReducerType } = useContext(ModalContext);
 
@@ -49,59 +46,9 @@ const Journal = () => {
      const { colors, container, text, title, border, smallTextWhite } =
           useTheme();
 
-     const handleOnDelete = (content) => {
-          // fixme: add alert/warning before doing the following logic:
-          deleteEntry(content);
-          setModalVisible(() => false);
-     };
-
-     const showEntry = (content) => {
-          setModalVisible(() => true);
-
-          showModal = (
-               <View style={container}>
-                    {/* fixme: BackHandler to go to Home page should be allowed */}
-                    <CloseIcon
-                         name="close"
-                         size={24}
-                         color={colors.white}
-                         onPress={() => setModalVisible(() => false)}
-                         style={{ marginBottom: 40 }}
-                    />
-                    {/* fixme: editing state should be its own component?? */}
-                    {editing && (
-                         <>
-                              <TextInput
-                                   style={{ ...text, ...border }}
-                                   value={content.input}
-                                   onChangeText={(text) => setInput(() => text)}
-                              />
-                              <Text>Cancel Button Here</Text>
-                              <Text>Save Button Here</Text>
-                         </>
-                    )}
-                    {!editing && (
-                         <>
-                              <Pressable
-                                   style={border}
-                                   onPress={() => setEditing(() => true)}
-                              >
-                                   <Text style={smallTextWhite}>
-                                        {content.timestamp.toDateString()}
-                                   </Text>
-                                   <Text style={text}>{content.input}</Text>
-                              </Pressable>
-                              <TextButton
-                                   backgroundColor={colors.notification}
-                                   onPress={() => handleOnDelete(content)}
-                              >
-                                   <Text style={smallTextWhite}>Delete</Text>
-                              </TextButton>
-                         </>
-                    )}
-               </View>
-          );
-     };
+     // hooks
+     const ref = useRef(null);
+     useScrollToTop(ref);
 
      // const onRefresh = useCallback(() => {
      //      setRefreshing(true);
@@ -116,7 +63,7 @@ const Journal = () => {
      }, [entries]);
 
      return (
-          <View style={container}>
+          <ScrollView contentContainerStyle={container} ref={ref}>
                <Text style={title}>Journal</Text>
                {entries.length === 0 && (
                     <>
@@ -132,19 +79,19 @@ const Journal = () => {
                          <Text style={smallTextWhite}>― Ernest Hemingway</Text>
                     </>
                )}
-               {/* fixme: sort by timestamp by default! */}
-               <FlatList
-                    data={entries}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                         <JournalEntry
-                              id={item.id}
-                              input={item.input}
-                              timestamp={item.timestamp}
-                         />
-                    )}
-               />
-          </View>
+               <View style={{ marginBottom: 40 }}>
+                    {/* fixme: sort by timestamp by default! */}
+                    {entries.length !== 0 &&
+                         entries.map((item) => (
+                              <JournalEntry
+                                   id={item.id}
+                                   key={item.id}
+                                   input={item.input}
+                                   timestamp={item.timestamp}
+                              />
+                         ))}
+               </View>
+          </ScrollView>
      );
 };
 

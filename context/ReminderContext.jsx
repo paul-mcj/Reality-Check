@@ -37,7 +37,6 @@ export const ReminderProvider = ({ children }) => {
                !copyReminders[findReminderIndex].active;
           // and rest context
           setReminders(() => copyReminders);
-          // fixme: set Toast context to show new changes here??
      };
 
      // any time reminders is changed, an array of all reminder id props (used in Modal component for dynamic output) is updated

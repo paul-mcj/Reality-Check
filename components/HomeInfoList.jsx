@@ -30,6 +30,7 @@ const CONTENT = [
     stabilize the dream`,
           id: 2,
      },
+     //fixme: add in a new "more info" tab, and use linking to go to wikipedia??
 ];
 
 const HomeInfoList = () => {
