@@ -1,5 +1,5 @@
 // react and misc
-import { useContext, useEffect, useReducer, useState } from "react";
+import { useContext, useEffect } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
@@ -19,13 +19,8 @@ import { useTheme } from "@react-navigation/native";
 import { View, Text, ScrollView } from "react-native";
 
 const Modal = () => {
-     // local reducer logic
-     // fixme: use reducer
-     // const [state, dispatch] = useReducer(reducer, init)
-     const [found, setFound] = useState(null);
-
      // init context
-     const { setModal, reducerType } = useContext(ModalContext);
+     const { dispatch } = useContext(ModalContext);
      const { reminders, reminderIds } = useContext(ReminderContext);
      const { entries, entryIds } = useContext(JournalContext);
 
@@ -49,7 +44,7 @@ const Modal = () => {
 
      // fixme: (temporary) for JSX slimming
      const showEntry = (
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
                <Text
                     style={{
                          ...smallTextWhite,
@@ -93,7 +88,7 @@ const Modal = () => {
                          name="close"
                          size={24}
                          color={colors.white}
-                         onPress={() => setModal(() => false)}
+                         onPress={() => dispatch({ type: "CLOSE_MODAL" })}
                          style={{ marginTop: 20 }}
                     />
                </View>

@@ -91,7 +91,11 @@ const NewEntry = () => {
      );
 
      return (
-          <ScrollView contentContainerStyle={container} ref={ref}>
+          <ScrollView
+               contentContainerStyle={container}
+               ref={ref}
+               showsVerticalScrollIndicator={false}
+          >
                <Text style={title}>New Entry</Text>
                <TextInput
                     style={{

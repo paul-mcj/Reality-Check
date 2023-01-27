@@ -40,7 +40,7 @@ const Journal = () => {
      //fixme: when entry is deleted, update toast context
      const { isToast, invokeToast } = useContext(ToastContext);
      //fixme: use modal to display currently selected entry
-     const { modal, setModal, setReducerType } = useContext(ModalContext);
+     const { dispatch } = useContext(ModalContext);
 
      // app theme deconstruction
      const { colors, container, text, title, border, smallTextWhite } =
@@ -63,7 +63,11 @@ const Journal = () => {
      }, [entries]);
 
      return (
-          <ScrollView contentContainerStyle={container} ref={ref}>
+          <ScrollView
+               contentContainerStyle={container}
+               ref={ref}
+               showsVerticalScrollIndicator={false}
+          >
                <Text style={title}>Journal</Text>
                {entries.length === 0 && (
                     <>

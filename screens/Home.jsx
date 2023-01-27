@@ -84,7 +84,7 @@ const Home = () => {
      } = useTheme();
 
      // init context
-     const { modal, setModal, setReducerType } = useContext(ModalContext);
+     const { dispatch } = useContext(ModalContext);
      const { reminders, addReminder } = useContext(ReminderContext);
      const {
           isToast,
@@ -105,8 +105,7 @@ const Home = () => {
 
      // open modal and display additional static app information
      const moreInfo = () => {
-          setReducerType(() => "MORE");
-          setModal(() => true);
+          dispatch({ type: "MORE" });
      };
 
      // opens time picker modal in Android module
@@ -163,7 +162,7 @@ const Home = () => {
      });
 
      return (
-          <ScrollView ref={ref}>
+          <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                <View
                     style={{
                          right: 20,

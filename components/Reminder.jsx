@@ -27,7 +27,7 @@ const Reminder = ({ id, time, active }) => {
           useTheme();
 
      // init context
-     const { setModal, setReducerType } = useContext(ModalContext);
+     const { dispatch } = useContext(ModalContext);
      const {
           reminders,
           deleteReminder,
@@ -45,8 +45,7 @@ const Reminder = ({ id, time, active }) => {
 
      // open modal and display options related to specific reminder object
      const openReminder = () => {
-          setReducerType(() => id);
-          setModal(() => true);
+          dispatch({ type: "REMINDER", payload: id });
      };
 
      // call function when reminder active state changes via Switch component

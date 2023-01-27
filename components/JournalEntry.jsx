@@ -14,15 +14,14 @@ import { Pressable, Text, View } from "react-native";
 
 const JournalEntry = ({ id, input, timestamp }) => {
      // app theme deconstruction
-     const { border, smallTextWhite, container, colors } = useTheme();
+     const { border, smallTextWhite, colors } = useTheme();
 
      // init context
-     const { setModal, setReducerType } = useContext(ModalContext);
+     const { dispatch } = useContext(ModalContext);
 
      // open modal and display options related to specific journal entry
      const openEntry = () => {
-          setReducerType(() => id);
-          setModal(() => true);
+          dispatch({ type: "JOURNAL", payload: id });
      };
 
      return (
