@@ -5,6 +5,14 @@ import PropTypes from "prop-types";
 // define context
 const ModalContext = createContext();
 
+// initial reducer context
+const init = {
+     reducerType: "MORE",
+     id: null,
+     data: null,
+     modal: false,
+};
+
 // local reducer function
 const modalReducer = (state, action) => {
      switch (action.type) {
@@ -15,30 +23,31 @@ const modalReducer = (state, action) => {
                return {
                     modal: true,
                     reducerType: "JOURNAL",
-                    data: action.payload,
+                    id: action.payload.id,
+                    data: action.payload.data,
                };
           }
           case "REMINDER": {
                return {
                     modal: true,
                     reducerType: "REMINDER",
-                    data: action.payload,
+                    data: action.payload.data,
+                    id: action.payload.id,
                };
           }
-          case "MORE":
+          case "MORE": {
+               return {
+                    ...state,
+                    modal: true,
+                    reducerType: "MORE",
+               };
+          }
           default:
-               return initState;
+               return init;
      }
 };
 
 export const ModalProvider = ({ children }) => {
-     // initial reducer context
-     const init = {
-          reducerType: "MORE",
-          data: null,
-          modal: true,
-     };
-
      // local reducer logic
      const [modalState, dispatch] = useReducer(modalReducer, init);
 

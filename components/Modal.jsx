@@ -3,8 +3,6 @@ import { useContext, useEffect } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
-import ReminderContext from "../context/ReminderContext";
-import JournalContext from "../context/JournalContext";
 
 // components
 import HomeInfoList from "../components/HomeInfoList";
@@ -20,59 +18,45 @@ import { View, Text, ScrollView } from "react-native";
 
 const Modal = () => {
      // init context
-     const { dispatch } = useContext(ModalContext);
-     const { reminders, reminderIds } = useContext(ReminderContext);
-     const { entries, entryIds } = useContext(JournalContext);
+     const { reducerType, data, dispatch, id } = useContext(ModalContext);
 
      // app theme deconstruction
      const { colors, container, smallTextWhite, border } = useTheme();
 
-     useEffect(() => {
-          reminders.forEach((item) => {
-               if (item.id === reducerType) {
-                    setFound(() => item);
-                    // setSource(() => reminders);
-               }
-          });
-          entries.forEach((item) => {
-               if (item.id === reducerType) {
-                    setFound(() => item);
-                    // setSource(() => entries);
-               }
-          });
-     }, [reminders, entries]);
+     // useEffect(() => {
+     // }, [reminders, entries]);
 
      // fixme: (temporary) for JSX slimming
-     const showEntry = (
-          <ScrollView showsVerticalScrollIndicator={false}>
-               <Text
-                    style={{
-                         ...smallTextWhite,
-                         paddingBottom: 0,
-                    }}
-               >
-                    {found?.timestamp.toDateString()}
-               </Text>
-               <View
-                    style={{
-                         ...border,
-                         borderColor: colors.text,
-                         marginBottom: 10,
-                         minWidth: "100%",
-                    }}
-               >
-                    <View style={{ minHeight: 100 }}>
-                         <Text style={smallTextWhite}>{found?.input}</Text>
-                    </View>
-               </View>
-               {/* const handleOnDelete = (content) => { */}
-               {/* // fixme: add alert/warning before doing the following logic: // */}
-               {/* deleteEntry(content); */}
-               {/* setModalVisible(() => false); */}
-               {/* }; */}
-               <Text>delete button with alert here</Text>
-          </ScrollView>
-     );
+     // const showEntry = (
+     //      <ScrollView showsVerticalScrollIndicator={false}>
+     //           <Text
+     //                style={{
+     //                     ...smallTextWhite,
+     //                     paddingBottom: 0,
+     //                }}
+     //           >
+     //                {data?.timestamp.toDateString()}
+     //           </Text>
+     //           <View
+     //                style={{
+     //                     ...border,
+     //                     borderColor: colors.text,
+     //                     marginBottom: 10,
+     //                     minWidth: "100%",
+     //                }}
+     //           >
+     //                <View style={{ minHeight: 100 }}>
+     //                     <Text style={smallTextWhite}>{data?.input}</Text>
+     //                </View>
+     //           </View>
+     //           {/* const handleOnDelete = (content) => { */}
+     //           {/* // fixme: add alert/warning before doing the following logic: // */}
+     //           {/* deleteEntry(content); */}
+     //           {/* setModalVisible(() => false); */}
+     //           {/* }; */}
+     //           <Text>delete button with alert here</Text>
+     //      </ScrollView>
+     // );
 
      return (
           <>
@@ -105,16 +89,18 @@ const Modal = () => {
                               marginBottom: 80,
                          }}
                     >
-                         {/* fixme: depending on usereducer type, show different modal content */}
+                         {/* depending on reducerType show different modal content */}
                          {reducerType === "MORE" && <HomeInfoList />}
-                         {/* {reducerType !== "MORE" && source === entries
-                              ? source
-                                     .filter((item) => item.id === found.id)
-                                     .map((element) => (
-                                          <Text>{element.active}</Text>
-                                     ))
-                              : console.log("nope")} */}
-                         {reducerType !== "MORE" && showEntry}
+                         {reducerType === "REMINDER" &&
+                              data
+                                   .filter((reminder) => reminder.id === id)
+                                   .map((item) => (
+                                        <Text>{item.active.toString()}</Text>
+                                   ))}
+                         {reducerType === "JOURNAL" &&
+                              data
+                                   .filter((entry) => entry.id === id)
+                                   .map((item) => <Text>{item.input}</Text>)}
                     </View>
                </View>
           </>

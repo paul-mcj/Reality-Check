@@ -45,7 +45,7 @@ const Reminder = ({ id, time, active }) => {
 
      // open modal and display options related to specific reminder object
      const openReminder = () => {
-          dispatch({ type: "REMINDER", payload: id });
+          dispatch({ type: "REMINDER", payload: { id, data: reminders } });
      };
 
      // call function when reminder active state changes via Switch component

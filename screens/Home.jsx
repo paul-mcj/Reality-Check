@@ -104,7 +104,7 @@ const Home = () => {
      useScrollToTop(ref);
 
      // open modal and display additional static app information
-     const moreInfo = () => {
+     const openMoreInfo = () => {
           dispatch({ type: "MORE" });
      };
 
@@ -150,7 +150,7 @@ const Home = () => {
                setToastMessage(() => "New reminder created!");
                invokeToast();
                // fixme: app will now make a notification at the scheduled time everyday
-               triggerNotification(selectedTime);
+               // triggerNotification(selectedTime);
                // note: this will erase all notifications in the use effect state, as long as there is no triggering of notifications like above!
                // Notifications.cancelAllScheduledNotificationsAsync();
                setNot(() => Notifications.getAllScheduledNotificationsAsync());
@@ -176,7 +176,7 @@ const Home = () => {
                          minWidth={0}
                          borderWidth={0}
                          backgroundColor={colors.background}
-                         onPress={moreInfo}
+                         onPress={openMoreInfo}
                     >
                          <DotsIcon
                               name="dots-vertical"
