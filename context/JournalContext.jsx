@@ -8,31 +8,21 @@ const JournalContext = createContext();
 export const JournalProvider = ({ children }) => {
      // init state
      const [entries, setEntries] = useState([]);
-     const [entryIds, setEntryIds] = useState([]);
 
-     // function to add new entries to context
-     const addEntry = (inputObj) => {
-          setEntries((prev) => [...prev, inputObj]);
+     // function to add a new entry object to journal context
+     const addEntry = (entryObj) => {
+          setEntries((prev) => [...prev, entryObj]);
      };
 
-     // function to delete an entry
-     const deleteEntry = (inputObj) => {
+     // function to delete an entry from journal context
+     const deleteEntry = (entryId) => {
           setEntries(() =>
-               [...entries].filter((item) => item.id !== inputObj.id)
+               [...entries].filter((entry) => entry.id !== entryId)
           );
      };
 
-     // any time entries is changed, an array of all entry id props (used in Modal component for dynamic output) is updated
-     useEffect(() => {
-          const ids = [];
-          entries.forEach((item) => ids.push(item.id));
-          setEntryIds(() => ids);
-     }, [entries]);
-
      return (
-          <JournalContext.Provider
-               value={{ entries, entryIds, addEntry, deleteEntry }}
-          >
+          <JournalContext.Provider value={{ entries, addEntry, deleteEntry }}>
                {children}
           </JournalContext.Provider>
      );

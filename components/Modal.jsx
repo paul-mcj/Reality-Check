@@ -6,6 +6,8 @@ import ModalContext from "../context/ModalContext";
 
 // components
 import HomeInfoList from "../components/HomeInfoList";
+import EditJournalItem from "./EditJournalItem";
+import EditReminderItem from "./EditReminderItem";
 
 // icons
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
@@ -14,49 +16,17 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { View, Text, ScrollView } from "react-native";
+import { View, Text } from "react-native";
 
 const Modal = () => {
      // init context
      const { reducerType, data, dispatch, id } = useContext(ModalContext);
 
      // app theme deconstruction
-     const { colors, container, smallTextWhite, border } = useTheme();
+     const { colors, container } = useTheme();
 
      // useEffect(() => {
      // }, [reminders, entries]);
-
-     // fixme: (temporary) for JSX slimming
-     // const showEntry = (
-     //      <ScrollView showsVerticalScrollIndicator={false}>
-     //           <Text
-     //                style={{
-     //                     ...smallTextWhite,
-     //                     paddingBottom: 0,
-     //                }}
-     //           >
-     //                {data?.timestamp.toDateString()}
-     //           </Text>
-     //           <View
-     //                style={{
-     //                     ...border,
-     //                     borderColor: colors.text,
-     //                     marginBottom: 10,
-     //                     minWidth: "100%",
-     //                }}
-     //           >
-     //                <View style={{ minHeight: 100 }}>
-     //                     <Text style={smallTextWhite}>{data?.input}</Text>
-     //                </View>
-     //           </View>
-     //           {/* const handleOnDelete = (content) => { */}
-     //           {/* // fixme: add alert/warning before doing the following logic: // */}
-     //           {/* deleteEntry(content); */}
-     //           {/* setModalVisible(() => false); */}
-     //           {/* }; */}
-     //           <Text>delete button with alert here</Text>
-     //      </ScrollView>
-     // );
 
      return (
           <>
@@ -95,12 +65,20 @@ const Modal = () => {
                               data
                                    .filter((reminder) => reminder.id === id)
                                    .map((item) => (
-                                        <Text>{item.active.toString()}</Text>
+                                        <EditReminderItem
+                                             reminder={item}
+                                             key={item.id}
+                                        />
                                    ))}
                          {reducerType === "JOURNAL" &&
                               data
                                    .filter((entry) => entry.id === id)
-                                   .map((item) => <Text>{item.input}</Text>)}
+                                   .map((item) => (
+                                        <EditJournalItem
+                                             entry={item}
+                                             key={item.id}
+                                        />
+                                   ))}
                     </View>
                </View>
           </>

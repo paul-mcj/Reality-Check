@@ -18,11 +18,13 @@ const AlertModal = () => {
           [
                {
                     text: "Cancel",
+                    // fixme: by default have it dismiss modal
                     // onPress: () => handleOnCancel,
                },
                {
-                    text: "confirm",
-                    // onPress: () => handleOnConfirm,
+                    text: "Confirm",
+                    // fixme: sometimes this needs to be set the dismiss modal, other times it needs to do something (ex. delete entry from context) -- if the latter is invoked then reset it to default dismiss functionality!
+                    onPress: handleOnConfirm,
                },
           ],
           {
