@@ -46,7 +46,6 @@ const MainScreens = () => {
                {alert && <AlertModal />}
                <Tab.Navigator
                     initialRouteName="Home"
-                    backBehavior="order"
                     tabBarPosition="bottom"
                     screenOptions={{
                          headerShown: false,

@@ -94,8 +94,11 @@ const Home = () => {
      const {
           setAlert,
           setTitle,
+          invokeAlert,
+          setObj,
           setMessage: setAlertMessage,
           setHandleOnCancel,
+          handleOnConfirm,
           setHandleOnConfirm,
      } = useContext(AlertContext);
 
@@ -125,6 +128,9 @@ const Home = () => {
           reminders.forEach((item) => {
                if (formatTime(selectedTime) === formatTime(item.time)) {
                     timeAlreadyInContext = true;
+                    if (e.type === "dismissed") {
+                         return;
+                    }
                     setTitle(() => "Error");
                     setAlertMessage(
                          () =>
@@ -132,8 +138,9 @@ const Home = () => {
                                    selectedTime
                               )}!`
                     );
-                    setAlert(() => true);
-                    setAlert(() => false);
+                    // setObj(() => null);
+                    // setAlert(() => true);
+                    invokeAlert();
                }
           });
           // if this reminder time is unique in the context:

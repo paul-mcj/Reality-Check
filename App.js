@@ -4,6 +4,7 @@
 // fixme: add app-wide functionality for backHandler
 // fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple)
 // fixme: check linter and all unused things in entire app for deletion
+// fixme: readme should be properly documented when finished to github
 {
      /* fixme: toast and alerts all needs to be properly called when something is deleted (ie. journal entry, reminder obj), when a reminder is turned off/on, etc!*/
 }
@@ -40,8 +41,8 @@ export default function App() {
      // }, [time]);
 
      return (
-          <AlertProvider>
-               <ModalProvider>
+          <ModalProvider>
+               <AlertProvider>
                     <ToastProvider>
                          <ReminderProvider>
                               <JournalProvider>
@@ -52,7 +53,7 @@ export default function App() {
                               </JournalProvider>
                          </ReminderProvider>
                     </ToastProvider>
-               </ModalProvider>
-          </AlertProvider>
+               </AlertProvider>
+          </ModalProvider>
      );
 }

@@ -7,7 +7,7 @@ import AlertContext from "../context/AlertContext";
 import TextButton from "./TextButton";
 
 // react and misc
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // react navigation
@@ -23,8 +23,10 @@ const EditJournalItem = ({ entry }) => {
      const {
           setAlert,
           setTitle,
+          setObj,
           setMessage: setAlertMessage,
           setHandleOnCancel,
+          handleOnConfirm,
           setHandleOnConfirm,
      } = useContext(AlertContext);
 
@@ -38,11 +40,8 @@ const EditJournalItem = ({ entry }) => {
           setAlertMessage(
                () => `Are you sure you want to delete this journal entry?`
           );
-          setHandleOnConfirm.bind(null, () => deleteEntry(entry?.id));
+          setObj(() => entry);
           setAlert(() => true);
-          // fixme: this logic needs some more fine tuning, but the above bind function fixes major issues so its a good start!
-          //   setAlert(() => false);
-          //   dispatch({ type: "CLOSE_MODAL" });
      };
 
      return (
