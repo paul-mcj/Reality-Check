@@ -23,8 +23,6 @@ export const AlertProvider = ({ children }) => {
 
      // fixme: the "obj and setObj" needs to be a useReducer like for Modal. why? because the confirm function needs to be able to either simply cancel out of the alert, delete a journal entry, or for EditReminderItem it can bring up the datetimepicker thingy and update its object in memory... so it needs multiple different ways to set some state!
 
-     useEffect(() => {}, [obj]);
-
      return (
           <AlertContext.Provider
                value={{

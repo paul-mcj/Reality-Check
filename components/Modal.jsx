@@ -1,5 +1,5 @@
 // react and misc
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
@@ -16,7 +16,7 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 const Modal = () => {
      // init context
@@ -24,9 +24,6 @@ const Modal = () => {
 
      // app theme deconstruction
      const { colors, container } = useTheme();
-
-     // useEffect(() => {
-     // }, [reminders, entries]);
 
      return (
           <>

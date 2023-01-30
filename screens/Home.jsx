@@ -123,14 +123,16 @@ const Home = () => {
 
      // function changes local time state, creates a new reminder with the time, and adds it to reminder context
      const createNewReminder = (e, selectedTime) => {
-          // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Toast users they cannot make the reminder time
+          // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
           let timeAlreadyInContext = false;
           reminders.forEach((item) => {
                if (formatTime(selectedTime) === formatTime(item.time)) {
                     timeAlreadyInContext = true;
+                    // dismiss immediately and return to not update Toast if "cancel" is tapped in the timer picker modal
                     if (e.type === "dismissed") {
                          return;
                     }
+                    // otherwise set Alert state
                     setTitle(() => "Error");
                     setAlertMessage(
                          () =>
@@ -138,8 +140,8 @@ const Home = () => {
                                    selectedTime
                               )}!`
                     );
-                    // setObj(() => null);
-                    // setAlert(() => true);
+                    // to make sure that a journal entry is not being deleted from context, make sure to update the obj it depends on to null
+                    setObj(() => null);
                     invokeAlert();
                }
           });
