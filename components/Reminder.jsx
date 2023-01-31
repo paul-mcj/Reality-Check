@@ -21,13 +21,13 @@ import ToastContext from "../context/ToastContext";
 // react and misc
 import { useContext } from "react";
 
-const Reminder = ({ id, time, active }) => {
+const Reminder = ({ id, time, active, canOpenReminder }) => {
      // app theme deconstruction
      const { colors, container, text, title, border, smallTextNotification } =
           useTheme();
 
      // init context
-     const { dispatch } = useContext(ModalContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
      const {
           reminders,
           deleteReminder,
@@ -45,7 +45,7 @@ const Reminder = ({ id, time, active }) => {
 
      // open modal and display options related to specific reminder object
      const openReminder = () => {
-          dispatch({ type: "REMINDER", payload: { id, data: reminders } });
+          modalDispatch({ type: "REMINDER", payload: { id, data: reminders } });
      };
 
      // call function when reminder active state changes via Switch component
@@ -59,7 +59,6 @@ const Reminder = ({ id, time, active }) => {
                setToastMessage(() => `Reminder set for ${formatTime(time)}`);
                invokeToast();
           }
-          // fixme: make sure to cancel notification (somehow need to make sure it can be set back later however)
      };
 
      return (
@@ -74,7 +73,7 @@ const Reminder = ({ id, time, active }) => {
                <TextButton
                     backgroundColor={active ? colors.white : colors.text}
                     borderColor={active ? colors.white : colors.text}
-                    onPress={openReminder}
+                    onPress={canOpenReminder ? openReminder : () => {}}
                     minWidth={"80%"}
                >
                     <Text style={smallTextNotification}>
@@ -83,7 +82,6 @@ const Reminder = ({ id, time, active }) => {
                               : `Reminder for ${formatTime(time)} off`}
                     </Text>
                </TextButton>
-               {/* // fixme: EACH reminder has a switch option for off/on logic, will toast in Home.jsx*/}
                <Switch
                     value={active}
                     onValueChange={handleOnValueChange}
@@ -101,6 +99,7 @@ Reminder.propTypes = {
      id: PropTypes.number.isRequired,
      time: PropTypes.object.isRequired,
      active: PropTypes.bool.isRequired,
+     canOpenReminder: PropTypes.bool.isRequired,
 };
 
 export default Reminder;

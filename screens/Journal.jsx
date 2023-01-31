@@ -40,7 +40,7 @@ const Journal = () => {
      //fixme: when entry is deleted, update toast context
      const { isToast, invokeToast } = useContext(ToastContext);
      //fixme: use modal to display currently selected entry
-     const { dispatch } = useContext(ModalContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
 
      // app theme deconstruction
      const { colors, container, text, title, border, smallTextWhite } =

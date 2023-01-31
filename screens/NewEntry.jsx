@@ -2,7 +2,7 @@
 import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -57,6 +57,7 @@ const NewEntry = () => {
           setInput(() => "");
      };
 
+     // fixme: pressing undo after interacting with Alert modal (CONFIRM only) seems to not being placing the text back into the input!! try useMemo in the use previous hook, or maybe a global state for prevInput to bypass any re-renders when additional contexts change?
      const handleUndo = () => {
           setInput(() => prevInput);
           setUndo(() => false);
@@ -89,6 +90,10 @@ const NewEntry = () => {
                </TextButton>
           </View>
      );
+
+     useEffect(() => {
+          console.log(prevInput);
+     });
 
      return (
           <ScrollView

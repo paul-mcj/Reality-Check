@@ -5,9 +5,10 @@ import { useContext } from "react";
 import ModalContext from "../context/ModalContext";
 
 // components
-import HomeInfoList from "../components/HomeInfoList";
+import HomeInfoList from "./HomeInfoList";
 import EditJournalItem from "./EditJournalItem";
 import EditReminderItem from "./EditReminderItem";
+import TextButton from "./TextButton";
 
 // icons
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
@@ -20,65 +21,79 @@ import { View } from "react-native";
 
 const Modal = () => {
      // init context
-     const { reducerType, data, dispatch, id } = useContext(ModalContext);
+     const {
+          reducerType,
+          data,
+          dispatch: modalDispatch,
+          id,
+     } = useContext(ModalContext);
 
      // app theme deconstruction
      const { colors, container } = useTheme();
 
      return (
-          <>
+          <View
+               style={{
+                    backgroundColor: colors.background,
+                    minHeight: "100%",
+               }}
+          >
                {/* fixme: BackHandler to go to previous page state should be allowed! this needs to be passed as props! */}
                <View
                     style={{
-                         justifyContent: "center",
-                         alignItems: "center",
-                         backgroundColor: colors.background,
+                         right: 20,
+                         top: 20,
+                         position: "absolute",
+                         zIndex: 3,
                     }}
                >
-                    <CloseIcon
-                         name="close"
-                         size={24}
-                         color={colors.white}
-                         onPress={() => dispatch({ type: "CLOSE_MODAL" })}
-                         style={{ marginTop: 20 }}
-                    />
-               </View>
-               <View
-                    style={{
-                         backgroundColor: colors.background,
-                         minHeight: "100%",
-                    }}
-               >
-                    <View
-                         style={{
-                              ...container,
-                              marginTop: 20,
-                              marginBottom: 80,
-                         }}
+                    <TextButton
+                         style={{ padding: 20 }}
+                         minWidth={0}
+                         borderWidth={0}
+                         backgroundColor={colors.notification}
+                         onPress={() => modalDispatch({ type: "CLOSE_MODAL" })}
                     >
-                         {/* depending on reducerType show different modal content */}
-                         {reducerType === "MORE" && <HomeInfoList />}
-                         {reducerType === "REMINDER" &&
-                              data
-                                   .filter((reminder) => reminder.id === id)
-                                   .map((item) => (
-                                        <EditReminderItem
-                                             reminder={item}
-                                             key={item.id}
-                                        />
-                                   ))}
-                         {reducerType === "JOURNAL" &&
-                              data
-                                   .filter((entry) => entry.id === id)
-                                   .map((item) => (
-                                        <EditJournalItem
-                                             entry={item}
-                                             key={item.id}
-                                        />
-                                   ))}
-                    </View>
+                         <CloseIcon
+                              style={{ padding: 10 }}
+                              name="close"
+                              size={24}
+                              color={colors.white}
+                         />
+                    </TextButton>
                </View>
-          </>
+
+               <View
+                    style={
+                         {
+                              // ...container,
+                              // marginTop: 20,
+                              // marginBottom: 80,
+                         }
+                    }
+               >
+                    {/* depending on reducerType show different modal content */}
+                    {reducerType === "MORE" && <HomeInfoList />}
+                    {reducerType === "REMINDER" &&
+                         data
+                              .filter((reminder) => reminder.id === id)
+                              .map((item) => (
+                                   <EditReminderItem
+                                        reminder={item}
+                                        key={item.id}
+                                   />
+                              ))}
+                    {reducerType === "JOURNAL" &&
+                         data
+                              .filter((entry) => entry.id === id)
+                              .map((item) => (
+                                   <EditJournalItem
+                                        entry={item}
+                                        key={item.id}
+                                   />
+                              ))}
+               </View>
+          </View>
      );
 };
 

@@ -8,7 +8,6 @@ const ReminderContext = createContext();
 export const ReminderProvider = ({ children }) => {
      // init state
      const [reminders, setReminders] = useState([]);
-     const [reminderIds, setReminderIds] = useState([]);
 
      // function to add new reminder to context
      const addReminder = (reminderObj) => {
@@ -39,18 +38,10 @@ export const ReminderProvider = ({ children }) => {
           setReminders(() => copyReminders);
      };
 
-     // any time reminders is changed, an array of all reminder id props (used in Modal component for dynamic output) is updated
-     useEffect(() => {
-          const ids = [];
-          reminders.forEach((item) => ids.push(item.id));
-          setReminderIds(() => ids);
-     }, [reminders]);
-
      return (
           <ReminderContext.Provider
                value={{
                     reminders,
-                    reminderIds,
                     addReminder,
                     deleteReminder,
                     editReminderTime,

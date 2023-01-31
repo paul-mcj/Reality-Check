@@ -1,5 +1,5 @@
 // react and misc
-import { useState, useReducer, createContext, useEffect } from "react";
+import { useReducer, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // define context
@@ -20,8 +20,12 @@ const init = {
 // local reducer function
 const alertReducer = (state, action) => {
      switch (action.type) {
+          // fixme: instead of spreading state, just resolve to init as it resets everything anyway?
           case "CLOSE_ALERT": {
                return { ...state, alert: false };
+          }
+          case "OPEN_ALERT": {
+               return { ...state, alert: true };
           }
           case "DUPLICATE_REMINDER": {
                return {
@@ -38,7 +42,7 @@ const alertReducer = (state, action) => {
                     reducerType: "EDIT_REMINDER",
                     title: action.payload.title,
                     message: action.payload.message,
-                    // fixme: edit reminder data state here
+                    data: action.payload.data,
                };
           }
           case "DELETE_ENTRY": {
@@ -47,7 +51,7 @@ const alertReducer = (state, action) => {
                     reducerType: "DELETE_ENTRY",
                     title: action.payload.title,
                     message: action.payload.message,
-                    //fixme: logic here
+                    data: action.payload.data,
                };
           }
           default:
@@ -59,35 +63,11 @@ export const AlertProvider = ({ children }) => {
      // local reducer logic
      const [alertState, dispatch] = useReducer(alertReducer, init);
 
-     // init state
-     const [obj, setObj] = useState(null);
-     const [alert, setAlert] = useState(false);
-     const [title, setTitle] = useState("");
-     const [message, setMessage] = useState("");
-
-     // fixme: see if below is necessary or not once useReducer is online...
-     const invokeAlert = () => {
-          setAlert(() => true);
-          setTimeout(() => {
-               setAlert(() => false);
-          }, 1);
-     };
-
      return (
           <AlertContext.Provider
                value={{
                     ...alertState,
                     dispatch,
-                    // fixme: all the below will eventually not exist...
-                    invokeAlert,
-                    alert,
-                    setObj,
-                    obj,
-                    setAlert,
-                    title,
-                    setTitle,
-                    message,
-                    setMessage,
                }}
           >
                {children}

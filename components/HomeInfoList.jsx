@@ -37,6 +37,7 @@ const HomeInfoList = () => {
      return (
           <FlatList
                data={CONTENT}
+               showsVerticalScrollIndicator={false}
                keyExtractor={(item) => item.id}
                renderItem={({ item }) => (
                     <ListItem title={item.title} message={item.text} />

@@ -17,12 +17,12 @@ const JournalEntry = ({ id, input, timestamp }) => {
      const { border, smallTextWhite, colors } = useTheme();
 
      // init context
-     const { dispatch } = useContext(ModalContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
      const { entries } = useContext(JournalContext);
 
      // open modal and display options related to specific journal entry
      const openEntry = () => {
-          dispatch({ type: "JOURNAL", payload: { id, data: entries } });
+          modalDispatch({ type: "JOURNAL", payload: { id, data: entries } });
      };
 
      return (

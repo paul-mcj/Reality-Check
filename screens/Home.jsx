@@ -84,20 +84,14 @@ const Home = () => {
      } = useTheme();
 
      // init context
-     const { dispatch } = useContext(ModalContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
      const { reminders, addReminder } = useContext(ReminderContext);
      const {
           isToast,
           invokeToast,
           setMessage: setToastMessage,
      } = useContext(ToastContext);
-     const {
-          setAlert,
-          setTitle,
-          invokeAlert,
-          setObj,
-          setMessage: setAlertMessage,
-     } = useContext(AlertContext);
+     const { dispatch: alertDispatch } = useContext(AlertContext);
 
      // hooks
      const ref = useRef(null);
@@ -105,7 +99,7 @@ const Home = () => {
 
      // open modal and display additional static app information
      const openMoreInfo = () => {
-          dispatch({ type: "MORE" });
+          modalDispatch({ type: "MORE" });
      };
 
      // opens time picker modal in Android module
@@ -129,18 +123,16 @@ const Home = () => {
                     if (e.type === "dismissed") {
                          return;
                     }
-                    // otherwise set Alert state
-                    setTitle(() => "Error");
-                    setAlertMessage(
-                         () =>
-                              `There is already a reminder set for ${formatTime(
+                    // otherwise set Alert state (make sure data is set to null, otherwise it will be referencing the last updated context which might cause unwanted bugs the next time Alert context is updated)
+                    alertDispatch({
+                         type: "DUPLICATE_REMINDER",
+                         payload: {
+                              title: "Error",
+                              message: `There is already a reminder set for ${formatTime(
                                    selectedTime
-                              )}!`
-                    );
-                    // to make sure that a journal entry is not being deleted from context, make sure to update the obj it depends on to null
-                    setObj(() => null);
-                    // fixme: don't know if below is necessary once dispatching from AlertContext useReducer...
-                    invokeAlert();
+                              )}!`,
+                         },
+                    });
                }
           });
           // if this reminder time is unique in the context:
@@ -169,66 +161,71 @@ const Home = () => {
      });
 
      return (
-          <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
+          <>
                <View
                     style={{
                          right: 20,
                          top: 20,
                          position: "absolute",
                          zIndex: 2,
-                         padding: 10,
                     }}
                >
                     <TextButton
+                         style={{ padding: 20 }}
                          minWidth={0}
                          borderWidth={0}
-                         backgroundColor={colors.background}
+                         backgroundColor={colors.notification}
                          onPress={openMoreInfo}
                     >
                          <DotsIcon
+                              style={{ padding: 10 }}
                               name="dots-vertical"
                               size={24}
                               color={colors.white}
                          />
                     </TextButton>
                </View>
-               <View style={container}>
-                    <Text style={title}>Home</Text>
-                    <Text style={{ ...text, marginBottom: 40 }}>
-                         This app is designed to help you perform daily "reality
-                         checks" in order to bring about lucidity during sleep.
-                    </Text>
-                    <TextButton
-                         onPress={showTimePicker}
-                         backgroundColor={colors.notification}
-                         minWidth={150}
-                    >
-                         {/* fixme: have another button that can turn on/off ALL reminders in one swoop??*/}
-                         <Text style={smallTextWhite}>Add Reminder</Text>
-                    </TextButton>
-               </View>
-               <View style={container}>
-                    {reminders.length === 0 && (
-                         <Text
-                              style={{
-                                   ...smallTextWhite,
-                                   marginBottom: 40,
-                              }}
-                         >
-                              No reminders currently set
+               <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
+                    <View style={container}>
+                         <Text style={title}>Home</Text>
+                         <Text style={{ ...text, marginBottom: 40 }}>
+                              This app is designed to help you perform daily
+                              "reality checks" in order to bring about lucidity
+                              during sleep.
                          </Text>
-                    )}
-                    {reminders.length !== 0 &&
-                         reminders.map((item) => (
-                              <Reminder
-                                   id={item.id}
-                                   key={item.id}
-                                   time={item.time}
-                                   active={item.active}
-                              />
-                         ))}
-               </View>
-          </ScrollView>
+                         <TextButton
+                              onPress={showTimePicker}
+                              backgroundColor={colors.notification}
+                              minWidth={150}
+                         >
+                              {/* fixme: have another button that can turn on/off ALL reminders in one swoop??*/}
+                              <Text style={smallTextWhite}>Add Reminder</Text>
+                         </TextButton>
+                    </View>
+                    <View style={container}>
+                         {reminders.length === 0 && (
+                              <Text
+                                   style={{
+                                        ...smallTextWhite,
+                                        marginBottom: 40,
+                                   }}
+                              >
+                                   No reminders currently set
+                              </Text>
+                         )}
+                         {reminders.length !== 0 &&
+                              reminders.map((item) => (
+                                   <Reminder
+                                        id={item.id}
+                                        key={item.id}
+                                        time={item.time}
+                                        active={item.active}
+                                        canOpenReminder={true}
+                                   />
+                              ))}
+                    </View>
+               </ScrollView>
+          </>
      );
 };
 

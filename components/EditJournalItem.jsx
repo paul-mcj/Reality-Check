@@ -19,26 +19,23 @@ import { View, Text, ScrollView } from "react-native";
 const EditJournalItem = ({ entry }) => {
      // init context
      const { deleteEntry } = useContext(JournalContext);
-     const { dispatch } = useContext(ModalContext);
-     const {
-          setAlert,
-          setTitle,
-          setObj,
-          setMessage: setAlertMessage,
-     } = useContext(AlertContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
+     const { dispatch: alertDispatch } = useContext(AlertContext);
 
      // app theme deconstruction
-     const { colors, smallTextWhite, border } = useTheme();
+     const { colors, container, smallTextWhite, border } = useTheme();
 
      // function will delete entry from journal context
      const handleOnPress = () => {
           // Alert user is about to delete the entry
-          setTitle(() => "Warning");
-          setAlertMessage(
-               () => `Are you sure you want to delete this journal entry?`
-          );
-          setObj(() => entry);
-          setAlert(() => true);
+          alertDispatch({
+               type: "DELETE_ENTRY",
+               payload: {
+                    title: "Warning",
+                    message: "Are you sure you want to delete this journal entry?",
+                    data: entry,
+               },
+          });
      };
 
      return (
@@ -63,13 +60,12 @@ const EditJournalItem = ({ entry }) => {
                          <Text style={smallTextWhite}>{entry?.input}</Text>
                     </View>
                </View>
-               <View style={{ flex: 1, marginTop: 40 }}>
+               <View style={container}>
                     <TextButton
                          backgroundColor={colors.notification}
                          minWidth={100}
                          onPress={handleOnPress}
                     >
-                         {/* fixme: fix width of the button to be smaller! */}
                          <Text style={smallTextWhite}>Delete</Text>
                     </TextButton>
                </View>
