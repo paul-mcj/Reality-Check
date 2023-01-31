@@ -39,7 +39,10 @@ const EditJournalItem = ({ entry }) => {
      };
 
      return (
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+               showsVerticalScrollIndicator={false}
+               contentContainerStyle={{ marginTop: 60 }}
+          >
                <Text
                     style={{
                          ...smallTextWhite,

@@ -30,16 +30,26 @@ const EditReminderItem = ({ reminder }) => {
      } = useContext(ReminderContext);
 
      // app theme deconstruction
-     const { colors, smallTextWhite, border } = useTheme();
+     const { colors, smallTextWhite, container, border } = useTheme();
 
      // function will delete entry from reminder context
      const handleDelete = () => {
+          // Alert user is about to delete the entry
           console.log("delete");
+          alertDispatch({
+               type: "DELETE_REMINDER",
+               payload: {
+                    title: "Warning",
+                    message: "Are you sure you want to delete this reminder?",
+                    data: reminder,
+               },
+          });
      };
-     // reminder context
 
      // function will allow users to edit the reminder time and update reminder context
      const handleEdit = () => {
+          // fixme: timepicker goes here, this will look similar to createNewReminder fn in Home component
+          // deleteReminder(reminder.id);
           console.log("edit");
      };
 
@@ -72,14 +82,19 @@ const EditReminderItem = ({ reminder }) => {
      );
 
      return (
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+               showsVerticalScrollIndicator={false}
+               contentContainerStyle={{
+                    alignItems: "center",
+                    marginTop: 200,
+               }}
+          >
                <Reminder
                     id={reminder?.id}
                     time={reminder?.time}
                     active={reminder?.active}
                     canOpenReminder={false}
                />
-
                {showButtons}
           </ScrollView>
      );

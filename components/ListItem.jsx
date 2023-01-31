@@ -13,18 +13,19 @@ import { useTheme } from "@react-navigation/native";
 
 const ListItem = ({ title, message }) => {
      // app theme deconstruction
-     const { colors, text, container, smallTextNotification } = useTheme();
+     const { colors, text, container, smallTextNotification, smallTextWhite } =
+          useTheme();
 
      // component state
      const [showContent, setShowContent] = useState(false);
 
      return (
-          <View style={{ ...container, marginBottom: 10 }}>
+          <View style={{ marginBottom: 10 }}>
                <TextButton
                     backgroundColor={showContent ? colors.white : colors.text}
                     borderColor={showContent ? colors.white : colors.text}
                     onPress={() => setShowContent(() => !showContent)}
-                    minWidth={200}
+                    minWidth={250}
                >
                     <Text style={smallTextNotification}>{title}</Text>
                </TextButton>

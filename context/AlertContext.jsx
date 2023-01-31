@@ -5,12 +5,9 @@ import PropTypes from "prop-types";
 // define context
 const AlertContext = createContext();
 
-// fixme: the "obj and setObj" needs to be a useReducer like for Modal. why? because the confirm function needs to be able to either simply cancel out of the alert, delete a journal entry, or for EditReminderItem it can bring up the datetimepicker thingy and update its object in memory... so it needs multiple different ways to set some state!
-
 // init reducer context
 const init = {
      reducerType: "",
-     // fixme: "obj" and setObj are now "data"
      data: null,
      alert: false,
      title: "",
@@ -36,10 +33,19 @@ const alertReducer = (state, action) => {
                     message: action.payload.message,
                };
           }
-          case "EDIT_REMINDER": {
+          // case "EDIT_REMINDER": {
+          //      return {
+          //           alert: true,
+          //           reducerType: "EDIT_REMINDER",
+          //           title: action.payload.title,
+          //           message: action.payload.message,
+          //           data: action.payload.data,
+          //      };
+          // }
+          case "DELETE_REMINDER": {
                return {
                     alert: true,
-                    reducerType: "EDIT_REMINDER",
+                    reducerType: "DELETE_REMINDER",
                     title: action.payload.title,
                     message: action.payload.message,
                     data: action.payload.data,

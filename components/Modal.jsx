@@ -17,7 +17,7 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 
 const Modal = () => {
      // init context
@@ -62,15 +62,12 @@ const Modal = () => {
                          />
                     </TextButton>
                </View>
-
-               <View
-                    style={
-                         {
-                              // ...container,
-                              // marginTop: 20,
-                              // marginBottom: 80,
-                         }
-                    }
+               <ScrollView
+                    style={{
+                         marginLeft: 40,
+                         marginRight: 40,
+                    }}
+                    showsVerticalScrollIndicator={false}
                >
                     {/* depending on reducerType show different modal content */}
                     {reducerType === "MORE" && <HomeInfoList />}
@@ -92,7 +89,7 @@ const Modal = () => {
                                         key={item.id}
                                    />
                               ))}
-               </View>
+               </ScrollView>
           </View>
      );
 };

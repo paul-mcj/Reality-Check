@@ -92,7 +92,7 @@ const NewEntry = () => {
      );
 
      useEffect(() => {
-          console.log(prevInput);
+          // console.log(prevInput);
      });
 
      return (

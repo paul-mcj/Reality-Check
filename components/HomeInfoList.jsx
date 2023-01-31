@@ -5,7 +5,7 @@ import React from "react";
 import ListItem from "./ListItem";
 
 // react native
-import { FlatList } from "react-native";
+import { View } from "react-native";
 
 // global static data to display
 const CONTENT = [
@@ -35,14 +35,15 @@ const CONTENT = [
 
 const HomeInfoList = () => {
      return (
-          <FlatList
-               data={CONTENT}
-               showsVerticalScrollIndicator={false}
-               keyExtractor={(item) => item.id}
-               renderItem={({ item }) => (
-                    <ListItem title={item.title} message={item.text} />
-               )}
-          />
+          <View style={{ marginTop: 80, marginBottom: 40 }}>
+               {CONTENT.map((item) => (
+                    <ListItem
+                         key={item.id}
+                         title={item.title}
+                         message={item.text}
+                    />
+               ))}
+          </View>
      );
 };
 

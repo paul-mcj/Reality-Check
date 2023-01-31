@@ -9,6 +9,7 @@ import AlertContext from "../context/AlertContext";
 import JournalContext from "../context/JournalContext";
 import ReminderContext from "../context/ReminderContext";
 import ModalContext from "../context/ModalContext";
+import ToastContext from "../context/ToastContext";
 
 const AlertModal = () => {
      // init context
@@ -28,6 +29,11 @@ const AlertModal = () => {
           editReminderTime,
           editReminderIsActive,
      } = useContext(ReminderContext);
+     const {
+          invokeToast,
+          message: toastMessage,
+          setMessage: setToastMessage,
+     } = useContext(ToastContext);
 
      // always make sure to set Alert context to false after the component mounts to prepare state for next context change
      useEffect(() => {
@@ -46,18 +52,30 @@ const AlertModal = () => {
                     // depending on the alert reducerType, the confirm button in the Alert component will perform different actions via interacting with its respective context. The modal context also needs to be changed for any components that allow alerts inside of modals as well.
                     onPress: () => {
                          switch (reducerType) {
-                              case "EDIT_REMINDER": {
-                                   //fixme: do something for edit reminder here
-                                   alertDispatch({ type: "CLOSE_ALERT" });
-                                   modalDispatch({ type: "CLOSE_MODAL" });
-                              }
+                              // case "EDIT_REMINDER": {
+                              //      alertDispatch({ type: "CLOSE_ALERT" });
+                              //      modalDispatch({ type: "CLOSE_MODAL" });
+                              //      editReminderTime(data?.id);
+                              //      setToastMessage(() => "Reminder updated");
+                              //      invokeToast();
+                              // }
                               case "DUPLICATE_REMINDER": {
                                    alertDispatch({ type: "CLOSE_ALERT" });
+                              }
+                              case "DELETE_REMINDER": {
+                                   deleteReminder(data?.id);
+                                   alertDispatch({ type: "CLOSE_ALERT" });
+                                   modalDispatch({ type: "CLOSE_MODAL" });
+                                   setToastMessage(() => "Reminder deleted");
                               }
                               case "DELETE_ENTRY": {
                                    deleteEntry(data?.id);
                                    alertDispatch({ type: "CLOSE_ALERT" });
                                    modalDispatch({ type: "CLOSE_MODAL" });
+                                   // fixme: for some reason, the toast message below is being displaying even when reminders are duplicated AND when reminders are being deleted...
+                                   setToastMessage(
+                                        () => "Journal entry deleted"
+                                   );
                               }
                               default: {
                                    alertDispatch({ type: "CLOSE_ALERT" });
