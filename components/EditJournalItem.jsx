@@ -25,9 +25,6 @@ const EditJournalItem = ({ entry }) => {
           setTitle,
           setObj,
           setMessage: setAlertMessage,
-          setHandleOnCancel,
-          handleOnConfirm,
-          setHandleOnConfirm,
      } = useContext(AlertContext);
 
      // app theme deconstruction

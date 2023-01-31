@@ -97,9 +97,6 @@ const Home = () => {
           invokeAlert,
           setObj,
           setMessage: setAlertMessage,
-          setHandleOnCancel,
-          handleOnConfirm,
-          setHandleOnConfirm,
      } = useContext(AlertContext);
 
      // hooks
@@ -142,6 +139,7 @@ const Home = () => {
                     );
                     // to make sure that a journal entry is not being deleted from context, make sure to update the obj it depends on to null
                     setObj(() => null);
+                    // fixme: don't know if below is necessary once dispatching from AlertContext useReducer...
                     invokeAlert();
                }
           });

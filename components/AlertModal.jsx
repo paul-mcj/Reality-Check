@@ -12,15 +12,8 @@ import ModalContext from "../context/ModalContext";
 
 const AlertModal = () => {
      // init context
-     const {
-          title,
-          message,
-          obj,
-          setAlert,
-          setHandleOnConfirm,
-          handleOnConfirm,
-          handleOnCancel,
-     } = useContext(AlertContext);
+     const { title, message, obj, setAlert, setHandleOnConfirm } =
+          useContext(AlertContext);
      const { dispatch } = useContext(ModalContext);
      const { deleteEntry } = useContext(JournalContext);
      const {
