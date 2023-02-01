@@ -20,7 +20,7 @@ export const ToastProvider = ({ children }) => {
 
      return (
           <ToastContext.Provider
-               value={{ isToast, invokeToast, setMessage, message }}
+               value={{ isToast, setIsToast, invokeToast, setMessage, message }}
           >
                {children}
           </ToastContext.Provider>

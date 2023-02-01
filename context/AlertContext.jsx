@@ -17,7 +17,6 @@ const init = {
 // local reducer function
 const alertReducer = (state, action) => {
      switch (action.type) {
-          // fixme: instead of spreading state, just resolve to init as it resets everything anyway?
           case "CLOSE_ALERT": {
                return { ...state, alert: false };
           }
@@ -28,20 +27,12 @@ const alertReducer = (state, action) => {
                return {
                     alert: true,
                     reducerType: "DUPLICATE_REMINDER",
+                    // make sure data is set to null, otherwise it will be referencing the last updated context which might cause unwanted bugs the next time Alert context is updated
                     data: null,
                     title: action.payload.title,
                     message: action.payload.message,
                };
           }
-          // case "EDIT_REMINDER": {
-          //      return {
-          //           alert: true,
-          //           reducerType: "EDIT_REMINDER",
-          //           title: action.payload.title,
-          //           message: action.payload.message,
-          //           data: action.payload.data,
-          //      };
-          // }
           case "DELETE_REMINDER": {
                return {
                     alert: true,

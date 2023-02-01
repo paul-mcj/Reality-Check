@@ -30,6 +30,7 @@ const AlertModal = () => {
           editReminderIsActive,
      } = useContext(ReminderContext);
      const {
+          setIsToast,
           invokeToast,
           message: toastMessage,
           setMessage: setToastMessage,
@@ -60,22 +61,28 @@ const AlertModal = () => {
                               //      invokeToast();
                               // }
                               case "DUPLICATE_REMINDER": {
-                                   alertDispatch({ type: "CLOSE_ALERT" });
+                                   alertDispatch({
+                                        type: "CLOSE_ALERT",
+                                   });
+                                   break;
                               }
                               case "DELETE_REMINDER": {
                                    deleteReminder(data?.id);
                                    alertDispatch({ type: "CLOSE_ALERT" });
                                    modalDispatch({ type: "CLOSE_MODAL" });
                                    setToastMessage(() => "Reminder deleted");
+                                   invokeToast();
+                                   break;
                               }
                               case "DELETE_ENTRY": {
                                    deleteEntry(data?.id);
                                    alertDispatch({ type: "CLOSE_ALERT" });
                                    modalDispatch({ type: "CLOSE_MODAL" });
-                                   // fixme: for some reason, the toast message below is being displaying even when reminders are duplicated AND when reminders are being deleted...
                                    setToastMessage(
                                         () => "Journal entry deleted"
                                    );
+                                   invokeToast();
+                                   break;
                               }
                               default: {
                                    alertDispatch({ type: "CLOSE_ALERT" });

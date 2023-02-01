@@ -62,7 +62,7 @@ const useTime = () => {
                // add new object to reminder context
                addReminder(newReminder);
                // Toast that new reminder has been created
-               setToastMessage(() => "New reminder created!");
+               setToastMessage(() => "New reminder created");
                invokeToast();
                // fixme: app will now make a notification at the scheduled time everyday
                // triggerNotification(selectedTime);

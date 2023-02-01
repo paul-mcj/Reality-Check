@@ -19,12 +19,6 @@ export const ReminderProvider = ({ children }) => {
           setReminders(() => [...reminders].filter((item) => item.id !== id));
      };
 
-     // function to edit the time when a reminder performs a notification
-     const editReminderTime = (id) => {
-          console.log(id);
-          // fixme: loop reminders arr, find reminder obj with given id, and edit its time to newTime
-     };
-
      // function to edit whether a specific reminder performs a notification or not
      const editReminderIsActive = (id) => {
           const findReminderIndex = reminders.findIndex(
@@ -44,7 +38,6 @@ export const ReminderProvider = ({ children }) => {
                     reminders,
                     addReminder,
                     deleteReminder,
-                    editReminderTime,
                     editReminderIsActive,
                }}
           >
