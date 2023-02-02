@@ -1,5 +1,5 @@
 // react and misc
-import { useReducer, createContext, useEffect } from "react";
+import { useReducer, createContext } from "react";
 import PropTypes from "prop-types";
 
 // define context

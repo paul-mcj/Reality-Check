@@ -1,13 +1,11 @@
 // context
-import ModalContext from "../context/ModalContext";
-import JournalContext from "../context/JournalContext";
 import AlertContext from "../context/AlertContext";
 
 // components
 import TextButton from "./TextButton";
 
 // react and misc
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import PropTypes from "prop-types";
 
 // react navigation
@@ -18,12 +16,10 @@ import { View, Text, ScrollView } from "react-native";
 
 const EditJournalItem = ({ entry }) => {
      // init context
-     const { deleteEntry } = useContext(JournalContext);
-     const { dispatch: modalDispatch } = useContext(ModalContext);
      const { dispatch: alertDispatch } = useContext(AlertContext);
 
      // app theme deconstruction
-     const { colors, container, smallTextWhite, border } = useTheme();
+     const { colors, container, smallTextWhite, border, text } = useTheme();
 
      // function will delete entry from journal context
      const handleOnPress = () => {
@@ -45,8 +41,7 @@ const EditJournalItem = ({ entry }) => {
           >
                <Text
                     style={{
-                         ...smallTextWhite,
-                         paddingBottom: 0,
+                         ...text,
                     }}
                >
                     {entry?.timestamp.toDateString()}
@@ -60,7 +55,9 @@ const EditJournalItem = ({ entry }) => {
                     }}
                >
                     <View style={{ minHeight: 100 }}>
-                         <Text style={smallTextWhite}>{entry?.input}</Text>
+                         <Text style={{ ...smallTextWhite, textAlign: "left" }}>
+                              {entry?.input}
+                         </Text>
                     </View>
                </View>
                <View style={container}>

@@ -25,8 +25,8 @@ const NewEntry = () => {
 
      // init context
      const { addEntry } = useContext(JournalContext);
-     // fixme: toast when new entry is made
-     const { isToast, invokeToast } = useContext(ToastContext);
+     const { setMessage: setToastMessage, invokeToast } =
+          useContext(ToastContext);
 
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text, border } =
@@ -53,6 +53,10 @@ const NewEntry = () => {
           };
           // add object to context
           addEntry(entry);
+          //fixme: add async storage capabilites
+          // Toast success
+          setToastMessage(() => "Journal entry added");
+          invokeToast();
           // reset text input
           setInput(() => "");
      };
@@ -106,6 +110,7 @@ const NewEntry = () => {
                     style={{
                          ...text,
                          ...border,
+                         textAlign: "left",
                     }}
                     placeholder="What did you dream of?"
                     placeholderTextColor={colors.text}

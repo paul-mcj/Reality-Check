@@ -1,65 +1,31 @@
 // react native
-import {
-     Text,
-     ScrollView,
-     View,
-     TextInput,
-     RefreshControl,
-     Pressable,
-} from "react-native";
-
-// icons
-import CloseIcon from "react-native-vector-icons/MaterialIcons";
+import { Text, ScrollView, View } from "react-native";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // context
 import JournalContext from "../context/JournalContext";
-import ModalContext from "../context/ModalContext";
-import ToastContext from "../context/ToastContext";
 
 // components
 import JournalEntry from "../components/JournalEntry";
-import TextButton from "../components/TextButton";
 
 // react and misc.
-import { useState, useCallback, useEffect, useRef, useContext } from "react";
-
-// global variable for later assignment (for JSX slimming)
-let showModal;
+import { useEffect, useRef, useContext } from "react";
 
 const Journal = () => {
-     // init component state
-     const [refreshing, setRefreshing] = useState(false);
-     const [modalVisible, setModalVisible] = useState(false);
-     const [input, setInput] = useState("");
-
      // init context
-     const { entries, deleteEntry } = useContext(JournalContext);
-     //fixme: when entry is deleted, update toast context
-     const { isToast, invokeToast } = useContext(ToastContext);
-     //fixme: use modal to display currently selected entry
-     const { dispatch: modalDispatch } = useContext(ModalContext);
+     const { entries } = useContext(JournalContext);
 
      // app theme deconstruction
-     const { colors, container, text, title, border, smallTextWhite } =
-          useTheme();
+     const { container, text, title, smallTextWhite } = useTheme();
 
      // hooks
      const ref = useRef(null);
      useScrollToTop(ref);
 
-     // const onRefresh = useCallback(() => {
-     //      setRefreshing(true);
-     //      setTimeout(() => {
-     //           setRefreshing(false);
-     //           resetSwitch();
-     //      }, 2000);
-     // }, []);
-
      useEffect(() => {
-          // fixme: when context is updated...
+          // fixme: does this need to be here?? or delete useffect completely?
      }, [entries]);
 
      return (

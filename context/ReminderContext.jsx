@@ -8,6 +8,8 @@ const ReminderContext = createContext();
 export const ReminderProvider = ({ children }) => {
      // init state
      const [reminders, setReminders] = useState([]);
+     const [activeReminders, setActiveReminders] = useState(0);
+     const [allRemindersActive, setAllRemindersActive] = useState(true);
 
      // function to add new reminder to context
      const addReminder = (reminderObj) => {
@@ -32,10 +34,44 @@ export const ReminderProvider = ({ children }) => {
           setReminders(() => copyReminders);
      };
 
+     // sets all reminders to either on/off
+     const changeAllRemindersActive = () => {
+          setAllRemindersActive((prev) => !prev);
+          let reminderIds = [];
+          reminders.forEach((reminder) => reminderIds.push(reminder.id));
+          reminders.forEach((reminder) => editReminderIsActive(reminder.id));
+
+          // let copyReminders = [...reminders].forEach(
+          //      (reminder) => reminder.id
+          // if (!allRemindersActive) {
+          //      reminder.active = true;
+          // } else {
+          //      reminder.active = false;
+          // }
+          // );
+          // editReminderIsActive();
+
+          // setReminders(() => copyReminders);
+     };
+
+     // keep track of every reminder thats currently set
+     useEffect(() => {
+          let count = 0;
+          reminders.forEach((reminder) => {
+               if (reminder.active) {
+                    count++;
+               }
+          });
+          setActiveReminders(() => count);
+     }, [reminders]);
+
      return (
           <ReminderContext.Provider
                value={{
                     reminders,
+                    activeReminders,
+                    allRemindersActive,
+                    changeAllRemindersActive,
                     addReminder,
                     deleteReminder,
                     editReminderIsActive,

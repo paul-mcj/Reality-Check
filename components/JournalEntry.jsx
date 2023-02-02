@@ -30,6 +30,7 @@ const JournalEntry = ({ id, input, timestamp }) => {
                <Text
                     style={{
                          ...smallTextWhite,
+                         textAlign: "left",
                          paddingBottom: 0,
                     }}
                >
@@ -45,7 +46,9 @@ const JournalEntry = ({ id, input, timestamp }) => {
                     }}
                >
                     <View style={{ minHeight: 100 }}>
-                         <Text style={smallTextWhite}>{input}</Text>
+                         <Text style={{ ...smallTextWhite, textAlign: "left" }}>
+                              {input}
+                         </Text>
                     </View>
                </Pressable>
           </>

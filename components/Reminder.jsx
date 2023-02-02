@@ -23,25 +23,13 @@ import { useContext } from "react";
 
 const Reminder = ({ id, time, active, canOpenReminder }) => {
      // app theme deconstruction
-     const { colors, container, text, title, border, smallTextNotification } =
-          useTheme();
+     const { colors, smallTextNotification } = useTheme();
 
      // init context
      const { dispatch: modalDispatch } = useContext(ModalContext);
-     const {
-          reminders,
-          deleteReminder,
-          editReminderTime,
-          editReminderIsActive,
-     } = useContext(ReminderContext);
-     const {
-          isToast,
-          message,
-          invokeToast,
-          setMessage: setToastMessage,
-     } = useContext(ToastContext);
-
-     // fixme: modal open, and ability to edit time or remove reminder from reminder context (alert user before deletion!)
+     const { reminders, editReminderIsActive } = useContext(ReminderContext);
+     const { invokeToast, setMessage: setToastMessage } =
+          useContext(ToastContext);
 
      // open modal and display options related to specific reminder object
      const openReminder = () => {

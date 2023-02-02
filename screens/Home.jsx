@@ -25,9 +25,9 @@ import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { formatTime, showTimePicker } from "../utils/helperFunctions";
 
 // react native
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, Switch } from "react-native";
 
-// fixme: put all timepicker and Notification stuff in custom hook??
+// fixme: put all Notification stuff in custom hook??
 // run notifications in background
 const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 TaskManager.defineTask(
@@ -71,23 +71,19 @@ const Home = () => {
      const [not, setNot] = useState();
 
      // app theme deconstruction
-     const {
-          colors,
-          smallTextWhite,
-          smallTextNotification,
-          container,
-          title,
-          text,
-     } = useTheme();
+     const { colors, smallTextWhite, container, title, text } = useTheme();
 
      // init context
      const { dispatch: modalDispatch } = useContext(ModalContext);
-     const { reminders, addReminder } = useContext(ReminderContext);
      const {
-          isToast,
-          invokeToast,
-          setMessage: setToastMessage,
-     } = useContext(ToastContext);
+          reminders,
+          activeReminders,
+          allRemindersActive,
+          changeAllRemindersActive,
+          addReminder,
+     } = useContext(ReminderContext);
+     const { invokeToast, setMessage: setToastMessage } =
+          useContext(ToastContext);
      const { dispatch: alertDispatch } = useContext(AlertContext);
 
      // hooks
@@ -118,7 +114,7 @@ const Home = () => {
                                    title: "Error",
                                    message: `There is already a reminder set for ${formatTime(
                                         selectedTime
-                                   )}!`,
+                                   )}. Please select a different time.`,
                               },
                          });
                     }
@@ -149,7 +145,6 @@ const Home = () => {
      );
 
      useEffect(() => {
-          console.log(reminders);
           // console.log(not);
      });
 
@@ -182,30 +177,52 @@ const Home = () => {
                     <View style={container}>
                          <Text style={title}>Home</Text>
                          <Text style={{ ...text, marginBottom: 40 }}>
-                              This app is designed to help you perform daily
-                              "reality checks" in order to bring about lucidity
-                              during sleep.
+                              Reality check notifications can help you become a
+                              lucid dreamer! Create as many daily reminders as
+                              you need!
                          </Text>
                          <TextButton
                               onPress={() => showTimePicker(createReminder)}
                               backgroundColor={colors.notification}
                               minWidth={150}
                          >
-                              {/* fixme: have another button that can turn on/off ALL reminders in one swoop??*/}
                               <Text style={smallTextWhite}>Add Reminder</Text>
                          </TextButton>
                     </View>
                     <View style={container}>
-                         {reminders.length === 0 && (
-                              <Text
-                                   style={{
-                                        ...smallTextWhite,
-                                        marginBottom: 40,
-                                   }}
-                              >
-                                   No reminders currently set
-                              </Text>
+                         {reminders?.length !== 0 && (
+                              <View>
+                                   <Text style={text}>
+                                        Turn off/on all reminders
+                                   </Text>
+                                   <Switch
+                                        value={allRemindersActive}
+                                        onValueChange={changeAllRemindersActive}
+                                        trackColor={{
+                                             false: colors.dim,
+                                             true: colors.secondary,
+                                        }}
+                                        thumbColor={
+                                             allRemindersActive
+                                                  ? colors.notification
+                                                  : colors.text
+                                        }
+                                   />
+                              </View>
                          )}
+                         <Text
+                              style={{
+                                   ...smallTextWhite,
+                                   marginBottom: 40,
+                              }}
+                         >
+                              {activeReminders === 0 &&
+                                   "No reminders currently set"}
+                              {activeReminders === 1 &&
+                                   `${activeReminders} reminder currently set`}
+                              {activeReminders > 1 &&
+                                   `${activeReminders} reminders currently set`}
+                         </Text>
                          {reminders.length !== 0 &&
                               reminders.map((item) => (
                                    <Reminder

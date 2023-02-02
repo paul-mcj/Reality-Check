@@ -22,19 +22,9 @@ const AlertModal = () => {
      } = useContext(AlertContext);
      const { dispatch: modalDispatch } = useContext(ModalContext);
      const { deleteEntry } = useContext(JournalContext);
-     const {
-          reminders,
-          addReminder,
-          deleteReminder,
-          editReminderTime,
-          editReminderIsActive,
-     } = useContext(ReminderContext);
-     const {
-          setIsToast,
-          invokeToast,
-          message: toastMessage,
-          setMessage: setToastMessage,
-     } = useContext(ToastContext);
+     const { deleteReminder } = useContext(ReminderContext);
+     const { invokeToast, setMessage: setToastMessage } =
+          useContext(ToastContext);
 
      // always make sure to set Alert context to false after the component mounts to prepare state for next context change
      useEffect(() => {
@@ -49,7 +39,7 @@ const AlertModal = () => {
                     text: "Cancel",
                },
                {
-                    text: "Confirm",
+                    text: "OK",
                     // depending on the alert reducerType, the confirm button in the Alert component will perform different actions via interacting with its respective context. The modal context also needs to be changed for any components that allow alerts inside of modals as well.
                     onPress: () => {
                          switch (reducerType) {

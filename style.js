@@ -24,21 +24,25 @@ const theme = {
           margin: 40,
      },
      title: {
+          textAlign: "center",
           fontSize: 36,
           color: "#fff",
           marginBottom: 40,
      },
      text: {
+          textAlign: "center",
           fontSize: 24,
           color: "#fff",
           padding: 10,
      },
      smallTextWhite: {
+          textAlign: "center",
           fontSize: 16,
           color: "#fff",
           padding: 10,
      },
      smallTextNotification: {
+          textAlign: "center",
           fontSize: 16,
           color: "#3f3861",
           padding: 10,

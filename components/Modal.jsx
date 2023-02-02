@@ -29,7 +29,7 @@ const Modal = () => {
      } = useContext(ModalContext);
 
      // app theme deconstruction
-     const { colors, container } = useTheme();
+     const { colors } = useTheme();
 
      return (
           <View
@@ -38,7 +38,6 @@ const Modal = () => {
                     minHeight: "100%",
                }}
           >
-               {/* fixme: BackHandler to go to previous page state should be allowed! this needs to be passed as props! */}
                <View
                     style={{
                          right: 20,

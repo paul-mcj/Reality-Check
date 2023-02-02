@@ -1,12 +1,10 @@
 // context
 import AlertContext from "../context/AlertContext";
-import ModalContext from "../context/ModalContext";
 import ReminderContext from "../context/ReminderContext";
 import ToastContext from "../context/ToastContext";
 
 // components
 import TextButton from "./TextButton";
-import Reminder from "./Reminder";
 
 // react and misc
 import { useContext, useState } from "react";
@@ -22,31 +20,22 @@ import { useTheme } from "@react-navigation/native";
 import { View, Text, ScrollView } from "react-native";
 
 const EditReminderItem = ({ reminder }) => {
-     // init local state
-     const [updated, setUpdated] = useState({
-          time: reminder.time,
-          id: reminder.id,
-          active: reminder.active,
-     });
+     // initialize local state
+     const [displayTime, setDisplayTime] = useState(reminder.time);
 
      // init context
-     const { dispatch: modalDispatch } = useContext(ModalContext);
      const { dispatch: alertDispatch } = useContext(AlertContext);
      const { reminders, deleteReminder, addReminder } =
           useContext(ReminderContext);
-     const {
-          isToast,
-          invokeToast,
-          setMessage: setToastMessage,
-     } = useContext(ToastContext);
+     const { invokeToast, setMessage: setToastMessage } =
+          useContext(ToastContext);
 
      // app theme deconstruction
-     const { colors, smallTextWhite, container, border } = useTheme();
+     const { colors, smallTextWhite, text } = useTheme();
 
      // function will delete entry from reminder context
      const handleDelete = () => {
           // Alert user is about to delete the entry
-          // console.log("delete");
           alertDispatch({
                type: "DELETE_REMINDER",
                payload: {
@@ -58,7 +47,7 @@ const EditReminderItem = ({ reminder }) => {
      };
 
      // function will allow users to edit the reminder time and thus update reminder context
-     const editReminder = (e, selectedTime) => {
+     const updateReminder = (e, selectedTime) => {
           // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
           let timeAlreadyInContext = false;
           reminders.forEach((item) => {
@@ -75,7 +64,7 @@ const EditReminderItem = ({ reminder }) => {
                               title: "Error",
                               message: `There is already a reminder set for ${formatTime(
                                    selectedTime
-                              )}!`,
+                              )}. Please select a different time.`,
                          },
                     });
                }
@@ -95,8 +84,7 @@ const EditReminderItem = ({ reminder }) => {
                // Toast that new reminder has been created
                setToastMessage(() => "Reminder updated");
                invokeToast();
-               setUpdated(() => ({ ...updatedReminder, time: selectedTime }));
-               // setDisplayTime(() => updatedReminder.time);
+               setDisplayTime(() => updatedReminder.time);
                // fixme: update notification?
           }
      };
@@ -115,10 +103,10 @@ const EditReminderItem = ({ reminder }) => {
                          backgroundColor={colors.notification}
                          minWidth={100}
                          onPress={() =>
-                              showTimePicker(editReminder, reminder.time)
+                              showTimePicker(updateReminder, reminder.time)
                          }
                     >
-                         <Text style={smallTextWhite}>Edit</Text>
+                         <Text style={smallTextWhite}>Update</Text>
                     </TextButton>
                </View>
                <TextButton
@@ -139,13 +127,15 @@ const EditReminderItem = ({ reminder }) => {
                     marginTop: 200,
                }}
           >
-               {/* fixme: switch isn't working for on/off reminder */}
-               <Reminder
-                    id={updated.id}
-                    time={updated.time}
-                    active={updated.active}
-                    canOpenReminder={false}
-               />
+               <Text style={text}>
+                    This reminder is currently
+                    {reminder.active ? " on and" : " off, but"} set for{" "}
+                    {formatTime(displayTime)}.
+               </Text>
+               <Text style={text}>
+                    You can update the notification time below, or choose to
+                    delete it.
+               </Text>
                {showButtons}
           </ScrollView>
      );
