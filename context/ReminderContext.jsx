@@ -37,21 +37,15 @@ export const ReminderProvider = ({ children }) => {
      // sets all reminders to either on/off
      const changeAllRemindersActive = () => {
           setAllRemindersActive((prev) => !prev);
-          let reminderIds = [];
-          reminders.forEach((reminder) => reminderIds.push(reminder.id));
-          reminders.forEach((reminder) => editReminderIsActive(reminder.id));
-
-          // let copyReminders = [...reminders].forEach(
-          //      (reminder) => reminder.id
-          // if (!allRemindersActive) {
-          //      reminder.active = true;
-          // } else {
-          //      reminder.active = false;
-          // }
-          // );
-          // editReminderIsActive();
-
-          // setReminders(() => copyReminders);
+          let copyReminders = [...reminders];
+          copyReminders.forEach((reminder) => {
+               if (!allRemindersActive) {
+                    reminder.active = true;
+               } else {
+                    reminder.active = false;
+               }
+          });
+          setReminders(() => copyReminders);
      };
 
      // keep track of every reminder thats currently set

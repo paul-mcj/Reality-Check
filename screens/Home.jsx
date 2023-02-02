@@ -95,6 +95,15 @@ const Home = () => {
           modalDispatch({ type: "MORE" });
      };
 
+     // run function when local Switch is turned off/on to set all reminders to active or not
+     const handleOnValueChange = () => {
+          changeAllRemindersActive();
+          setToastMessage(
+               () => `All reminders ${!allRemindersActive ? "on" : "off"}`
+          );
+          invokeToast();
+     };
+
      // function changes local time state, creates a new reminder with the time, and adds it to reminder context
      const createReminder = useCallback(
           (e, selectedTime) => {
@@ -177,9 +186,9 @@ const Home = () => {
                     <View style={container}>
                          <Text style={title}>Home</Text>
                          <Text style={{ ...text, marginBottom: 40 }}>
-                              Reality check notifications can help you become a
-                              lucid dreamer! Create as many daily reminders as
-                              you need!
+                              Reality checks can help you become a lucid
+                              dreamer! Create as many daily reminders as you
+                              need!
                          </Text>
                          <TextButton
                               onPress={() => showTimePicker(createReminder)}
@@ -190,14 +199,33 @@ const Home = () => {
                          </TextButton>
                     </View>
                     <View style={container}>
-                         {reminders?.length !== 0 && (
-                              <View>
-                                   <Text style={text}>
+                         <Text
+                              style={{
+                                   ...text,
+                                   marginBottom: 40,
+                              }}
+                         >
+                              {activeReminders === 0 && "No reminders set"}
+                              {activeReminders === 1 &&
+                                   `${activeReminders} reminder set`}
+                              {activeReminders > 1 &&
+                                   `${activeReminders} reminders set`}
+                         </Text>
+                         {reminders && reminders?.length !== 0 && (
+                              <View
+                                   style={{
+                                        flex: 2,
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        marginBottom: 10,
+                                   }}
+                              >
+                                   <Text style={smallTextWhite}>
                                         Turn off/on all reminders
                                    </Text>
                                    <Switch
                                         value={allRemindersActive}
-                                        onValueChange={changeAllRemindersActive}
+                                        onValueChange={handleOnValueChange}
                                         trackColor={{
                                              false: colors.dim,
                                              true: colors.secondary,
@@ -210,20 +238,8 @@ const Home = () => {
                                    />
                               </View>
                          )}
-                         <Text
-                              style={{
-                                   ...smallTextWhite,
-                                   marginBottom: 40,
-                              }}
-                         >
-                              {activeReminders === 0 &&
-                                   "No reminders currently set"}
-                              {activeReminders === 1 &&
-                                   `${activeReminders} reminder currently set`}
-                              {activeReminders > 1 &&
-                                   `${activeReminders} reminders currently set`}
-                         </Text>
-                         {reminders.length !== 0 &&
+                         {reminders &&
+                              reminders?.length !== 0 &&
                               reminders.map((item) => (
                                    <Reminder
                                         id={item.id}
