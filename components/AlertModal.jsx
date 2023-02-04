@@ -43,19 +43,6 @@ const AlertModal = () => {
                     // depending on the alert reducerType, the confirm button in the Alert component will perform different actions via interacting with its respective context. The modal context also needs to be changed for any components that allow alerts inside of modals as well.
                     onPress: () => {
                          switch (reducerType) {
-                              // case "EDIT_REMINDER": {
-                              //      alertDispatch({ type: "CLOSE_ALERT" });
-                              //      modalDispatch({ type: "CLOSE_MODAL" });
-                              //      editReminderTime(data?.id);
-                              //      setToastMessage(() => "Reminder updated");
-                              //      invokeToast();
-                              // }
-                              case "DUPLICATE_REMINDER": {
-                                   alertDispatch({
-                                        type: "CLOSE_ALERT",
-                                   });
-                                   break;
-                              }
                               case "DELETE_REMINDER": {
                                    deleteReminder(data?.id);
                                    alertDispatch({ type: "CLOSE_ALERT" });
@@ -74,8 +61,10 @@ const AlertModal = () => {
                                    invokeToast();
                                    break;
                               }
+                              case "DUPLICATE_REMINDER":
                               default: {
                                    alertDispatch({ type: "CLOSE_ALERT" });
+                                   break;
                               }
                          }
                     },

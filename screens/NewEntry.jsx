@@ -14,17 +14,18 @@ import TextButton from "../components/TextButton";
 import JournalContext from "../context/JournalContext";
 import ToastContext from "../context/ToastContext";
 
-// hooks
-import usePrevious from "../hooks/use-previous";
+// // hooks
+// import usePrevious from "../hooks/use-previous";
 
 const NewEntry = () => {
      // init component state/hooks
-     const [input, setInput] = useState("");
+     // const [input, setInput] = useState("");
      const [undo, setUndo] = useState(false);
-     const prevInput = usePrevious(input);
+     // const prevInput = usePrevious(input);
 
      // init context
-     const { addEntry } = useContext(JournalContext);
+     const { addEntry, input, setInput, prevInput } =
+          useContext(JournalContext);
      const { setMessage: setToastMessage, invokeToast } =
           useContext(ToastContext);
 
@@ -62,6 +63,7 @@ const NewEntry = () => {
      };
 
      // fixme: pressing undo after interacting with Alert modal (CONFIRM only) seems to not being placing the text back into the input!! try useMemo in the use previous hook, or maybe a global state for prevInput to bypass any re-renders when additional contexts change?
+     // fixme: Issue stemming from JournalContext!!!!
      const handleUndo = () => {
           setInput(() => prevInput);
           setUndo(() => false);
@@ -119,7 +121,7 @@ const NewEntry = () => {
                     multiline
                />
                {input.trim().length !== 0 && showButtons}
-               {undo && (
+               {undo && input.trim().length === 0 && (
                     <View style={{ flex: 1, marginTop: 40 }}>
                          <TextButton
                               backgroundColor={colors.notification}

@@ -45,7 +45,7 @@ const JournalEntry = ({ id, input, timestamp }) => {
                          minWidth: "100%",
                     }}
                >
-                    <View style={{ minHeight: 100 }}>
+                    <View>
                          <Text style={{ ...smallTextWhite, textAlign: "left" }}>
                               {input}
                          </Text>
