@@ -2,7 +2,7 @@
 import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
-import { useState, useContext, useRef, useEffect } from "react";
+import { useContext, useRef } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -14,17 +14,9 @@ import TextButton from "../components/TextButton";
 import JournalContext from "../context/JournalContext";
 import ToastContext from "../context/ToastContext";
 
-// // hooks
-// import usePrevious from "../hooks/use-previous";
-
 const NewEntry = () => {
-     // init component state/hooks
-     // const [input, setInput] = useState("");
-     const [undo, setUndo] = useState(false);
-     // const prevInput = usePrevious(input);
-
      // init context
-     const { addEntry, input, setInput, prevInput } =
+     const { addEntry, input, setInput, prevInput, undo, setUndo } =
           useContext(JournalContext);
      const { setMessage: setToastMessage, invokeToast } =
           useContext(ToastContext);
@@ -62,8 +54,6 @@ const NewEntry = () => {
           setInput(() => "");
      };
 
-     // fixme: pressing undo after interacting with Alert modal (CONFIRM only) seems to not being placing the text back into the input!! try useMemo in the use previous hook, or maybe a global state for prevInput to bypass any re-renders when additional contexts change?
-     // fixme: Issue stemming from JournalContext!!!!
      const handleUndo = () => {
           setInput(() => prevInput);
           setUndo(() => false);
@@ -96,10 +86,6 @@ const NewEntry = () => {
                </TextButton>
           </View>
      );
-
-     useEffect(() => {
-          // console.log(prevInput);
-     });
 
      return (
           <ScrollView

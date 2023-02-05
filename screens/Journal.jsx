@@ -24,10 +24,6 @@ const Journal = () => {
      const ref = useRef(null);
      useScrollToTop(ref);
 
-     useEffect(() => {
-          // fixme: does this need to be here?? or delete useffect completely?
-     }, [entries]);
-
      return (
           <ScrollView
                contentContainerStyle={container}
