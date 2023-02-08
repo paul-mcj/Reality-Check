@@ -42,7 +42,9 @@ const Journal = () => {
                               “I love sleep. My life has the tendency to fall
                               apart when I'm awake, you know?”
                          </Text>
-                         <Text style={smallTextWhite}>― Ernest Hemingway</Text>
+                         <Text style={{ ...smallTextWhite, padding: 0 }}>
+                              ― Ernest Hemingway
+                         </Text>
                     </>
                )}
                <View style={{ marginBottom: 40 }}>

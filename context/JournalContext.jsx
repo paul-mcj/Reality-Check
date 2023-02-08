@@ -25,7 +25,8 @@ export const JournalProvider = ({ children }) => {
           try {
                setEntries((prev) => [...prev, entryObj]);
                const jsonEntry = JSON.stringify(entryObj);
-               await AsyncStorage.setItem(entryObj.id, jsonEntry);
+               await AsyncStorage.setItem(String(entryObj.id), jsonEntry);
+               console.log(AsyncStorage);
           } catch (err) {
                console.log(`error at addEntry in JournalContext: ${err}`);
           }
@@ -45,7 +46,28 @@ export const JournalProvider = ({ children }) => {
           // fixme: array of just storage key values for multiKey get below ??
           const getEntries = async () => {
                try {
-                    // const jsonEntries = await AsyncStorage.get;
+                    let tempArr = [];
+                    const jsonEntries = await AsyncStorage.getAllKeys();
+                    await Promise.all(
+                         jsonEntries.map(async (entry) => {
+                              const data = await AsyncStorage.getItem(entry);
+                              let jsonData = JSON.parse(data);
+                              // const timestamp = Date.parse(jsonData.timestamp);
+                              const reformatData = {
+                                   ...jsonData,
+                                   timestamp: jsonData.id,
+                              };
+                              tempArr.push(reformatData);
+                         })
+                    );
+                    console.log(tempArr);
+                    setEntries(() => tempArr);
+                    // for (const entry of jsonEntries) {
+                    //      const data = await AsyncStorage.getItem(entry);
+                    //      console.log(JSON.parse(data));
+                    //      await setEntries((prev) => [...prev, data]);
+                    // }
+                    console.log(entries);
                } catch (err) {
                     console.log(err);
                }
