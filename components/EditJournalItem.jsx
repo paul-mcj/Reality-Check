@@ -42,12 +42,15 @@ const EditJournalItem = ({ entry }) => {
 
      // function will update the journal entry in entries context as well as in storage
      const handleUpdate = () => {
-          const updatedEntry = { ...entry, input };
+          const updatedEntry = { ...entry, input, revised: new Date() };
+          console.log(updatedEntry);
           updateEntry(updatedEntry);
+          // fixme: close modal state here
      };
 
      // everytime the entry prop changes, find its position in the entries array in order to perform editing functionality of the object (used within this component)
      useEffect(() => {
+          // fixme: input is mimicking new entry (combine context!), which is NOT desired.
           setInput(() => entry?.input);
           const foundEntryIndex = entries.findIndex(
                (item) => item.id === entry.id
@@ -85,6 +88,18 @@ const EditJournalItem = ({ entry }) => {
                          </TextInput>
                     </View>
                </View>
+               {/* fixme: last revised date here!!!! */}
+               {entry?.revised && (
+                    <Text
+                         style={{
+                              ...smallTextWhite,
+                              textAlign: "left",
+                              paddingBottom: 0,
+                         }}
+                    >
+                         Revised on: {entry?.revised?.toDateString()}
+                    </Text>
+               )}
                <View
                     style={{
                          ...container,
@@ -118,7 +133,6 @@ const EditJournalItem = ({ entry }) => {
                          </TextButton>
                     )}
                </View>
-               {/* fixme: last revised date here!!!! */}
           </ScrollView>
      );
 };

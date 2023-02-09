@@ -58,11 +58,14 @@ export const JournalProvider = ({ children }) => {
                     String(updatedEntryObj),
                     JSON.stringify(updatedEntryObj)
                );
+               console.log(tempArr);
+               // fixme: after an entry is updated and the app reloads, there is duplicate entries with the same id, make sure the old one after an update is deleted!
           } catch (err) {
                console.log(err);
           }
      };
 
+     // fixme: delete this later!
      useEffect(() => {
           console.log(entries);
      }, [entries]);
