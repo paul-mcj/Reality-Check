@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 // hooks
 import usePrevious from "../hooks/use-previous";
+import useInput from "../hooks/use-input";
 
 // async storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,10 +15,10 @@ const JournalContext = createContext();
 export const JournalProvider = ({ children }) => {
      // init state
      const [entries, setEntries] = useState([]);
-     const [input, setInput] = useState("");
      const [undo, setUndo] = useState(false);
 
      // hooks
+     const { input, setInput } = useInput();
      const prevInput = usePrevious(input);
 
      // function to add a new entry object to journal context as well as to persist to device storage
@@ -39,9 +40,10 @@ export const JournalProvider = ({ children }) => {
                );
                await AsyncStorage.removeItem(String(entryId));
           } catch (err) {
-               console.log(err);
+               console.log(`error at deleteEntry in JournalContext: ${err}`);
           }
           // users cannot undo previous journal entry if they delete another entry (as the entries context will erase all previous data) -- instead of creating a HOC for one piece of state management in a very fringe scenario, simply setting this undo state is fine enough
+          // fixme: this should still be fixed!
           setUndo(() => false);
      };
 
@@ -54,21 +56,16 @@ export const JournalProvider = ({ children }) => {
                const tempArr = [...entries];
                tempArr[index] = updatedEntryObj;
                setEntries(() => tempArr);
-               await AsyncStorage.mergeItem(
-                    String(updatedEntryObj),
-                    JSON.stringify(updatedEntryObj)
+               const jsonEntry = JSON.stringify(updatedEntryObj);
+               await AsyncStorage.removeItem(String(updatedEntryObj.id));
+               await AsyncStorage.setItem(
+                    String(updatedEntryObj.id),
+                    jsonEntry
                );
-               console.log(tempArr);
-               // fixme: after an entry is updated and the app reloads, there is duplicate entries with the same id, make sure the old one after an update is deleted!
           } catch (err) {
-               console.log(err);
+               console.log(`error at updateEntry in JournalContext: ${err}`);
           }
      };
-
-     // fixme: delete this later!
-     useEffect(() => {
-          console.log(entries);
-     }, [entries]);
 
      // get all entries from device storage upon initial render and fill context with those objects
      useEffect(() => {
@@ -89,7 +86,7 @@ export const JournalProvider = ({ children }) => {
                     );
                     setEntries(() => tempArr);
                } catch (err) {
-                    console.log(err);
+                    console.log(`error at useEffect in JournalContext: ${err}`);
                }
           };
           getEntries();

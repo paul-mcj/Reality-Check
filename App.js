@@ -2,7 +2,7 @@
 // fixme: how to optimize react native apps? fells very slow...
 // fixme: google fonts??
 // fixme: add app-wide functionality for backHandler
-// fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple)
+// fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple), all main screens should have the same margins...
 // fixme: check linter and all unused things in entire app for deletion
 // fixme: readme should be properly documented when finished to github
 {

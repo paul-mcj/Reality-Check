@@ -29,10 +29,16 @@ const NewEntry = () => {
      const ref = useRef(null);
      useScrollToTop(ref);
 
-     // erase text input state
+     // erase text input state and show undo button
      const handleErase = () => {
           setInput(() => "");
           setUndo(() => true);
+     };
+
+     // reset input field to what it was before erasing, and hide the undo button
+     const handleUndo = () => {
+          setInput(() => prevInput);
+          setUndo(() => false);
      };
 
      // add new entry to journal context and persist to storage
@@ -41,10 +47,10 @@ const NewEntry = () => {
           // add timestamp, unique id and input data to new entry object
           const entry = {
                input: input.trim(),
-               id: timestamp.getTime(),
                timestamp,
+               id: timestamp.getTime(),
+               revised: null,
           };
-          console.log(entry);
           // add object to context and storage
           addEntry(entry);
           // Toast success
@@ -52,11 +58,6 @@ const NewEntry = () => {
           invokeToast();
           // reset text input
           setInput(() => "");
-     };
-
-     const handleUndo = () => {
-          setInput(() => prevInput);
-          setUndo(() => false);
      };
 
      // for JSX slimming
@@ -98,6 +99,7 @@ const NewEntry = () => {
                     style={{
                          ...text,
                          ...border,
+                         marginTop: 20,
                          textAlign: "left",
                     }}
                     placeholder="What did you dream of?"
