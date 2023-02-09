@@ -34,7 +34,7 @@ const JournalEntry = ({ id, input, timestamp }) => {
                          paddingBottom: 0,
                     }}
                >
-                    {timestamp}
+                    {timestamp.toDateString()}
                </Text>
                <Pressable
                     onPress={openEntry}

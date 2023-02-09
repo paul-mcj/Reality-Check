@@ -35,7 +35,7 @@ const NewEntry = () => {
           setUndo(() => true);
      };
 
-     // add new entry to journal context
+     // add new entry to journal context and persist to storage
      const handleSave = () => {
           const timestamp = new Date();
           // add timestamp, unique id and input data to new entry object
@@ -44,9 +44,9 @@ const NewEntry = () => {
                id: timestamp.getTime(),
                timestamp,
           };
-          // add object to context
+          console.log(entry);
+          // add object to context and storage
           addEntry(entry);
-          //fixme: add async storage capabilites
           // Toast success
           setToastMessage(() => "Journal entry added");
           invokeToast();
