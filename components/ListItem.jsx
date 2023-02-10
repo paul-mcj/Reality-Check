@@ -13,7 +13,8 @@ import { useTheme } from "@react-navigation/native";
 
 const ListItem = ({ title, message }) => {
      // app theme deconstruction
-     const { colors, smallTextNotification, smallTextWhite } = useTheme();
+     const { colors, smallTextNotification, smallTextWhite, border } =
+          useTheme();
 
      // component state
      const [showContent, setShowContent] = useState(false);
@@ -28,11 +29,26 @@ const ListItem = ({ title, message }) => {
                >
                     <Text style={smallTextNotification}>{title}</Text>
                </TextButton>
-               {showContent &&
-                    message.map((item) => (
-                         // its improper to not have a key while mapping, but since the data is static theres no need...
-                         <Text style={smallTextWhite}>{item}</Text>
-                    ))}
+               {showContent && (
+                    <View
+                         style={{
+                              ...border,
+                              borderTopWidth: 0,
+                              borderTopLeftRadius: 0,
+                              borderTopRightRadius: 0,
+                              borderBottomStartRadius: 25,
+                              borderBottomEndRadius: 25,
+                              marginTop: -20,
+                         }}
+                    >
+                         <View style={{ marginTop: 20 }}>
+                              {message.map((item) => (
+                                   // its improper to not have a key while mapping, but since the data is static theres no need...
+                                   <Text style={smallTextWhite}>{item}</Text>
+                              ))}
+                         </View>
+                    </View>
+               )}
           </View>
      );
 };

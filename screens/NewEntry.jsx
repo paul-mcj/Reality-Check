@@ -2,7 +2,7 @@
 import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -15,9 +15,12 @@ import JournalContext from "../context/JournalContext";
 import ToastContext from "../context/ToastContext";
 
 const NewEntry = () => {
+     // component state
+     const [undo, setUndo] = useState(false);
+     const [prevInput, setPrevInput] = useState("");
+
      // init context
-     const { addEntry, input, setInput, prevInput, undo, setUndo } =
-          useContext(JournalContext);
+     const { addEntry, input, setInput } = useContext(JournalContext);
      const { setMessage: setToastMessage, invokeToast } =
           useContext(ToastContext);
 
@@ -31,6 +34,7 @@ const NewEntry = () => {
 
      // erase text input state and show undo button
      const handleErase = () => {
+          setPrevInput(() => input);
           setInput(() => "");
           setUndo(() => true);
      };
@@ -46,7 +50,7 @@ const NewEntry = () => {
           const timestamp = new Date();
           // add timestamp, unique id and input data to new entry object
           const entry = {
-               input: input.trim(),
+               input: input?.trim(),
                timestamp,
                id: timestamp.getTime(),
                revised: null,
@@ -108,8 +112,8 @@ const NewEntry = () => {
                     onChangeText={(text) => setInput(() => text)}
                     multiline
                />
-               {input.trim().length !== 0 && showButtons}
-               {undo && input.trim().length === 0 && (
+               {input?.trim().length !== 0 && showButtons}
+               {undo && input?.trim().length === 0 && (
                     <View style={{ flex: 1, marginTop: 40 }}>
                          <TextButton
                               backgroundColor={colors.notification}

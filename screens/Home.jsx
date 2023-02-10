@@ -141,6 +141,7 @@ const Home = () => {
                     // Toast that new reminder has been created
                     setToastMessage(() => "New reminder created");
                     invokeToast();
+                    // fixme: call a function in reminder context to add to storage!
                     // fixme: app will now make a notification at the scheduled time everyday
                     // triggerNotification(selectedTime);
                     // note: this will erase all notifications in the use effect state, as long as there is no triggering of notifications like above!

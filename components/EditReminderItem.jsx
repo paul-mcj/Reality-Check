@@ -86,6 +86,7 @@ const EditReminderItem = ({ reminder }) => {
                invokeToast();
                setDisplayTime(() => updatedReminder.time);
                // fixme: update notification?
+               // fixme: call a function in reminder context to add to storage!
           }
      };
 

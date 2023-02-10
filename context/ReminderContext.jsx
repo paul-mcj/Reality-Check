@@ -2,6 +2,9 @@
 import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
+// async storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 // define context
 const ReminderContext = createContext();
 
@@ -11,14 +14,31 @@ export const ReminderProvider = ({ children }) => {
      const [activeReminders, setActiveReminders] = useState(0);
      const [allRemindersActive, setAllRemindersActive] = useState(true);
 
-     // function to add new reminder to context
-     const addReminder = (reminderObj) => {
-          setReminders((prev) => [...prev, reminderObj]);
+     // function to add new reminder to context and async storage
+     const addReminder = async (reminderObj) => {
+          try {
+               setReminders((prev) => [...prev, reminderObj]);
+               const jsonEntry = JSON.stringify(reminderObj);
+               await AsyncStorage.setItem(String(reminderObj.id), jsonEntry);
+          } catch (err) {
+               console.log(`error at addReminder in ReminderContext: ${err}`);
+          }
      };
 
-     // function to delete a reminder from context
-     const deleteReminder = (id) => {
-          setReminders(() => [...reminders].filter((item) => item.id !== id));
+     // function to delete a reminder from context and device storage
+     const deleteReminder = async (reminderId) => {
+          try {
+               setReminders(() =>
+                    [...reminders].filter(
+                         (reminder) => reminder.id !== reminderId
+                    )
+               );
+               await AsyncStorage.removeItem(String(reminderId));
+          } catch (err) {
+               console.log(
+                    `error at deleteReminder in ReminderContext: ${err}`
+               );
+          }
      };
 
      // function to edit whether a specific reminder performs a notification or not
@@ -57,7 +77,13 @@ export const ReminderProvider = ({ children }) => {
                }
           });
           setActiveReminders(() => count);
+          console.log(reminders);
      }, [reminders]);
+
+     // get all entries from device storage upon initial render and fill context with those objects
+     useEffect(() => {
+          // fixme: multiget just the journal entry reminder keys and loop thorugh them! Reminder context will multiget just the reminder ids in an array!
+     }, []);
 
      return (
           <ReminderContext.Provider

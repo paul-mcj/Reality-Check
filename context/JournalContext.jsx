@@ -3,7 +3,6 @@ import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // hooks
-import usePrevious from "../hooks/use-previous";
 import useInput from "../hooks/use-input";
 
 // async storage
@@ -15,11 +14,9 @@ const JournalContext = createContext();
 export const JournalProvider = ({ children }) => {
      // init state
      const [entries, setEntries] = useState([]);
-     const [undo, setUndo] = useState(false);
 
      // hooks
      const { input, setInput } = useInput();
-     const prevInput = usePrevious(input);
 
      // function to add a new entry object to journal context as well as to persist to device storage
      const addEntry = async (entryObj) => {
@@ -42,9 +39,6 @@ export const JournalProvider = ({ children }) => {
           } catch (err) {
                console.log(`error at deleteEntry in JournalContext: ${err}`);
           }
-          // users cannot undo previous journal entry if they delete another entry (as the entries context will erase all previous data) -- instead of creating a HOC for one piece of state management in a very fringe scenario, simply setting this undo state is fine enough
-          // fixme: this should still be fixed!
-          setUndo(() => false);
      };
 
      // function will update the journal entry in the entries context array, as well as in storage
@@ -72,7 +66,8 @@ export const JournalProvider = ({ children }) => {
           const getEntries = async () => {
                try {
                     let tempArr = [];
-                    const jsonEntries = await AsyncStorage.getAllKeys();
+                    // fixme: multiget just the journal entry reminder keys and loop thorugh them! Reminder context will multiget just the reminder ids in an array!
+                    const jsonEntries = await AsyncStorage.multiGet();
                     await Promise.all(
                          jsonEntries.map(async (entry) => {
                               const data = await AsyncStorage.getItem(entry);
@@ -97,9 +92,6 @@ export const JournalProvider = ({ children }) => {
                value={{
                     input,
                     setInput,
-                    undo,
-                    setUndo,
-                    prevInput,
                     entries,
                     addEntry,
                     deleteEntry,
