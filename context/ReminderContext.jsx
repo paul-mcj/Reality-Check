@@ -12,7 +12,7 @@ export const ReminderProvider = ({ children }) => {
      // init state
      const [reminders, setReminders] = useState([]);
      const [activeReminders, setActiveReminders] = useState(0);
-     const [allRemindersActive, setAllRemindersActive] = useState(true);
+     const [allRemindersActive, setAllRemindersActive] = useState();
 
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
@@ -68,7 +68,6 @@ export const ReminderProvider = ({ children }) => {
      // sets all reminders to either on/off and make sure each reminder is appropriately set with either setting in device storage
      const changeAllRemindersActive = async () => {
           try {
-               setAllRemindersActive((prev) => !prev);
                let copyReminders = [...reminders];
                copyReminders.forEach((reminder) => {
                     if (!allRemindersActive) {
@@ -87,10 +86,12 @@ export const ReminderProvider = ({ children }) => {
                          );
                     })
                );
-               // fixme: merge all active state change here
-               await AsyncStorage.mergeItem(
+               // set state and storage for all active reminders
+               setAllRemindersActive((prev) => !prev);
+               await AsyncStorage.removeItem("all-reminders-active");
+               await AsyncStorage.setItem(
                     "all-reminders-active",
-                    JSON.stringify({ allRemindersActive })
+                    JSON.stringify(!allRemindersActive)
                );
           } catch (err) {
                console.log(
@@ -108,10 +109,9 @@ export const ReminderProvider = ({ children }) => {
                }
           });
           setActiveReminders(() => count);
-          console.log(reminders);
      }, [reminders]);
 
-     // get all entries from device storage upon initial render and fill reminder context with those objects
+     // upon initial render, get all entries from device storage and fill reminder context with those objects as well as setting whether all reminders are on or off and setting that state too.
      useEffect(() => {
           const getReminders = async () => {
                let tempKeyArr = [];
@@ -146,7 +146,6 @@ export const ReminderProvider = ({ children }) => {
                               tempReminderArr.push(reformatData);
                          })
                     );
-                    console.log(tempReminderArr);
                     setReminders(() => tempReminderArr);
                } catch (err) {
                     console.log(
@@ -155,21 +154,30 @@ export const ReminderProvider = ({ children }) => {
                }
           };
 
-          // fixme: usecallback
+          // fixme: usecallback ?
           const getAllRemindersActive = async () => {
                try {
-                    (await AsyncStorage.getItem("all-reminders-active")) ===
-                         undefined &&
-                         (await AsyncStorage.setItem(
-                              "all-reminders-active",
-                              JSON.stringify({ allRemindersActive })
-                         ));
-                    console.log(
-                         await AsyncStorage.getItem("all-reminders-active")
+                    const jsonValue = await AsyncStorage.getItem(
+                         "all-reminders-active"
                     );
-                    console.log(AsyncStorage.getAllKeys());
-               } catch (error) {
-                    console.log(error);
+                    // if there is no storage key found that holds state of if all reminders are active or not, then set a new one (true by default)...
+                    if (jsonValue === null) {
+                         await AsyncStorage.setItem(
+                              "all-reminders-active",
+                              JSON.stringify(true)
+                         );
+                         setAllRemindersActive(() => true);
+                    } else {
+                         // ... otherwise if there is a key, set the local state to true or false depending on the value of the stored key
+                         const value = await AsyncStorage.getItem(
+                              "all-reminders-active"
+                         );
+                         setAllRemindersActive(() => JSON.parse(value));
+                    }
+               } catch (err) {
+                    console.log(
+                         `error at useEffect in ReminderContext with getAllRemindersActive: ${err}`
+                    );
                }
           };
           getReminders();

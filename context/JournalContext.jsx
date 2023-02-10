@@ -111,6 +111,7 @@ export const JournalProvider = ({ children }) => {
                     input,
                     setInput,
                     entries,
+                    setEntries,
                     addEntry,
                     deleteEntry,
                     updateEntry,

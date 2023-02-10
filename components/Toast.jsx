@@ -11,7 +11,7 @@ const Toast = () => {
      // init context
      const { message } = useContext(ToastContext);
 
-     return ToastAndroid.show(message, ToastAndroid.LONG);
+     return ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
 export default Toast;
