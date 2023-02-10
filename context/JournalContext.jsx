@@ -61,27 +61,45 @@ export const JournalProvider = ({ children }) => {
           }
      };
 
-     // get all entries from device storage upon initial render and fill context with those objects
+     // get all entries from device storage upon initial render and then fill journal context with those objects
      useEffect(() => {
           const getEntries = async () => {
+               let tempKeyArr = [];
+               let tempEntryArr = [];
                try {
-                    let tempArr = [];
-                    // fixme: multiget just the journal entry reminder keys and loop thorugh them! Reminder context will multiget just the reminder ids in an array!
-                    const jsonEntries = await AsyncStorage.multiGet();
+                    // since app needs to fetch storage data first and then update context based upon that retrieved data, AsyncStorage.multiGet() doesn't work as journal entry objects are not yet set in context state. So in order to find only the journal entries (and not the reminder objects), use AsyncStorage.getAllKeys() for all data saved in storage, but include only journal entry objects by finding objects that have an "input" prop (as only entry objects will have that prop -- reminder objects do not) and add them to an array that will consist of just the journal entry keys/ids.
+                    const allJsonData = await AsyncStorage.getAllKeys();
                     await Promise.all(
-                         jsonEntries.map(async (entry) => {
+                         allJsonData.map(async (entry) => {
+                              const data = await AsyncStorage.getItem(entry);
+                              let jsonData = JSON.parse(data);
+                              jsonData.input &&
+                                   tempKeyArr.push(String(jsonData.id));
+                         })
+                    );
+               } catch (err) {
+                    console.log(
+                         `error at useEffect in JournalContext with getAllKeys(): ${err}`
+                    );
+               }
+               try {
+                    // now that all journal entry keys are fetched, update context array with those relevant objects
+                    await Promise.all(
+                         tempKeyArr.map(async (entry) => {
                               const data = await AsyncStorage.getItem(entry);
                               let jsonData = JSON.parse(data);
                               const reformatData = {
                                    ...jsonData,
                                    timestamp: new Date(jsonData.timestamp),
                               };
-                              tempArr.push(reformatData);
+                              tempEntryArr.push(reformatData);
                          })
                     );
-                    setEntries(() => tempArr);
+                    setEntries(() => tempEntryArr);
                } catch (err) {
-                    console.log(`error at useEffect in JournalContext: ${err}`);
+                    console.log(
+                         `error at useEffect in JournalContext with individual getItem(): ${err}`
+                    );
                }
           };
           getEntries();

@@ -14,7 +14,7 @@ export const ReminderProvider = ({ children }) => {
      const [activeReminders, setActiveReminders] = useState(0);
      const [allRemindersActive, setAllRemindersActive] = useState(true);
 
-     // function to add new reminder to context and async storage
+     // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
           try {
                setReminders((prev) => [...prev, reminderObj]);
@@ -41,31 +41,62 @@ export const ReminderProvider = ({ children }) => {
           }
      };
 
-     // function to edit whether a specific reminder performs a notification or not
-     const editReminderIsActive = (id) => {
-          const findReminderIndex = reminders.findIndex(
-               (item) => item.id === id
-          );
-          const copyReminders = [...reminders];
-          // set the active state of the target reminder to the opposite of what it currently is
-          copyReminders[findReminderIndex].active =
-               !copyReminders[findReminderIndex].active;
-          // and rest context
-          setReminders(() => copyReminders);
+     // function to edit whether a specific reminder performs a notification or not -- needs to update the active state in device storage as well
+     const editReminderIsActive = async (id) => {
+          try {
+               const findReminderIndex = reminders.findIndex(
+                    (item) => item.id === id
+               );
+               const copyReminders = [...reminders];
+               // set the active state of the target reminder to the opposite of what it currently is
+               copyReminders[findReminderIndex].active =
+                    !copyReminders[findReminderIndex].active;
+               // and reset context
+               setReminders(() => copyReminders);
+               // change item active state in device storage
+               const jsonReminder = JSON.stringify(
+                    copyReminders[findReminderIndex]
+               );
+               await AsyncStorage.mergeItem(String(id), jsonReminder);
+          } catch (err) {
+               console.log(
+                    `error at editReminderIsActive in ReminderContext: ${err}`
+               );
+          }
      };
 
-     // sets all reminders to either on/off
-     const changeAllRemindersActive = () => {
-          setAllRemindersActive((prev) => !prev);
-          let copyReminders = [...reminders];
-          copyReminders.forEach((reminder) => {
-               if (!allRemindersActive) {
-                    reminder.active = true;
-               } else {
-                    reminder.active = false;
-               }
-          });
-          setReminders(() => copyReminders);
+     // sets all reminders to either on/off and make sure each reminder is appropriately set with either setting in device storage
+     const changeAllRemindersActive = async () => {
+          try {
+               setAllRemindersActive((prev) => !prev);
+               let copyReminders = [...reminders];
+               copyReminders.forEach((reminder) => {
+                    if (!allRemindersActive) {
+                         reminder.active = true;
+                    } else {
+                         reminder.active = false;
+                    }
+               });
+               setReminders(() => copyReminders);
+               // change all item active states in device storage
+               await Promise.all(
+                    reminders.map(async (reminder) => {
+                         await AsyncStorage.mergeItem(
+                              String(reminder.id),
+                              JSON.stringify(reminder)
+                         );
+                    })
+               );
+               // fixme: merge all active state change here
+               await AsyncStorage.mergeItem(
+                    "all-reminders-active",
+                    JSON.stringify({ allRemindersActive })
+               );
+          } catch (err) {
+               console.log(
+                    `error at changeAllRemindersActive in ReminderContext: ${err}`
+               );
+          }
      };
 
      // keep track of every reminder thats currently set
@@ -80,9 +111,69 @@ export const ReminderProvider = ({ children }) => {
           console.log(reminders);
      }, [reminders]);
 
-     // get all entries from device storage upon initial render and fill context with those objects
+     // get all entries from device storage upon initial render and fill reminder context with those objects
      useEffect(() => {
-          // fixme: multiget just the journal entry reminder keys and loop thorugh them! Reminder context will multiget just the reminder ids in an array!
+          const getReminders = async () => {
+               let tempKeyArr = [];
+               let tempReminderArr = [];
+               try {
+                    // since app needs to fetch storage data first and then update context based upon that retrieved data, AsyncStorage.multiGet() doesn't work as reminder objects are not yet set in context state. So in order to find only the reminders (and not the journal entries), use AsyncStorage.getAllKeys() for all data saved in storage, but include only reminder objects by finding objects that have a "time" prop (as only reminder objects will have that prop -- journal entry objects do not) and add them to an array that will consist of just the reminder keys/ids.
+                    const allJsonData = await AsyncStorage.getAllKeys();
+                    await Promise.all(
+                         allJsonData.map(async (reminder) => {
+                              const data = await AsyncStorage.getItem(reminder);
+                              let jsonData = JSON.parse(data);
+                              jsonData.time &&
+                                   tempKeyArr.push(String(jsonData.id));
+                         })
+                    );
+               } catch (err) {
+                    console.log(
+                         `error at useEffect in ReminderContext with getAllKeys(): ${err}`
+                    );
+               }
+
+               try {
+                    // now that all reminder keys are found, update context array with those relevant objects
+                    await Promise.all(
+                         tempKeyArr.map(async (reminder) => {
+                              const data = await AsyncStorage.getItem(reminder);
+                              let jsonData = JSON.parse(data);
+                              const reformatData = {
+                                   ...jsonData,
+                                   time: new Date(jsonData.time),
+                              };
+                              tempReminderArr.push(reformatData);
+                         })
+                    );
+                    console.log(tempReminderArr);
+                    setReminders(() => tempReminderArr);
+               } catch (err) {
+                    console.log(
+                         `error at useEffect in ReminderContext with individual getItem(): ${err}`
+                    );
+               }
+          };
+
+          // fixme: usecallback
+          const getAllRemindersActive = async () => {
+               try {
+                    (await AsyncStorage.getItem("all-reminders-active")) ===
+                         undefined &&
+                         (await AsyncStorage.setItem(
+                              "all-reminders-active",
+                              JSON.stringify({ allRemindersActive })
+                         ));
+                    console.log(
+                         await AsyncStorage.getItem("all-reminders-active")
+                    );
+                    console.log(AsyncStorage.getAllKeys());
+               } catch (error) {
+                    console.log(error);
+               }
+          };
+          getReminders();
+          getAllRemindersActive();
      }, []);
 
      return (
