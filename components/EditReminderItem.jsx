@@ -85,8 +85,7 @@ const EditReminderItem = ({ reminder }) => {
                setToastMessage(() => "Reminder updated");
                invokeToast();
                setDisplayTime(() => updatedReminder.time);
-               // fixme: update notification?
-               // fixme: call a function in reminder context to add to storage!
+               // fixme: update notification in context (deleteReminder already does the reminder context storage, so no need to do that also!)
           }
      };
 

@@ -1,3 +1,5 @@
+// note: DELETE NOTIFICATION CONTEXT AND HOOK! SINCE EVERY NOTIFICATION RELIES ON A REMINDER OBJECT (AND THUS, WILL SHARE THE SAME IDS), IT WILL CAUSE ISSUES WHEN DEALING WITH ASYNC STORAGE! INSTEAD, NOTIFICATION ACTIVE NEEDS TO BE A PROP IN EACH REMINDER OBJECT -- DEPENDING ON IF THAT IS SET TO TRUE OR FALSE, THE NOTIFICATION FOR THAT REMINDER WILL BE SET IN ASYNC STORAGE OR NOT!
+
 // react and misc
 import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
@@ -42,10 +44,10 @@ export const ReminderProvider = ({ children }) => {
      };
 
      // function to edit whether a specific reminder performs a notification or not -- needs to update the active state in device storage as well
-     const editReminderIsActive = async (id) => {
+     const editReminderIsActive = async (reminderId) => {
           try {
                const findReminderIndex = reminders.findIndex(
-                    (item) => item.id === id
+                    (item) => item.id === reminderId
                );
                const copyReminders = [...reminders];
                // set the active state of the target reminder to the opposite of what it currently is
@@ -57,7 +59,7 @@ export const ReminderProvider = ({ children }) => {
                const jsonReminder = JSON.stringify(
                     copyReminders[findReminderIndex]
                );
-               await AsyncStorage.mergeItem(String(id), jsonReminder);
+               await AsyncStorage.mergeItem(String(reminderId), jsonReminder);
           } catch (err) {
                console.log(
                     `error at editReminderIsActive in ReminderContext: ${err}`

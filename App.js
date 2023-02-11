@@ -5,9 +5,6 @@
 // fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple), all main screens should have the same margins...
 // fixme: check linter and all unused things in entire app for deletion
 // fixme: readme should be properly documented when finished to github
-{
-     /* fixme: toast and alerts all needs to be properly called when something is deleted (ie. journal entry, reminder obj), when a reminder is turned off/on, etc!*/
-}
 
 // react navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -27,33 +24,25 @@ import { JournalProvider } from "./context/JournalContext";
 import { ModalProvider } from "./context/ModalContext";
 import { ReminderProvider } from "./context/ReminderContext";
 import { AlertProvider } from "./context/AlertContext";
+import { NotificationProvider } from "./context/NotificationContext";
 
 export default function App() {
-     // fixme: reminders, notifications, and journal entries loaded in App.js (look into local storage). use callback, too ?
-     // useEffect(() => {
-     //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
-     // console.log(`now: ${now}`);
-     // console.log(`trigger is now: ${nextTrigger}`);
-     // note: additional logic ensures that there will be at least one min before setting off future notification
-     //      if (nextTrigger >= 60) {
-     //           triggerNotification(nextTrigger);
-     //      }
-     // }, [time]);
-
      return (
-          <ModalProvider>
-               <AlertProvider>
-                    <ToastProvider>
-                         <ReminderProvider>
-                              <JournalProvider>
-                                   <NavigationContainer theme={theme}>
-                                        <StatusBar hidden={true} />
-                                        <MainScreens />
-                                   </NavigationContainer>
-                              </JournalProvider>
-                         </ReminderProvider>
-                    </ToastProvider>
-               </AlertProvider>
-          </ModalProvider>
+          <NotificationProvider>
+               <ModalProvider>
+                    <AlertProvider>
+                         <ToastProvider>
+                              <ReminderProvider>
+                                   <JournalProvider>
+                                        <NavigationContainer theme={theme}>
+                                             <StatusBar hidden={true} />
+                                             <MainScreens />
+                                        </NavigationContainer>
+                                   </JournalProvider>
+                              </ReminderProvider>
+                         </ToastProvider>
+                    </AlertProvider>
+               </ModalProvider>
+          </NotificationProvider>
      );
 }

@@ -31,7 +31,7 @@ const MainScreens = () => {
      // initialize creator function for navigation bar
      const Tab = createMaterialTopTabNavigator();
 
-     // context
+     // initialize context
      const { modal } = useContext(ModalContext);
      const { isToast } = useContext(ToastContext);
      const { alert } = useContext(AlertContext);

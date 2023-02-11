@@ -44,6 +44,8 @@ const AlertModal = () => {
                     onPress: () => {
                          switch (reducerType) {
                               case "DELETE_REMINDER": {
+                                   // fixme: call a function in notification context to delete from storage!
+                                   // deleteNotification(data?.id)
                                    deleteReminder(data?.id);
                                    alertDispatch({ type: "CLOSE_ALERT" });
                                    modalDispatch({ type: "CLOSE_MODAL" });

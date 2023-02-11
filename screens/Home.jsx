@@ -1,10 +1,6 @@
 // react and misc.
 import { useEffect, useContext, useState, useRef, useCallback } from "react";
 
-// expo notifications
-import * as Notifications from "expo-notifications";
-import * as TaskManager from "expo-task-manager";
-
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
 
@@ -26,45 +22,6 @@ import { formatTime, showTimePicker } from "../utils/helperFunctions";
 
 // react native
 import { Text, View, ScrollView, Switch } from "react-native";
-
-// fixme: put all Notification stuff in custom hook??
-// run notifications in background
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
-TaskManager.defineTask(
-     BACKGROUND_NOTIFICATION_TASK,
-     ({ data, error, executionInfo }) => {
-          console.log(data);
-          console.log(error);
-          console.log(executionInfo);
-          triggerNotification(trigger);
-     }
-);
-Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
-
-// notification to remind user
-const triggerNotification = async (trigger) => {
-     await Notifications.scheduleNotificationAsync({
-          content: {
-               title: "Reality Check",
-               body: "Perform scheduled reality check!",
-          },
-          trigger: {
-               hour: trigger.getHours(),
-               minute: trigger.getMinutes(),
-               repeats: true,
-          },
-     });
-     //fixme: should this be called here also?:
-     // Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
-};
-
-// run notification in foreground
-Notifications.setNotificationHandler({
-     handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-     }),
-});
 
 const Home = () => {
      // local state
@@ -141,14 +98,13 @@ const Home = () => {
                     // Toast that new reminder has been created
                     setToastMessage(() => "New reminder created");
                     invokeToast();
-                    // fixme: call a function in reminder context to add to storage!
-                    // fixme: app will now make a notification at the scheduled time everyday
-                    // triggerNotification(selectedTime);
+                    // fixme: now you only need to call a function in notification context to add to storage (since reminder obj has already been added to device storage)!
+                    // addNotification(selectedTime); this comes from NotificationContext
                     // note: this will erase all notifications in the use effect state, as long as there is no triggering of notifications like above!
                     // Notifications.cancelAllScheduledNotificationsAsync();
-                    setNot(() =>
-                         Notifications.getAllScheduledNotificationsAsync()
-                    );
+                    // setNot(() =>
+                    //      Notifications.getAllScheduledNotificationsAsync()
+                    // );
                }
           },
           [reminders]
