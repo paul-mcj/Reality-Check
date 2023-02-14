@@ -18,8 +18,7 @@ export const ReminderProvider = ({ children }) => {
      const [allRemindersActive, setAllRemindersActive] = useState();
 
      // import functions for notification actions from custom hook
-     const { triggerNotification, deleteNotification, updateNotification } =
-          useNotification();
+     const { deleteNotification, updateNotification } = useNotification();
 
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
@@ -27,9 +26,6 @@ export const ReminderProvider = ({ children }) => {
                setReminders((prev) => [...prev, reminderObj]);
                const jsonEntry = JSON.stringify(reminderObj);
                await AsyncStorage.setItem(String(reminderObj.id), jsonEntry);
-               // trigger new notification
-               await triggerNotification(reminderObj.time);
-               console.log(reminderObj.time);
           } catch (err) {
                console.log(`error at addReminder in ReminderContext: ${err}`);
           }
@@ -44,9 +40,12 @@ export const ReminderProvider = ({ children }) => {
                     )
                );
                await AsyncStorage.removeItem(String(reminderId));
+               let reminderObj = reminders.find(
+                    (reminder) => reminder.id === reminderId
+               );
+               console.log(reminderObj.notificationIdentifier);
                // delete notification
-               await deleteNotification(reminderId);
-               console.log(reminderId);
+               await deleteNotification(reminderObj.notificationIdentifier);
           } catch (err) {
                console.log(
                     `error at deleteReminder in ReminderContext: ${err}`

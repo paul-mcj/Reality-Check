@@ -13,6 +13,9 @@ import PropTypes from "prop-types";
 // utils
 import { formatTime, showTimePicker } from "../utils/helperFunctions";
 
+// hooks
+import useNotification from "../hooks/use-notification";
+
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
@@ -29,6 +32,10 @@ const EditReminderItem = ({ reminder }) => {
           useContext(ReminderContext);
      const { invokeToast, setMessage: setToastMessage } =
           useContext(ToastContext);
+
+     // hooks
+     const { triggerNotification, deleteNotification, updateNotification } =
+          useNotification();
 
      // app theme deconstruction
      const { colors, smallTextWhite, text } = useTheme();
@@ -76,6 +83,7 @@ const EditReminderItem = ({ reminder }) => {
                     time: selectedTime,
                     id: reminder.id,
                     active: reminder.active,
+                    notificationIdentifier: reminder.notificationIdentifier,
                };
                // remove old reminder object from reminder context
                deleteReminder(reminder.id);

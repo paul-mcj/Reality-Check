@@ -18,19 +18,25 @@ const useNotification = () => {
                     repeats: true,
                },
           });
-          // Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
           console.log(Notifications.getAllScheduledNotificationsAsync());
      };
 
      // function to delete desired notification
-     const deleteNotification = async (notificationId) => {
+     const deleteNotification = async (notificationIdentifierObj) => {
+          console.log(notificationIdentifierObj);
+          //   console.log(notificationIdentifierObj._z);
+          //   console.log(notificationIdentifierObj[_z]);
+          Notifications.cancelScheduledNotificationAsync(
+               String(notificationIdentifierObj)
+          );
+          //   Notifications.cancelAllScheduledNotificationsAsync();
           console.log(Notifications.getAllScheduledNotificationsAsync());
      };
 
-     // function that will update a notification for context and device storage
+     // function that will update notification and reminder device storage
      // fixme: if the active prop is false, remove the notification entirely, else add a new notification for it (since there will not be one if it is already false!)
      const updateNotification = async (notificationId) => {
-          console.log(notificationId);
+          console.log(Notifications.getAllScheduledNotificationsAsync());
      };
 
      // fixme: useffect should get all active notifications upon initial render ??

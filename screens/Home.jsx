@@ -20,12 +20,18 @@ import DotsIcon from "react-native-vector-icons/MaterialCommunityIcons";
 // utils
 import { formatTime, showTimePicker } from "../utils/helperFunctions";
 
+// hooks
+import useNotification from "../hooks/use-notification";
+
 // react native
 import { Text, View, ScrollView, Switch } from "react-native";
 
 const Home = () => {
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text } = useTheme();
+
+     // hooks
+     const { triggerNotification } = useNotification();
 
      // init context
      const { dispatch: modalDispatch } = useContext(ModalContext);
@@ -84,11 +90,14 @@ const Home = () => {
                });
                // if this reminder time is unique (ie. not already in the reminder context):
                if (e.type === "set" && !timeAlreadyInContext) {
-                    // add selected time, unique id and an active state (true by default) to new reminder object
+                    // add selected time, unique id, active state (true by default) and a unique identifier (for the notification) to new reminder object
                     const newReminder = {
                          time: selectedTime,
                          id: selectedTime.getTime(),
                          active: true,
+                         notificationIdentifier:
+                              // this unique prop set for the respective object allows for the notification to occur on user devices
+                              triggerNotification(selectedTime),
                     };
                     // add new object to reminder context
                     addReminder(newReminder);
