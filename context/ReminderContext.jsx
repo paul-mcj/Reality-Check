@@ -1,11 +1,12 @@
-// note: DELETE NOTIFICATION CONTEXT AND HOOK! SINCE EVERY NOTIFICATION RELIES ON A REMINDER OBJECT (AND THUS, WILL SHARE THE SAME IDS), IT WILL CAUSE ISSUES WHEN DEALING WITH ASYNC STORAGE! INSTEAD, NOTIFICATION ACTIVE NEEDS TO BE A PROP IN EACH REMINDER OBJECT -- DEPENDING ON IF THAT IS SET TO TRUE OR FALSE, THE NOTIFICATION FOR THAT REMINDER WILL BE SET IN ASYNC STORAGE OR NOT!
-
 // react and misc
 import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // async storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// hooks
+import useNotification from "../hooks/use-notification";
 
 // define context
 const ReminderContext = createContext();
@@ -16,12 +17,19 @@ export const ReminderProvider = ({ children }) => {
      const [activeReminders, setActiveReminders] = useState(0);
      const [allRemindersActive, setAllRemindersActive] = useState();
 
+     // import functions for notification actions from custom hook
+     const { triggerNotification, deleteNotification, updateNotification } =
+          useNotification();
+
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
           try {
                setReminders((prev) => [...prev, reminderObj]);
                const jsonEntry = JSON.stringify(reminderObj);
                await AsyncStorage.setItem(String(reminderObj.id), jsonEntry);
+               // trigger new notification
+               await triggerNotification(reminderObj.time);
+               console.log(reminderObj.time);
           } catch (err) {
                console.log(`error at addReminder in ReminderContext: ${err}`);
           }
@@ -36,6 +44,9 @@ export const ReminderProvider = ({ children }) => {
                     )
                );
                await AsyncStorage.removeItem(String(reminderId));
+               // delete notification
+               await deleteNotification(reminderId);
+               console.log(reminderId);
           } catch (err) {
                console.log(
                     `error at deleteReminder in ReminderContext: ${err}`
@@ -60,6 +71,9 @@ export const ReminderProvider = ({ children }) => {
                     copyReminders[findReminderIndex]
                );
                await AsyncStorage.mergeItem(String(reminderId), jsonReminder);
+               // update notification
+               // await updateNotification(reminderId);
+               console.log(reminderId);
           } catch (err) {
                console.log(
                     `error at editReminderIsActive in ReminderContext: ${err}`
@@ -95,6 +109,8 @@ export const ReminderProvider = ({ children }) => {
                     "all-reminders-active",
                     JSON.stringify(!allRemindersActive)
                );
+               // fixme: if allRemindersActive is true, then all reminders that have a false "active" prop need to trigger a new notification; any notifications that already have a true "active" state can remain with there original notifications. Conversely, if allRemindersActive is false, then all reminders with an "active" prop set to false can remain and any reminders with a true "active" prop can just delete those notifications.
+               // fixme: might need a Promise.all to loop thorough multiple objects to change them asynchronously!
           } catch (err) {
                console.log(
                     `error at changeAllRemindersActive in ReminderContext: ${err}`

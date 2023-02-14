@@ -1,5 +1,5 @@
 // react and misc.
-import { useEffect, useContext, useState, useRef, useCallback } from "react";
+import { useContext, useRef, useCallback } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -24,9 +24,6 @@ import { formatTime, showTimePicker } from "../utils/helperFunctions";
 import { Text, View, ScrollView, Switch } from "react-native";
 
 const Home = () => {
-     // local state
-     const [not, setNot] = useState();
-
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text } = useTheme();
 
@@ -98,21 +95,10 @@ const Home = () => {
                     // Toast that new reminder has been created
                     setToastMessage(() => "New reminder created");
                     invokeToast();
-                    // fixme: now you only need to call a function in notification context to add to storage (since reminder obj has already been added to device storage)!
-                    // addNotification(selectedTime); this comes from NotificationContext
-                    // note: this will erase all notifications in the use effect state, as long as there is no triggering of notifications like above!
-                    // Notifications.cancelAllScheduledNotificationsAsync();
-                    // setNot(() =>
-                    //      Notifications.getAllScheduledNotificationsAsync()
-                    // );
                }
           },
           [reminders]
      );
-
-     useEffect(() => {
-          // console.log(not);
-     });
 
      return (
           <>
