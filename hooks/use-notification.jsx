@@ -7,7 +7,7 @@ import * as Notifications from "expo-notifications";
 const useNotification = () => {
      // function to trigger a notification
      const triggerNotification = async (trigger) => {
-          await Notifications.scheduleNotificationAsync({
+          return await Notifications.scheduleNotificationAsync({
                content: {
                     title: "Lucid Dream Reminder",
                     body: "Perform scheduled reality check!",
@@ -18,19 +18,13 @@ const useNotification = () => {
                     repeats: true,
                },
           });
-          console.log(Notifications.getAllScheduledNotificationsAsync());
      };
 
      // function to delete desired notification
-     const deleteNotification = async (notificationIdentifierObj) => {
-          console.log(notificationIdentifierObj);
-          //   console.log(notificationIdentifierObj._z);
-          //   console.log(notificationIdentifierObj[_z]);
-          Notifications.cancelScheduledNotificationAsync(
-               String(notificationIdentifierObj)
-          );
-          //   Notifications.cancelAllScheduledNotificationsAsync();
-          console.log(Notifications.getAllScheduledNotificationsAsync());
+     const deleteNotification = async (notificationIdentifier) => {
+          // expo unique private prop on notification objects:
+          let notificationId = notificationIdentifier._z;
+          await Notifications.cancelScheduledNotificationAsync(notificationId);
      };
 
      // function that will update notification and reminder device storage

@@ -43,7 +43,6 @@ export const ReminderProvider = ({ children }) => {
                let reminderObj = reminders.find(
                     (reminder) => reminder.id === reminderId
                );
-               console.log(reminderObj.notificationIdentifier);
                // delete notification
                await deleteNotification(reminderObj.notificationIdentifier);
           } catch (err) {

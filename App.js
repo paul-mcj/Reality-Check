@@ -6,6 +6,8 @@
 // fixme: check linter and all unused things in entire app for deletion
 // fixme: readme should be properly documented when finished to github
 // fixme: make sure all async function are properly wrapped with try/catch
+// fixme: Set custom icon and color for notifications on Android
+// fixme: Listen to interactions with notifications (bring to app when touched!)
 
 // react navigation
 import { NavigationContainer } from "@react-navigation/native";
