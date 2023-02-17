@@ -34,8 +34,7 @@ const EditReminderItem = ({ reminder }) => {
           useContext(ToastContext);
 
      // hooks
-     const { triggerNotification, deleteNotification, updateNotification } =
-          useNotification();
+     const { deleteNotification, updateNotification } = useNotification();
 
      // app theme deconstruction
      const { colors, smallTextWhite, text } = useTheme();

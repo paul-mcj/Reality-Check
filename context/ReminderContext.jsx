@@ -18,7 +18,8 @@ export const ReminderProvider = ({ children }) => {
      const [allRemindersActive, setAllRemindersActive] = useState();
 
      // import functions for notification actions from custom hook
-     const { deleteNotification, updateNotification } = useNotification();
+     const { deleteNotification, triggerNotification, updateNotification } =
+          useNotification();
 
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
@@ -59,19 +60,31 @@ export const ReminderProvider = ({ children }) => {
                     (item) => item.id === reminderId
                );
                const copyReminders = [...reminders];
-               // set the active state of the target reminder to the opposite of what it currently is
+               // set the "active" state of the target reminder to the opposite of what it currently is
                copyReminders[findReminderIndex].active =
                     !copyReminders[findReminderIndex].active;
-               // and reset context
+               // grab the notificationIdentifier (needs to be passed to updateNotification function from custom hook in order for the notification to be properly updated -- if this ins't passed, then re-triggering the notification when updating creates a new notification object, which is unwanted)
+               const oldNotificationIdentifier =
+                    copyReminders[findReminderIndex];
+               // grab time prop
+               const time = copyReminders[findReminderIndex].time;
+               // to circumnavigate the aforementioned issue, create a new triggerNotification call and set that to the new notificationIdentifier of the above reminder obj
+               copyReminders[findReminderIndex] = {
+                    ...copyReminders[findReminderIndex],
+                    notificationIdentifier: triggerNotification(time),
+               };
+               // now reset context
                setReminders(() => copyReminders);
                // change item active state in device storage
                const jsonReminder = JSON.stringify(
                     copyReminders[findReminderIndex]
                );
                await AsyncStorage.mergeItem(String(reminderId), jsonReminder);
-               // update notification
-               // await updateNotification(reminderId);
-               console.log(reminderId);
+               // update the notification
+               await updateNotification(
+                    copyReminders[findReminderIndex],
+                    oldNotificationIdentifier
+               );
           } catch (err) {
                console.log(
                     `error at editReminderIsActive in ReminderContext: ${err}`

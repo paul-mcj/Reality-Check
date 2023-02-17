@@ -64,7 +64,7 @@ const Home = () => {
           invokeToast();
      };
 
-     // function changes local time state, creates a new reminder with the time, and adds it to reminder context
+     // function takes the selected time and creates a new reminder object with it, then adds it to reminder context and sets-up the future notification
      const createReminder = useCallback(
           (e, selectedTime) => {
                // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
@@ -99,6 +99,7 @@ const Home = () => {
                               // this unique prop set for the respective object allows for the notification to occur on user devices
                               triggerNotification(selectedTime),
                     };
+                    console.log(newReminder);
                     // add new object to reminder context
                     addReminder(newReminder);
                     // Toast that new reminder has been created
