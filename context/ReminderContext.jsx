@@ -45,7 +45,7 @@ export const ReminderProvider = ({ children }) => {
                     (reminder) => reminder.id === reminderId
                );
                // delete notification
-               await deleteNotification(reminderObj.notificationIdentifier);
+               deleteNotification(reminderObj.notificationIdentifier);
           } catch (err) {
                console.log(
                     `error at deleteReminder in ReminderContext: ${err}`

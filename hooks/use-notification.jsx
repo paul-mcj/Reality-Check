@@ -39,23 +39,30 @@ const useNotification = () => {
           let oldNotificationId =
                oldNotificationIdentifier?.notificationIdentifier._z;
           let newNotificationId = notificationObj?.notificationIdentifier;
-          console.log(oldNotificationId);
-          console.log(newNotificationId);
           // immediately cancel the outdated notification associated with the notificationObj
-          await Notifications.cancelScheduledNotificationAsync(
-               oldNotificationId
-          );
-          // if the "active" prop is false, delete the newly triggered notification (which comes from ReminderContext's "editReminderIsActive" function) -- otherwise just return, as the notification will be triggered as its already been assigned in the aforementioned context
-          if (!notificationObj.active) {
-               await deleteNotification(newNotificationId);
-               console.log("notification should be deleted");
-          } else {
-               console.log("notification should be shown!");
-               return;
-          }
+          // note: the below does work!
+          // oldNotificationId !== null &&
+          //      (await Notifications.cancelScheduledNotificationAsync(
+          //           oldNotificationId
+          //      ));
+          // note: see if the below can be used instead of the above which is working (as this would mimic logic in the setTimeout fn!)
+          oldNotificationId !== null && deleteNotification(oldNotificationId);
+
+          // setTimeout is circumventing issues with expo unhandled promise rejections
+          setTimeout(() => {
+               // if the "active" prop is false, delete the newly triggered notification (which comes from ReminderContext's "editReminderIsActive" function) -- otherwise just return, as the notification will be triggered as its already been assigned in the aforementioned context
+               if (!notificationObj.active) {
+                    deleteNotification(newNotificationId);
+               } else {
+                    return;
+               }
+          }, 1);
      };
 
      // fixme: useffect should get all active notifications upon initial render ??
+     useEffect(() => {
+          console.log(Notifications.getAllScheduledNotificationsAsync());
+     }, []);
      // useEffect(() => {
      //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
      // console.log(`now: ${now}`);
