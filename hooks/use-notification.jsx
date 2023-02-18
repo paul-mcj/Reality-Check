@@ -4,10 +4,12 @@ import { useState, createContext, useEffect } from "react";
 // expo notifications
 import * as Notifications from "expo-notifications";
 
+// note: await Notifications.cancelAllScheduledNotificationsAsync();
+
 const useNotification = () => {
      // function to trigger a notification
      const triggerNotification = async (trigger) => {
-          // console.log(await Notifications.getAllScheduledNotificationsAsync());
+          console.log(await Notifications.getAllScheduledNotificationsAsync());
           return await Notifications.scheduleNotificationAsync({
                content: {
                     title: "Lucid Dream Reminder",
@@ -37,6 +39,8 @@ const useNotification = () => {
           let oldNotificationId =
                oldNotificationIdentifier?.notificationIdentifier._z;
           let newNotificationId = notificationObj?.notificationIdentifier;
+          console.log(oldNotificationId);
+          console.log(newNotificationId);
           // immediately cancel the outdated notification associated with the notificationObj
           await Notifications.cancelScheduledNotificationAsync(
                oldNotificationId
