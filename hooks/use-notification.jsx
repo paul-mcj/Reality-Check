@@ -9,11 +9,10 @@ import * as Notifications from "expo-notifications";
 const useNotification = () => {
      // function to trigger a notification
      const triggerNotification = async (trigger) => {
-          console.log(await Notifications.getAllScheduledNotificationsAsync());
           return await Notifications.scheduleNotificationAsync({
                content: {
                     title: "Lucid Dream Reminder",
-                    body: "Perform scheduled reality check!",
+                    body: "Perform daily scheduled reality check!",
                },
                trigger: {
                     hour: trigger.getHours(),
@@ -28,40 +27,28 @@ const useNotification = () => {
           // expo unique private prop on notification objects:
           let notificationId = notificationIdentifier._z;
           await Notifications.cancelScheduledNotificationAsync(notificationId);
-          // console.log(await Notifications.getAllScheduledNotificationsAsync());
      };
 
+     // fixme: put all this logic in ReminderContext (as reminder context needs to change in order for the notification to change as well...)
      // function that will update notification depending on current "active" prop state
-     const updateNotification = async (
-          notificationObj,
-          oldNotificationIdentifier
-     ) => {
-          let oldNotificationId =
-               oldNotificationIdentifier?.notificationIdentifier._z;
-          let newNotificationId = notificationObj?.notificationIdentifier;
-          // immediately cancel the outdated notification associated with the notificationObj
-          // note: the below does work!
-          // oldNotificationId !== null &&
-          //      (await Notifications.cancelScheduledNotificationAsync(
-          //           oldNotificationId
-          //      ));
-          // note: see if the below can be used instead of the above which is working (as this would mimic logic in the setTimeout fn!)
-          oldNotificationId !== null && deleteNotification(oldNotificationId);
+     // const updateNotification = async (reminderObj) => {
+     //      // expo unique private prop on notification objects:
+     //      let notificationId = reminderObj.notificationIdentifier._z;
 
-          // setTimeout is circumventing issues with expo unhandled promise rejections
-          setTimeout(() => {
-               // if the "active" prop is false, delete the newly triggered notification (which comes from ReminderContext's "editReminderIsActive" function) -- otherwise just return, as the notification will be triggered as its already been assigned in the aforementioned context
-               if (!notificationObj.active) {
-                    deleteNotification(newNotificationId);
-               } else {
-                    return;
-               }
-          }, 1);
+     //      // console.log("notId: " + notificationId);
+     //      // console.log(reminderObj);
+     //      // console.log(notificationsArr);
+
+     // };
+
+     // get all expo notifications
+     const getNotifications = async () => {
+          return await Notifications.getAllScheduledNotificationsAsync();
      };
 
-     // fixme: useffect should get all active notifications upon initial render ??
+     // get all active notifications upon initial render
      useEffect(() => {
-          console.log(Notifications.getAllScheduledNotificationsAsync());
+          Notifications.getAllScheduledNotificationsAsync();
      }, []);
      // useEffect(() => {
      //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
@@ -73,7 +60,12 @@ const useNotification = () => {
      //      }
      // }, [time]);
 
-     return { triggerNotification, deleteNotification, updateNotification };
+     return {
+          triggerNotification,
+          deleteNotification,
+          updateNotification,
+          getNotifications,
+     };
 };
 
 export default useNotification;

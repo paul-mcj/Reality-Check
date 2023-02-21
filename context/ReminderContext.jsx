@@ -18,8 +18,12 @@ export const ReminderProvider = ({ children }) => {
      const [allRemindersActive, setAllRemindersActive] = useState();
 
      // import functions for notification actions from custom hook
-     const { deleteNotification, triggerNotification, updateNotification } =
-          useNotification();
+     const {
+          deleteNotification,
+          getNotifications,
+          triggerNotification,
+          updateNotification,
+     } = useNotification();
 
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
@@ -64,15 +68,6 @@ export const ReminderProvider = ({ children }) => {
                copyReminders[findReminderIndex].active =
                     !copyReminders[findReminderIndex].active;
                // grab the notificationIdentifier (needs to be passed to updateNotification function from custom hook in order for the notification to be properly updated -- if this ins't passed, then re-triggering the notification when updating creates a new notification object, which is unwanted)
-               const oldNotificationIdentifier =
-                    copyReminders[findReminderIndex];
-               // grab time prop
-               const time = copyReminders[findReminderIndex].time;
-               // to circumnavigate the aforementioned issue, create a new triggerNotification call and set that to the new notificationIdentifier of the above reminder obj
-               copyReminders[findReminderIndex] = {
-                    ...copyReminders[findReminderIndex],
-                    notificationIdentifier: triggerNotification(time),
-               };
                // now reset context
                setReminders(() => copyReminders);
                // change item active state in device storage
@@ -80,11 +75,24 @@ export const ReminderProvider = ({ children }) => {
                     copyReminders[findReminderIndex]
                );
                await AsyncStorage.mergeItem(String(reminderId), jsonReminder);
-               // update the notification
-               await updateNotification(
-                    copyReminders[findReminderIndex],
-                    oldNotificationIdentifier
+
+               // fixme: all this logic used to come from custom hook, but it needs to be here now as it depends on reminders context array in order to update properly
+               let notificationsArr = getNotifications();
+               let desiredNotification = notificationsArr.find(
+                    async (notification) => {
+                         notification.identifier === notificationId;
+                    }
                );
+
+               console.log(desiredNotification);
+               if (desiredNotification.trigger.type === "daily") {
+                    return (desiredNotification.trigger.type = false);
+               } else {
+                    return (desiredNotification.trigger.type = "daily");
+               }
+
+               // update the notification
+               await updateNotification(copyReminders[findReminderIndex]);
           } catch (err) {
                console.log(
                     `error at editReminderIsActive in ReminderContext: ${err}`

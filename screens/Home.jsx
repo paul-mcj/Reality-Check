@@ -99,7 +99,6 @@ const Home = () => {
                               // this unique prop set for the respective object allows for the notification to occur on user devices
                               triggerNotification(selectedTime),
                     };
-                    console.log();
                     // add new object to reminder context
                     addReminder(newReminder);
                     // Toast that new reminder has been created
