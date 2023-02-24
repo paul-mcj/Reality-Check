@@ -34,7 +34,7 @@ const EditReminderItem = ({ reminder }) => {
           useContext(ToastContext);
 
      // hooks
-     const { deleteNotification, updateNotification } = useNotification();
+     const { triggerNotification } = useNotification();
 
      // app theme deconstruction
      const { colors, smallTextWhite, text } = useTheme();
@@ -77,15 +77,17 @@ const EditReminderItem = ({ reminder }) => {
           });
           // if this reminder time is unique in the context:
           if (e.type === "set" && !timeAlreadyInContext) {
-               // update the reminder object with the new selected time
+               console.log(reminder);
+               // remove old reminder object from reminder context
+               deleteReminder(reminder.id);
+               // update the reminder object with the new selected time, and schedule a new notification for it as well
                const updatedReminder = {
                     time: selectedTime,
                     id: reminder.id,
                     active: reminder.active,
-                    notificationIdentifier: reminder.notificationIdentifier,
+                    notificationIdentifier: triggerNotification(selectedTime),
                };
-               // remove old reminder object from reminder context
-               deleteReminder(reminder.id);
+               console.log(updatedReminder);
                // add updated reminder object to reminder context
                addReminder(updatedReminder);
                // fixme: keep in mind that the reminder can be updated and not necessarily have the notification SET! therefore, the above logic of just deleting and then adding a reminder doesn't always work! Fix that logic just for this "updateReminder" function!

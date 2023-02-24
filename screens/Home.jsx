@@ -190,7 +190,8 @@ const Home = () => {
                                    />
                               </View>
                          )}
-                         {reminders &&
+                         {reminders !== null &&
+                              reminders !== undefined &&
                               reminders?.length !== 0 &&
                               reminders.map((item) => (
                                    <Reminder

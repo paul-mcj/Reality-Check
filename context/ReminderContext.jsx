@@ -18,12 +18,7 @@ export const ReminderProvider = ({ children }) => {
      const [allRemindersActive, setAllRemindersActive] = useState();
 
      // import functions for notification actions from custom hook
-     const {
-          deleteNotification,
-          getNotifications,
-          triggerNotification,
-          updateNotification,
-     } = useNotification();
+     const { deleteNotification, triggerNotification } = useNotification();
 
      // function to add new reminder to context and device storage
      const addReminder = async (reminderObj) => {
@@ -36,7 +31,7 @@ export const ReminderProvider = ({ children }) => {
           }
      };
 
-     // function to delete a reminder from context and device storage
+     // function to delete a reminder from context and device storage, as well as removing target notification
      const deleteReminder = async (reminderId) => {
           try {
                setReminders(() =>
@@ -60,39 +55,34 @@ export const ReminderProvider = ({ children }) => {
      // function to edit whether a specific reminder performs a notification or not -- needs to update the active state in device storage as well
      const editReminderIsActive = async (reminderId) => {
           try {
+               let updatedReminder;
                const findReminderIndex = reminders.findIndex(
                     (item) => item.id === reminderId
                );
                const copyReminders = [...reminders];
+               const foundReminder = copyReminders[findReminderIndex];
                // set the "active" state of the target reminder to the opposite of what it currently is
-               copyReminders[findReminderIndex].active =
-                    !copyReminders[findReminderIndex].active;
-               // grab the notificationIdentifier (needs to be passed to updateNotification function from custom hook in order for the notification to be properly updated -- if this ins't passed, then re-triggering the notification when updating creates a new notification object, which is unwanted)
-               // now reset context
+               foundReminder.active = !foundReminder.active;
+               // if the reminder "active" prop is now true, schedule a new notification...
+               if (foundReminder.active) {
+                    updatedReminder = {
+                         ...foundReminder,
+                         notificationIdentifier:
+                              // this unique prop set for the respective object allows for the notification to occur on user devices
+                              triggerNotification(foundReminder.time),
+                    };
+                    // replace old reminder object in reminder context with updatedReminder -- must be done on deep copy array first
+                    copyReminders[findReminderIndex] = updatedReminder;
+               }
+               // ...otherwise, delete the notification
+               if (!foundReminder.active) {
+                    deleteNotification(foundReminder.notificationIdentifier);
+               }
+               // update reminder context
                setReminders(() => copyReminders);
                // change item active state in device storage
-               const jsonReminder = JSON.stringify(
-                    copyReminders[findReminderIndex]
-               );
+               const jsonReminder = JSON.stringify(foundReminder);
                await AsyncStorage.mergeItem(String(reminderId), jsonReminder);
-
-               // fixme: all this logic used to come from custom hook, but it needs to be here now as it depends on reminders context array in order to update properly
-               let notificationsArr = getNotifications();
-               let desiredNotification = notificationsArr.find(
-                    async (notification) => {
-                         notification.identifier === notificationId;
-                    }
-               );
-
-               console.log(desiredNotification);
-               if (desiredNotification.trigger.type === "daily") {
-                    return (desiredNotification.trigger.type = false);
-               } else {
-                    return (desiredNotification.trigger.type = "daily");
-               }
-
-               // update the notification
-               await updateNotification(copyReminders[findReminderIndex]);
           } catch (err) {
                console.log(
                     `error at editReminderIsActive in ReminderContext: ${err}`
@@ -100,6 +90,8 @@ export const ReminderProvider = ({ children }) => {
           }
      };
 
+     // fixme: first test if editReminderIsActive on multiple reminder objs works, then do:
+     //fixme: HERE!
      // sets all reminders to either on/off and make sure each reminder is appropriately set with either setting in device storage
      const changeAllRemindersActive = async () => {
           try {
