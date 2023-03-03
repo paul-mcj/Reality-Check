@@ -90,20 +90,40 @@ export const ReminderProvider = ({ children }) => {
           }
      };
 
-     // fixme: first test if editReminderIsActive on multiple reminder objs works, then do:
-     //fixme: HERE!
-     // sets all reminders to either on/off and make sure each reminder is appropriately set with either setting in device storage
+     // sets all reminders to either on/off and reflects that state in device storage
      const changeAllRemindersActive = async () => {
           try {
+               let currentReminder;
+               let placeholderRemindersArr = [];
                let copyReminders = [...reminders];
                copyReminders.forEach((reminder) => {
+                    // if user wants to set all reminders from false to true:
                     if (!allRemindersActive) {
-                         reminder.active = true;
+                         // all reminders that have a false "active" prop need to trigger a new notification and update a new reminder object
+                         if (!reminder.active) {
+                              currentReminder = {
+                                   ...reminder,
+                                   active: true,
+                                   notificationIdentifier: triggerNotification(
+                                        reminder.time
+                                   ),
+                              };
+                              // else any reminder that already has a true "active" state can remain the same
+                         } else {
+                              currentReminder = { ...reminder };
+                         }
+                         // if users want to turn off all reminders, simply set "active" prop state to false and delete the notification:
                     } else {
-                         reminder.active = false;
+                         currentReminder = { ...reminder, active: false };
+                         deleteNotification(reminder?.notificationIdentifier);
                     }
+                    // add reminder object to array
+                    placeholderRemindersArr.push(currentReminder);
                });
-               setReminders(() => copyReminders);
+               // set state for all active reminders
+               setAllRemindersActive((prev) => !prev);
+               // update reminder context
+               setReminders(() => placeholderRemindersArr);
                // change all item active states in device storage
                await Promise.all(
                     reminders.map(async (reminder) => {
@@ -113,15 +133,12 @@ export const ReminderProvider = ({ children }) => {
                          );
                     })
                );
-               // set state and storage for all active reminders
-               setAllRemindersActive((prev) => !prev);
+               // set changes to device storage
                await AsyncStorage.removeItem("all-reminders-active");
                await AsyncStorage.setItem(
                     "all-reminders-active",
                     JSON.stringify(!allRemindersActive)
                );
-               // fixme: if allRemindersActive is true, then all reminders that have a false "active" prop need to trigger a new notification; any notifications that already have a true "active" state can remain with there original notifications. Conversely, if allRemindersActive is false, then all reminders with an "active" prop set to false can remain and any reminders with a true "active" prop can just delete those notifications.
-               // fixme: might need a Promise.all to loop thorough multiple objects to change them asynchronously!
           } catch (err) {
                console.log(
                     `error at changeAllRemindersActive in ReminderContext: ${err}`

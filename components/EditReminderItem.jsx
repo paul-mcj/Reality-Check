@@ -87,7 +87,7 @@ const EditReminderItem = ({ reminder }) => {
                     active: reminder.active,
                     notificationIdentifier: triggerNotification(selectedTime),
                };
-               console.log(updatedReminder);
+               console.log("updatedReminder: " + updatedReminder);
                // add updated reminder object to reminder context
                addReminder(updatedReminder);
                // fixme: keep in mind that the reminder can be updated and not necessarily have the notification SET! therefore, the above logic of just deleting and then adding a reminder doesn't always work! Fix that logic just for this "updateReminder" function!

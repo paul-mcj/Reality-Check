@@ -38,19 +38,10 @@ const useNotification = () => {
 
      // get all active notifications upon initial render
      useEffect(() => {
-          // note:
-          // Notifications.cancelAllScheduledNotificationsAsync();
+          // ||| Notifications.cancelAllScheduledNotificationsAsync();
           Notifications.getAllScheduledNotificationsAsync();
+          console.log(Notifications.getAllScheduledNotificationsAsync());
      }, []);
-     // useEffect(() => {
-     //      let nextTrigger = Math.ceil((time.getTime() - now.getTime()) / 1000);
-     // console.log(`now: ${now}`);
-     // console.log(`trigger is now: ${nextTrigger}`);
-     // note: additional logic ensures that there will be at least one min before setting off future notification
-     //      if (nextTrigger >= 60) {
-     //           addNotification(nextTrigger);
-     //      }
-     // }, [time]);
 
      return {
           triggerNotification,

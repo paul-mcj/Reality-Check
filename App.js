@@ -53,12 +53,6 @@ Notifications.setNotificationHandler({
      }),
 });
 
-// note: this will erase all notifications as long as there is no triggering of notifications in current state!
-// Notifications.cancelAllScheduledNotificationsAsync();
-// setNot(() =>
-//      Notifications.getAllScheduledNotificationsAsync()
-// );
-
 export default function App() {
      return (
           <ModalProvider>
