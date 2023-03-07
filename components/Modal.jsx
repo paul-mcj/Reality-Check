@@ -40,10 +40,10 @@ const Modal = () => {
           >
                <View
                     style={{
-                         right: 20,
-                         top: 20,
+                         left: 12,
+                         top: 40,
                          position: "absolute",
-                         zIndex: 3,
+                         zIndex: 2,
                     }}
                >
                     <TextButton

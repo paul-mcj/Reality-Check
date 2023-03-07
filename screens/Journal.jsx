@@ -48,8 +48,8 @@ const Journal = () => {
           <>
                <View
                     style={{
-                         right: 20,
-                         top: 20,
+                         left: 12,
+                         top: 40,
                          position: "absolute",
                          zIndex: 2,
                     }}
@@ -78,9 +78,8 @@ const Journal = () => {
                          )}
                     </TextButton>
                </View>
-
                <ScrollView
-                    contentContainerStyle={container}
+                    contentContainerStyle={{ ...container, marginTop: 80 }}
                     ref={ref}
                     showsVerticalScrollIndicator={false}
                >

@@ -1,6 +1,3 @@
-// note: general app fixes
-// fixme: how to optimize react native apps? fells very slow...(use callback anywhere?)
-// fixme: google fonts??
 // fixme: add app-wide functionality for backHandler
 // fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple), all main screens should have the same margins...
 // fixme: check linter and all unused things in entire app for deletion
@@ -8,6 +5,7 @@
 // fixme: make sure all async function are properly wrapped with try/catch
 // fixme: Set custom icon and color for notifications on Android
 // fixme: Listen to interactions with notifications (bring to app when touched!)
+// fixme: how to optimize react native apps? fells very slow...(use callback anywhere?)
 
 // react navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -61,7 +59,10 @@ export default function App() {
                          <ReminderProvider>
                               <JournalProvider>
                                    <NavigationContainer theme={theme}>
-                                        <StatusBar hidden={true} />
+                                        <StatusBar
+                                             backgroundColor="#221b47"
+                                             style="light"
+                                        />
                                         <MainScreens />
                                    </NavigationContainer>
                               </JournalProvider>

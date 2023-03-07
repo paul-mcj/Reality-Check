@@ -94,7 +94,7 @@ const NewEntry = () => {
 
      return (
           <ScrollView
-               contentContainerStyle={container}
+               contentContainerStyle={{ ...container, marginTop: 80 }}
                ref={ref}
                showsVerticalScrollIndicator={false}
           >

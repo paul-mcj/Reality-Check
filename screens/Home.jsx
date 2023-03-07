@@ -114,8 +114,8 @@ const Home = () => {
           <>
                <View
                     style={{
-                         right: 20,
-                         top: 20,
+                         left: 12,
+                         top: 40,
                          position: "absolute",
                          zIndex: 2,
                     }}
@@ -136,7 +136,7 @@ const Home = () => {
                     </TextButton>
                </View>
                <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
-                    <View style={container}>
+                    <View style={{ ...container, marginTop: 80 }}>
                          <Text style={title}>Home</Text>
                          <Text style={{ ...text, marginBottom: 40 }}>
                               Reality checks can help you become a lucid
