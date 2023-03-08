@@ -8,7 +8,10 @@
 // fixme: how to optimize react native apps? fells very slow...(use callback anywhere?)
 
 // react navigation
-import { NavigationContainer } from "@react-navigation/native";
+import {
+     NavigationContainer,
+     useNavigationContainerRef,
+} from "@react-navigation/native";
 
 // expo
 import { StatusBar } from "expo-status-bar";
@@ -19,6 +22,9 @@ import * as TaskManager from "expo-task-manager";
 
 // style
 import theme from "./style";
+
+// react an misc.
+import { useState } from "react";
 
 // screens
 import MainScreens from "./screens/MainScreens";
@@ -52,23 +58,32 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-     return (
-          <ModalProvider>
-               <AlertProvider>
-                    <ToastProvider>
-                         <ReminderProvider>
-                              <JournalProvider>
-                                   <NavigationContainer theme={theme}>
-                                        <StatusBar
-                                             backgroundColor="#221b47"
-                                             style="light"
-                                        />
-                                        <MainScreens />
-                                   </NavigationContainer>
-                              </JournalProvider>
-                         </ReminderProvider>
-                    </ToastProvider>
-               </AlertProvider>
-          </ModalProvider>
-     );
+     // navigation ref
+     const navigationRef = useNavigationContainerRef();
+     const [nav, useNav] = useState(navigationRef);
+
+     if (nav !== undefined && nav !== null) {
+          return (
+               <ModalProvider>
+                    <AlertProvider>
+                         <ToastProvider>
+                              <ReminderProvider>
+                                   <JournalProvider>
+                                        <NavigationContainer
+                                             theme={theme}
+                                             // ref={navigationRef}
+                                        >
+                                             <StatusBar
+                                                  backgroundColor="#221b47"
+                                                  style="light"
+                                             />
+                                             <MainScreens nav={nav} />
+                                        </NavigationContainer>
+                                   </JournalProvider>
+                              </ReminderProvider>
+                         </ToastProvider>
+                    </AlertProvider>
+               </ModalProvider>
+          );
+     }
 }

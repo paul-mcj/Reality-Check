@@ -27,7 +27,7 @@ import theme from "../style";
 // react navigation
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-const MainScreens = () => {
+const MainScreens = ({ nav }) => {
      // initialize creator function for navigation bar
      const Tab = createMaterialTopTabNavigator();
 
@@ -42,7 +42,7 @@ const MainScreens = () => {
      return (
           <>
                {isToast && <Toast />}
-               {modal && <Modal />}
+               {modal && <Modal nav={nav} />}
                {alert && <AlertModal />}
                <Tab.Navigator
                     initialRouteName="Home"

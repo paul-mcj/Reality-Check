@@ -1,8 +1,12 @@
 // react and misc.
-import { useContext, useRef, useCallback } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 
 // react navigation
-import { useTheme, useScrollToTop } from "@react-navigation/native";
+import {
+     useTheme,
+     useScrollToTop,
+     useFocusEffect,
+} from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
@@ -24,9 +28,12 @@ import { formatTime, showTimePicker } from "../utils/helperFunctions";
 import useNotification from "../hooks/use-notification";
 
 // react native
-import { Text, View, ScrollView, Switch } from "react-native";
+import { Text, View, ScrollView, Switch, BackHandler } from "react-native";
 
 const Home = () => {
+     // init state
+     const [selected, setSelected] = useState(false);
+
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text } = useTheme();
 
@@ -109,6 +116,35 @@ const Home = () => {
           },
           [reminders]
      );
+
+     //
+     // useEffect(() => {
+     // const onBackPress = () => {
+     //      if (selected) {
+     //           setSelected(() => false);
+     //           console.log("true");
+     //           return true;
+     //      } else {
+     //           console.log("false");
+     //           return false;
+     //      }
+     // };
+
+     // const subscription = BackHandler.addEventListener(
+     //      "hardwareBackPress",
+     //      onBackPress
+     // );
+
+     // return () => subscription.remove();
+     // BackHandler.addEventListener("hardwareBackPress", () => {
+     //      return true;
+     // });
+     // return () => {
+     //      BackHandler.removeEventListener("hardwareBackPress", () => {
+     //           return true;
+     //      });
+     // };
+     // }, [selected]);
 
      return (
           <>

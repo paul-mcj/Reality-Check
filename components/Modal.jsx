@@ -1,5 +1,5 @@
 // react and misc
-import { useContext } from "react";
+import { Children, useContext, useEffect } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
@@ -17,9 +17,9 @@ import CloseIcon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@react-navigation/native";
 
 // react native
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, BackHandler } from "react-native";
 
-const Modal = () => {
+const Modal = ({ nav }) => {
      // init context
      const {
           reducerType,
@@ -30,6 +30,19 @@ const Modal = () => {
 
      // app theme deconstruction
      const { colors } = useTheme();
+
+     useEffect(() => {
+          nav.navigate("Home");
+          //      BackHandler.addEventListener("hardwareBackPress", () => {
+          //           nav.navigate("Home");
+          //           return true;
+          //      });
+          //      return () => {
+          //           BackHandler.removeEventListener("hardwareBackPress", () => {
+          //                return true;
+          //           });
+          //      };
+     });
 
      return (
           <View
