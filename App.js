@@ -1,5 +1,6 @@
-// fixme: add app-wide functionality for backHandler
-// fixme: fix all styles for consistency (ex. textbutton component colors should be all the same, with the exception of the Reminder component can be white not purple), all main screens should have the same margins...
+// fixme: fix all styles for consistency (ex. textbutton and any interacting elements/component colors should be all the same color and text size, etc., with the exception of the Reminder component can be white not purple), all main screens should have the same MARGINS (especially Journal bottom)...
+//fixme: the text input in NewEntry should be the same size/padding as when editing an individual journal entry item...
+// fixme: EditReminderItem should be in the middle of the screen vertically just like the EditJournalItem and Modal content components
 // fixme: check linter and all unused things in entire app for deletion
 // fixme: readme should be properly documented when finished to github
 // fixme: make sure all async function are properly wrapped with try/catch
@@ -8,10 +9,7 @@
 // fixme: how to optimize react native apps? fells very slow...(use callback anywhere?)
 
 // react navigation
-import {
-     NavigationContainer,
-     useNavigationContainerRef,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
 // expo
 import { StatusBar } from "expo-status-bar";
@@ -22,9 +20,6 @@ import * as TaskManager from "expo-task-manager";
 
 // style
 import theme from "./style";
-
-// react an misc.
-import { useState } from "react";
 
 // screens
 import MainScreens from "./screens/MainScreens";
@@ -58,32 +53,23 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-     // navigation ref
-     const navigationRef = useNavigationContainerRef();
-     const [nav, useNav] = useState(navigationRef);
-
-     if (nav !== undefined && nav !== null) {
-          return (
-               <ModalProvider>
-                    <AlertProvider>
-                         <ToastProvider>
-                              <ReminderProvider>
-                                   <JournalProvider>
-                                        <NavigationContainer
-                                             theme={theme}
-                                             // ref={navigationRef}
-                                        >
-                                             <StatusBar
-                                                  backgroundColor="#221b47"
-                                                  style="light"
-                                             />
-                                             <MainScreens nav={nav} />
-                                        </NavigationContainer>
-                                   </JournalProvider>
-                              </ReminderProvider>
-                         </ToastProvider>
-                    </AlertProvider>
-               </ModalProvider>
-          );
-     }
+     return (
+          <ModalProvider>
+               <AlertProvider>
+                    <ToastProvider>
+                         <ReminderProvider>
+                              <JournalProvider>
+                                   <NavigationContainer theme={theme}>
+                                        <StatusBar
+                                             backgroundColor="#221b47"
+                                             style="light"
+                                        />
+                                        <MainScreens />
+                                   </NavigationContainer>
+                              </JournalProvider>
+                         </ReminderProvider>
+                    </ToastProvider>
+               </AlertProvider>
+          </ModalProvider>
+     );
 }

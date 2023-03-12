@@ -2,19 +2,20 @@
 import { TextInput, Text, ScrollView, View } from "react-native";
 
 // react and misc
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
+import ShadowOverlay from "../components/ShadowOverlay";
 
 // context
 import JournalContext from "../context/JournalContext";
 import ToastContext from "../context/ToastContext";
 
-const NewEntry = () => {
+const NewEntry = ({ navigation, route }) => {
      // component state
      const [undo, setUndo] = useState(false);
      const [prevInput, setPrevInput] = useState("");
@@ -92,39 +93,50 @@ const NewEntry = () => {
           </View>
      );
 
+     // fixme: when textinput is focused && route is on NewEntry, get rid of navigation bar???
+     useEffect(() => {
+          console.log(route);
+          console.log(navigation);
+     });
+
      return (
-          <ScrollView
-               contentContainerStyle={{ ...container, marginTop: 80 }}
-               ref={ref}
-               showsVerticalScrollIndicator={false}
-          >
-               <Text style={title}>New Entry</Text>
-               <TextInput
-                    style={{
-                         ...text,
-                         ...border,
-                         marginTop: 20,
-                         textAlign: "left",
-                    }}
-                    placeholder="What did you dream of?"
-                    placeholderTextColor={colors.text}
-                    value={input}
-                    onChangeText={(text) => setInput(() => text)}
-                    multiline
-               />
-               {input?.trim().length !== 0 && showButtons}
-               {undo && input?.trim().length === 0 && (
-                    <View style={{ flex: 1, marginTop: 40 }}>
-                         <TextButton
-                              backgroundColor={colors.notification}
-                              minWidth={100}
-                              onPress={handleUndo}
-                         >
-                              <Text style={smallTextWhite}>Undo</Text>
-                         </TextButton>
-                    </View>
-               )}
-          </ScrollView>
+          <>
+               <ShadowOverlay />
+               <ScrollView
+                    contentContainerStyle={{ ...container, marginTop: 80 }}
+                    ref={ref}
+                    showsVerticalScrollIndicator={false}
+               >
+                    <Text style={title}>New Entry</Text>
+                    <TextInput
+                         style={{
+                              // ...text,
+                              ...smallTextWhite,
+                              ...border,
+                              marginTop: 20,
+                              textAlign: "left",
+                              backgroundColor: colors.notification,
+                         }}
+                         placeholder="What did you dream of?"
+                         placeholderTextColor={colors.text}
+                         value={input}
+                         onChangeText={(text) => setInput(() => text)}
+                         multiline
+                    />
+                    {input?.trim().length !== 0 && showButtons}
+                    {undo && input?.trim().length === 0 && (
+                         <View style={{ flex: 1, marginTop: 40 }}>
+                              <TextButton
+                                   backgroundColor={colors.notification}
+                                   minWidth={100}
+                                   onPress={handleUndo}
+                              >
+                                   <Text style={smallTextWhite}>Undo</Text>
+                              </TextButton>
+                         </View>
+                    )}
+               </ScrollView>
+          </>
      );
 };
 

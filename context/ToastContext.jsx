@@ -1,5 +1,5 @@
 // react and misc
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // define context
@@ -17,6 +17,9 @@ export const ToastProvider = ({ children }) => {
                setIsToast(() => false);
           }, 1);
      };
+
+     // fixme: return subscription so that previous toast is overwritten if a newer one comes up??
+     useEffect(() => {}, [isToast]);
 
      return (
           <ToastContext.Provider

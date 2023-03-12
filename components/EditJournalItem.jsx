@@ -87,12 +87,14 @@ const EditJournalItem = ({ entry }) => {
                <View
                     style={{
                          ...border,
+                         backgroundColor: colors.notification,
                     }}
                >
                     <View>
                          <TextInput
                               style={{
                                    ...smallTextWhite,
+                                   backgroundColor: colors.notification,
                                    textAlign: "left",
                               }}
                               multiline

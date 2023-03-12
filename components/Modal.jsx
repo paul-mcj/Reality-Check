@@ -1,5 +1,5 @@
 // react and misc
-import { Children, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 // context
 import ModalContext from "../context/ModalContext";
@@ -9,6 +9,7 @@ import HomeInfoList from "./HomeInfoList";
 import EditJournalItem from "./EditJournalItem";
 import EditReminderItem from "./EditReminderItem";
 import TextButton from "./TextButton";
+import ShadowOverlay from "./ShadowOverlay";
 
 // icons
 import CloseIcon from "react-native-vector-icons/MaterialIcons";
@@ -19,7 +20,7 @@ import { useTheme } from "@react-navigation/native";
 // react native
 import { View, ScrollView, BackHandler } from "react-native";
 
-const Modal = ({ nav }) => {
+const Modal = () => {
      // init context
      const {
           reducerType,
@@ -32,16 +33,15 @@ const Modal = ({ nav }) => {
      const { colors } = useTheme();
 
      useEffect(() => {
-          nav.navigate("Home");
-          //      BackHandler.addEventListener("hardwareBackPress", () => {
-          //           nav.navigate("Home");
-          //           return true;
-          //      });
-          //      return () => {
-          //           BackHandler.removeEventListener("hardwareBackPress", () => {
-          //                return true;
-          //           });
-          //      };
+          BackHandler.addEventListener("hardwareBackPress", () => {
+               modalDispatch({ type: "CLOSE_MODAL" });
+               return true;
+          });
+          return () => {
+               BackHandler.removeEventListener("hardwareBackPress", () => {
+                    return true;
+               });
+          };
      });
 
      return (
@@ -62,7 +62,6 @@ const Modal = ({ nav }) => {
                     <TextButton
                          style={{ padding: 20 }}
                          minWidth={0}
-                         borderWidth={0}
                          backgroundColor={colors.notification}
                          onPress={() => modalDispatch({ type: "CLOSE_MODAL" })}
                     >
@@ -74,6 +73,7 @@ const Modal = ({ nav }) => {
                          />
                     </TextButton>
                </View>
+               <ShadowOverlay />
                <ScrollView
                     style={{
                          marginLeft: 40,

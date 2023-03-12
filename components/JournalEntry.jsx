@@ -32,6 +32,7 @@ const JournalEntry = ({ id, input, timestamp }) => {
                          ...smallTextWhite,
                          textAlign: "left",
                          paddingBottom: 0,
+                         paddingLeft: 0,
                     }}
                >
                     {timestamp.toDateString()}
@@ -40,13 +41,19 @@ const JournalEntry = ({ id, input, timestamp }) => {
                     onPress={openEntry}
                     style={{
                          ...border,
-                         borderColor: colors.text,
                          marginBottom: 10,
                          minWidth: "100%",
+                         backgroundColor: colors.notification,
                     }}
                >
                     <View>
-                         <Text style={{ ...smallTextWhite, textAlign: "left" }}>
+                         <Text
+                              style={{
+                                   ...smallTextWhite,
+                                   textAlign: "left",
+                                   backgroundColor: colors.notification,
+                              }}
+                         >
                               {input}
                          </Text>
                     </View>

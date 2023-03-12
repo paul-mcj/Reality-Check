@@ -6,10 +6,12 @@ import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // context
 import JournalContext from "../context/JournalContext";
+import ToastContext from "../context/ToastContext";
 
 // components
 import JournalEntry from "../components/JournalEntry";
 import TextButton from "../components/TextButton";
+import ShadowOverlay from "../components/ShadowOverlay";
 
 // icons
 import SortAsc from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,6 +26,8 @@ const Journal = () => {
 
      // init context
      const { entries, setEntries } = useContext(JournalContext);
+     const { invokeToast, setMessage: setToastMessage } =
+          useContext(ToastContext);
 
      // app theme deconstruction
      const { colors, container, text, title, smallTextWhite } = useTheme();
@@ -42,6 +46,13 @@ const Journal = () => {
           });
           setEntries(() => copyEntriesArr);
           setSortedByNewest((prev) => !prev);
+          setToastMessage(
+               () =>
+                    `Journal sorted by ${
+                         !sortedByNewest ? "oldest" : "newest"
+                    } entry first`
+          );
+          invokeToast();
      };
 
      return (
@@ -57,7 +68,6 @@ const Journal = () => {
                     <TextButton
                          style={{ padding: 20 }}
                          minWidth={0}
-                         borderWidth={0}
                          backgroundColor={colors.notification}
                          onPress={sortEntries}
                     >
@@ -78,6 +88,7 @@ const Journal = () => {
                          )}
                     </TextButton>
                </View>
+               <ShadowOverlay />
                <ScrollView
                     contentContainerStyle={{ ...container, marginTop: 80 }}
                     ref={ref}

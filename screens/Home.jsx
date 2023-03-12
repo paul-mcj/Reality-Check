@@ -1,16 +1,13 @@
 // react and misc.
-import { useState, useEffect, useContext, useRef, useCallback } from "react";
+import { useState, useContext, useRef, useCallback } from "react";
 
 // react navigation
-import {
-     useTheme,
-     useScrollToTop,
-     useFocusEffect,
-} from "@react-navigation/native";
+import { useTheme, useScrollToTop } from "@react-navigation/native";
 
 // components
 import TextButton from "../components/TextButton";
 import Reminder from "../components/Reminder";
+import ShadowOverlay from "../components/ShadowOverlay";
 
 // context
 import ReminderContext from "../context/ReminderContext";
@@ -28,7 +25,7 @@ import { formatTime, showTimePicker } from "../utils/helperFunctions";
 import useNotification from "../hooks/use-notification";
 
 // react native
-import { Text, View, ScrollView, Switch, BackHandler } from "react-native";
+import { Text, View, ScrollView, Switch } from "react-native";
 
 const Home = () => {
      // init state
@@ -117,35 +114,6 @@ const Home = () => {
           [reminders]
      );
 
-     //
-     // useEffect(() => {
-     // const onBackPress = () => {
-     //      if (selected) {
-     //           setSelected(() => false);
-     //           console.log("true");
-     //           return true;
-     //      } else {
-     //           console.log("false");
-     //           return false;
-     //      }
-     // };
-
-     // const subscription = BackHandler.addEventListener(
-     //      "hardwareBackPress",
-     //      onBackPress
-     // );
-
-     // return () => subscription.remove();
-     // BackHandler.addEventListener("hardwareBackPress", () => {
-     //      return true;
-     // });
-     // return () => {
-     //      BackHandler.removeEventListener("hardwareBackPress", () => {
-     //           return true;
-     //      });
-     // };
-     // }, [selected]);
-
      return (
           <>
                <View
@@ -157,9 +125,7 @@ const Home = () => {
                     }}
                >
                     <TextButton
-                         style={{ padding: 20 }}
                          minWidth={0}
-                         borderWidth={0}
                          backgroundColor={colors.notification}
                          onPress={openMoreInfo}
                     >
@@ -171,6 +137,7 @@ const Home = () => {
                          />
                     </TextButton>
                </View>
+               <ShadowOverlay />
                <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                     <View style={{ ...container, marginTop: 80 }}>
                          <Text style={title}>Home</Text>

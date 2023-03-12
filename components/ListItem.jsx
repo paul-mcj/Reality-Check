@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import TextButton from "./TextButton";
 
 // react native
-import { Text, View } from "react-native";
+import { Text, View, Pressable } from "react-native";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
@@ -44,7 +44,15 @@ const ListItem = ({ title, message }) => {
                          <View style={{ marginTop: 20 }}>
                               {message.map((item) => (
                                    // its improper to not have a key while mapping, but since the data is static theres no need...
-                                   <Text style={smallTextWhite}>{item}</Text>
+                                   <Pressable
+                                        onPress={() =>
+                                             setShowContent(() => !showContent)
+                                        }
+                                   >
+                                        <Text style={smallTextWhite}>
+                                             {item}
+                                        </Text>
+                                   </Pressable>
                               ))}
                          </View>
                     </View>
