@@ -20,6 +20,7 @@ import useInput from "../hooks/use-input";
 // react native
 import { View, Text, ScrollView, TextInput } from "react-native";
 
+// eslint-disable-next-line react/display-name
 const EditJournalItem = ({ entry }) => {
      // component state
      const [entryIndex, setEntryIndex] = useState(-1);
@@ -66,8 +67,9 @@ const EditJournalItem = ({ entry }) => {
                (item) => item.id === entry.id
           );
           setEntryIndex(() => foundEntryIndex);
-     }, [entry]);
+     }, [entry, entries]);
 
+     // if entry is being revised, update the revised date for the journal entry object
      useEffect(() => {
           setRevisedDate(() => new Date(entry.revised));
      }, [entry?.revised]);

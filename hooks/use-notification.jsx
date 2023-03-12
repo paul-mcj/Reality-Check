@@ -38,9 +38,8 @@ const useNotification = () => {
 
      // get all active notifications upon initial render
      useEffect(() => {
-          // ||| Notifications.cancelAllScheduledNotificationsAsync();
+          // Notifications.cancelAllScheduledNotificationsAsync();
           Notifications.getAllScheduledNotificationsAsync();
-          console.log(Notifications.getAllScheduledNotificationsAsync());
      }, []);
 
      return {

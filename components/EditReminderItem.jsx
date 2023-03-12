@@ -22,6 +22,7 @@ import { useTheme } from "@react-navigation/native";
 // react native
 import { View, Text, ScrollView } from "react-native";
 
+// eslint-disable-next-line react/display-name
 const EditReminderItem = ({ reminder }) => {
      // initialize local state
      const [displayTime, setDisplayTime] = useState(reminder.time);
@@ -77,7 +78,6 @@ const EditReminderItem = ({ reminder }) => {
           });
           // if this reminder time is unique in the context:
           if (e.type === "set" && !timeAlreadyInContext) {
-               console.log(reminder);
                // remove old reminder object from reminder context
                deleteReminder(reminder.id);
                // update the reminder object with the new selected time, and schedule a new notification for it as well
@@ -87,10 +87,8 @@ const EditReminderItem = ({ reminder }) => {
                     active: reminder.active,
                     notificationIdentifier: triggerNotification(selectedTime),
                };
-               console.log("updatedReminder: " + updatedReminder);
                // add updated reminder object to reminder context
                addReminder(updatedReminder);
-               // fixme: keep in mind that the reminder can be updated and not necessarily have the notification SET! therefore, the above logic of just deleting and then adding a reminder doesn't always work! Fix that logic just for this "updateReminder" function!
                // Toast that new reminder has been created
                setToastMessage(() => "Reminder updated");
                invokeToast();

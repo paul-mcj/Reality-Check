@@ -21,6 +21,7 @@ import ToastContext from "../context/ToastContext";
 // react and misc
 import { useContext } from "react";
 
+// eslint-disable-next-line react/display-name
 const Reminder = ({ id, time, active, canOpenReminder }) => {
      // app theme deconstruction
      const { colors, smallTextNotification } = useTheme();
@@ -59,10 +60,9 @@ const Reminder = ({ id, time, active, canOpenReminder }) => {
                }}
           >
                <TextButton
-                    backgroundColor={active ? colors.white : colors.text}
-                    borderColor={active ? colors.white : colors.text}
+                    backgroundColor={active ? colors.white : colors.dim}
+                    borderColor={active ? colors.white : colors.dim}
                     onPress={canOpenReminder ? openReminder : () => {}}
-                    minWidth={"80%"}
                >
                     <Text style={smallTextNotification}>
                          {active

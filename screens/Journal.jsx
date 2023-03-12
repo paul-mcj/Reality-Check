@@ -30,7 +30,7 @@ const Journal = () => {
           useContext(ToastContext);
 
      // app theme deconstruction
-     const { colors, container, text, title, smallTextWhite } = useTheme();
+     const { colors, container, title, smallTextWhite } = useTheme();
 
      // hooks
      const ref = useRef(null);
@@ -66,9 +66,8 @@ const Journal = () => {
                     }}
                >
                     <TextButton
-                         style={{ padding: 20 }}
                          minWidth={0}
-                         backgroundColor={colors.notification}
+                         backgroundColor={colors.accent}
                          onPress={sortEntries}
                     >
                          {sortedByNewest ? (
@@ -99,22 +98,27 @@ const Journal = () => {
                          <>
                               <Text
                                    style={{
-                                        ...text,
+                                        ...smallTextWhite,
+                                        paddingBottom: 0,
                                         fontStyle: "italic",
                                    }}
                               >
                                    “I love sleep. My life has the tendency to
-                                   fall apart when I'm awake, you know?”
+                                   fall apart when I&apos;m awake, you know?”
                               </Text>
-                              <Text style={{ ...smallTextWhite, padding: 0 }}>
+                              <Text
+                                   style={{
+                                        ...smallTextWhite,
+                                   }}
+                              >
                                    ― Ernest Hemingway
                               </Text>
                          </>
                     )}
-                    <View style={{ marginBottom: 40 }}>
-                         {entries.length !== 0 &&
-                              entries
-                                   // reverse method makes newest entries visible and older ones go to the bottom
+                    {entries.length !== 0 && (
+                         <View style={{ marginBottom: 120 }}>
+                              {entries
+                                   // the reverse method will make newer entries shown first by default
                                    .reverse()
                                    .map((item) => (
                                         <JournalEntry
@@ -124,7 +128,16 @@ const Journal = () => {
                                              timestamp={item.timestamp}
                                         />
                                    ))}
-                    </View>
+                              <Text
+                                   style={{
+                                        ...smallTextWhite,
+                                        fontStyle: "italic",
+                                   }}
+                              >
+                                   End of Journal
+                              </Text>
+                         </View>
+                    )}
                </ScrollView>
           </>
      );

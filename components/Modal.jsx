@@ -60,9 +60,8 @@ const Modal = () => {
                     }}
                >
                     <TextButton
-                         style={{ padding: 20 }}
                          minWidth={0}
-                         backgroundColor={colors.notification}
+                         backgroundColor={colors.accent}
                          onPress={() => modalDispatch({ type: "CLOSE_MODAL" })}
                     >
                          <CloseIcon

@@ -1,5 +1,5 @@
 // react and misc
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext } from "react";
 import PropTypes from "prop-types";
 
 // define context
@@ -10,16 +10,11 @@ export const ToastProvider = ({ children }) => {
      const [isToast, setIsToast] = useState(false);
      const [message, setMessage] = useState("");
 
-     // encapsulate setIsToast state (setting it from true to false after a setTimeout function internally helps navigate unnecessary re-renders in components that use the Toast component )
-     const invokeToast = () => {
-          setIsToast(() => true);
-          setTimeout(() => {
-               setIsToast(() => false);
-          }, 1);
+     // allows the toast to be shown and then dismissed
+     const invokeToast = async () => {
+          await setIsToast(() => true);
+          await setIsToast(() => false);
      };
-
-     // fixme: return subscription so that previous toast is overwritten if a newer one comes up??
-     useEffect(() => {}, [isToast]);
 
      return (
           <ToastContext.Provider

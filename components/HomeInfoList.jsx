@@ -1,6 +1,3 @@
-// react and misc
-import React from "react";
-
 // components
 import ListItem from "./ListItem";
 

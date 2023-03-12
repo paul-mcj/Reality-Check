@@ -15,10 +15,11 @@ import ShadowOverlay from "../components/ShadowOverlay";
 import JournalContext from "../context/JournalContext";
 import ToastContext from "../context/ToastContext";
 
-const NewEntry = ({ navigation, route }) => {
+const NewEntry = () => {
      // component state
      const [undo, setUndo] = useState(false);
      const [prevInput, setPrevInput] = useState("");
+     const [fontStyle, setFontStyle] = useState("italic");
 
      // init context
      const { addEntry, input, setInput } = useContext(JournalContext);
@@ -26,8 +27,7 @@ const NewEntry = ({ navigation, route }) => {
           useContext(ToastContext);
 
      // app theme deconstruction
-     const { colors, smallTextWhite, container, title, text, border } =
-          useTheme();
+     const { colors, smallTextWhite, container, title, border } = useTheme();
 
      // hooks
      const ref = useRef(null);
@@ -93,11 +93,12 @@ const NewEntry = ({ navigation, route }) => {
           </View>
      );
 
-     // fixme: when textinput is focused && route is on NewEntry, get rid of navigation bar???
+     // update the text field to be italicized if there is no text in it (UI enhancement)
      useEffect(() => {
-          console.log(route);
-          console.log(navigation);
-     });
+          input?.trim().length > 0
+               ? setFontStyle(() => "")
+               : setFontStyle(() => "italic");
+     }, [input]);
 
      return (
           <>
@@ -108,21 +109,27 @@ const NewEntry = ({ navigation, route }) => {
                     showsVerticalScrollIndicator={false}
                >
                     <Text style={title}>New Entry</Text>
-                    <TextInput
+                    <View
                          style={{
-                              // ...text,
-                              ...smallTextWhite,
                               ...border,
-                              marginTop: 20,
-                              textAlign: "left",
                               backgroundColor: colors.notification,
+                              marginTop: 20,
                          }}
-                         placeholder="What did you dream of?"
-                         placeholderTextColor={colors.text}
-                         value={input}
-                         onChangeText={(text) => setInput(() => text)}
-                         multiline
-                    />
+                    >
+                         <TextInput
+                              style={{
+                                   ...smallTextWhite,
+                                   textAlign: "left",
+                                   backgroundColor: colors.notification,
+                                   fontStyle,
+                              }}
+                              placeholder="What did you dream of?"
+                              placeholderTextColor={colors.text}
+                              value={input}
+                              onChangeText={(text) => setInput(() => text)}
+                              multiline
+                         />
+                    </View>
                     {input?.trim().length !== 0 && showButtons}
                     {undo && input?.trim().length === 0 && (
                          <View style={{ flex: 1, marginTop: 40 }}>

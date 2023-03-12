@@ -64,12 +64,12 @@ const MainScreens = () => {
                          name="Home"
                          component={Home}
                          options={{
-                              tabBarIcon: (props) => (
+                              tabBarIcon: ({ color }) => (
                                    <HomeIcon
                                         name="home"
                                         style={{ fontWeight: "100" }}
                                         size={24}
-                                        color={props.color}
+                                        color={color}
                                    />
                               ),
                          }}
@@ -78,11 +78,11 @@ const MainScreens = () => {
                          name="NewEntry"
                          component={NewEntry}
                          options={{
-                              tabBarIcon: (props) => (
+                              tabBarIcon: ({ color }) => (
                                    <PencilIcon
                                         name="pencil"
                                         size={24}
-                                        color={props.color}
+                                        color={color}
                                    />
                               ),
                          }}
@@ -91,11 +91,11 @@ const MainScreens = () => {
                          name="Journal"
                          component={Journal}
                          options={{
-                              tabBarIcon: (props) => (
+                              tabBarIcon: ({ color }) => (
                                    <BookIcon
                                         name="book"
                                         size={24}
-                                        color={props.color}
+                                        color={color}
                                    />
                               ),
                          }}

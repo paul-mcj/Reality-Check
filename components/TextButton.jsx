@@ -7,6 +7,7 @@ import { Pressable } from "react-native";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
+// eslint-disable-next-line react/display-name
 const TextButton = ({
      minWidth,
      borderWidth,
@@ -36,7 +37,6 @@ const TextButton = ({
           </Pressable>
      );
 };
-
 TextButton.propTypes = {
      minWidth: PropTypes.any,
      borderWidth: PropTypes.number,

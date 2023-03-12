@@ -11,6 +11,7 @@ import { Text, View, Pressable } from "react-native";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
+// eslint-disable-next-line react/display-name
 const ListItem = ({ title, message }) => {
      // app theme deconstruction
      const { colors, smallTextNotification, smallTextWhite, border } =
@@ -21,18 +22,21 @@ const ListItem = ({ title, message }) => {
 
      return (
           <View style={{ marginBottom: 10 }}>
-               <TextButton
-                    backgroundColor={showContent ? colors.white : colors.text}
-                    borderColor={showContent ? colors.white : colors.text}
-                    onPress={() => setShowContent(() => !showContent)}
-                    minWidth={250}
-               >
-                    <Text style={smallTextNotification}>{title}</Text>
-               </TextButton>
+               <View style={{ zIndex: 1 }}>
+                    <TextButton
+                         backgroundColor={colors.white}
+                         borderColor={colors.white}
+                         onPress={() => setShowContent(() => !showContent)}
+                         minWidth={250}
+                    >
+                         <Text style={smallTextNotification}>{title}</Text>
+                    </TextButton>
+               </View>
                {showContent && (
                     <View
                          style={{
                               ...border,
+                              backgroundColor: colors.notification,
                               borderTopWidth: 0,
                               borderTopLeftRadius: 0,
                               borderTopRightRadius: 0,
@@ -43,7 +47,8 @@ const ListItem = ({ title, message }) => {
                     >
                          <View style={{ marginTop: 20 }}>
                               {message.map((item) => (
-                                   // its improper to not have a key while mapping, but since the data is static theres no need...
+                                   // its improper to not have a key for each item while mapping, but since the data is static theres no need:
+                                   // eslint-disable-next-line react/jsx-key
                                    <Pressable
                                         onPress={() =>
                                              setShowContent(() => !showContent)

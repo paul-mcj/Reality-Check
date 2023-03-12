@@ -1,13 +1,3 @@
-// fixme: fix all styles for consistency (ex. textbutton and any interacting elements/component colors should be all the same color and text size, etc., with the exception of the Reminder component can be white not purple), all main screens should have the same MARGINS (especially Journal bottom)...
-//fixme: the text input in NewEntry should be the same size/padding as when editing an individual journal entry item...
-// fixme: EditReminderItem should be in the middle of the screen vertically just like the EditJournalItem and Modal content components
-// fixme: check linter and all unused things in entire app for deletion
-// fixme: readme should be properly documented when finished to github
-// fixme: make sure all async function are properly wrapped with try/catch
-// fixme: Set custom icon and color for notifications on Android
-// fixme: Listen to interactions with notifications (bring to app when touched!)
-// fixme: how to optimize react native apps? fells very slow...(use callback anywhere?)
-
 // react navigation
 import { NavigationContainer } from "@react-navigation/native";
 

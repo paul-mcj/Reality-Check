@@ -12,6 +12,7 @@ import { useTheme } from "@react-navigation/native";
 // react native
 import { Pressable, Text, View } from "react-native";
 
+// eslint-disable-next-line react/display-name
 const JournalEntry = ({ id, input, timestamp }) => {
      // app theme deconstruction
      const { border, smallTextWhite, colors } = useTheme();

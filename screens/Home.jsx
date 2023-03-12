@@ -1,5 +1,5 @@
 // react and misc.
-import { useState, useContext, useRef, useCallback } from "react";
+import { useContext, useRef } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -28,9 +28,6 @@ import useNotification from "../hooks/use-notification";
 import { Text, View, ScrollView, Switch } from "react-native";
 
 const Home = () => {
-     // init state
-     const [selected, setSelected] = useState(false);
-
      // app theme deconstruction
      const { colors, smallTextWhite, container, title, text } = useTheme();
 
@@ -69,50 +66,46 @@ const Home = () => {
      };
 
      // function takes the selected time and creates a new reminder object with it, then adds it to reminder context and sets-up the future notification
-     const createReminder = useCallback(
-          (e, selectedTime) => {
-               // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
-               let timeAlreadyInContext = false;
-               reminders.forEach((item) => {
-                    if (formatTime(selectedTime) === formatTime(item.time)) {
-                         timeAlreadyInContext = true;
-                         // dismiss immediately and return to not update Toast if "cancel" is tapped in the timer picker modal
-                         if (e.type === "dismissed") {
-                              return;
-                         }
-                         // otherwise set Alert state
-                         alertDispatch({
-                              type: "DUPLICATE_REMINDER",
-                              payload: {
-                                   title: "Error",
-                                   message: `There is already a reminder set for ${formatTime(
-                                        selectedTime
-                                   )}. Please select a different time.`,
-                              },
-                         });
+     const createReminder = (e, selectedTime) => {
+          // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
+          let timeAlreadyInContext = false;
+          reminders.forEach((item) => {
+               if (formatTime(selectedTime) === formatTime(item.time)) {
+                    timeAlreadyInContext = true;
+                    // dismiss immediately and return to not update Toast if "cancel" is tapped in the timer picker modal
+                    if (e.type === "dismissed") {
+                         return;
                     }
-               });
-               // if this reminder time is unique (ie. not already in the reminder context):
-               if (e.type === "set" && !timeAlreadyInContext) {
-                    // add selected time, unique id, active state (true by default) and a unique identifier (for the notification) to new reminder object
-                    const newReminder = {
-                         time: selectedTime,
-                         id: selectedTime.getTime(),
-                         active: true,
-                         notificationIdentifier:
-                              // this unique prop set for the respective object allows for the notification to occur on user devices
-                              triggerNotification(selectedTime),
-                    };
-                    console.log("newReminder: " + newReminder);
-                    // add new object to reminder context
-                    addReminder(newReminder);
-                    // Toast that new reminder has been created
-                    setToastMessage(() => "New reminder created");
-                    invokeToast();
+                    // otherwise set Alert state
+                    alertDispatch({
+                         type: "DUPLICATE_REMINDER",
+                         payload: {
+                              title: "Error",
+                              message: `There is already a reminder set for ${formatTime(
+                                   selectedTime
+                              )}. Please select a different time.`,
+                         },
+                    });
                }
-          },
-          [reminders]
-     );
+          });
+          // if this reminder time is unique (ie. not already in the reminder context):
+          if (e.type === "set" && !timeAlreadyInContext) {
+               // add selected time, unique id, active state (true by default) and a unique identifier (for the notification) to new reminder object
+               const newReminder = {
+                    time: selectedTime,
+                    id: selectedTime.getTime(),
+                    active: true,
+                    notificationIdentifier:
+                         // this unique prop set for the respective object allows for the notification to occur on user devices
+                         triggerNotification(selectedTime),
+               };
+               // add new object to reminder context
+               addReminder(newReminder);
+               // Toast that new reminder has been created
+               setToastMessage(() => "New reminder created");
+               invokeToast();
+          }
+     };
 
      return (
           <>
@@ -126,7 +119,7 @@ const Home = () => {
                >
                     <TextButton
                          minWidth={0}
-                         backgroundColor={colors.notification}
+                         backgroundColor={colors.accent}
                          onPress={openMoreInfo}
                     >
                          <DotsIcon
@@ -141,7 +134,7 @@ const Home = () => {
                <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                     <View style={{ ...container, marginTop: 80 }}>
                          <Text style={title}>Home</Text>
-                         <Text style={{ ...text, marginBottom: 40 }}>
+                         <Text style={{ ...smallTextWhite, marginBottom: 40 }}>
                               Reality checks can help you become a lucid
                               dreamer! Create as many daily reminders as you
                               need!
@@ -157,8 +150,7 @@ const Home = () => {
                     <View style={container}>
                          <Text
                               style={{
-                                   ...text,
-                                   marginBottom: 40,
+                                   ...smallTextWhite,
                               }}
                          >
                               {activeReminders === 0 && "No reminders set"}
