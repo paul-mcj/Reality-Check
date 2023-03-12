@@ -29,7 +29,7 @@ import { Text, View, ScrollView, Switch } from "react-native";
 
 const Home = () => {
      // app theme deconstruction
-     const { colors, smallTextWhite, container, title, text } = useTheme();
+     const { colors, smallTextWhite, container, title } = useTheme();
 
      // hooks
      const { triggerNotification } = useNotification();

@@ -23,7 +23,7 @@ const theme = {
      },
      title: {
           textAlign: "center",
-          fontSize: 36,
+          fontSize: 28,
           color: "#fff",
           marginBottom: 40,
      },
