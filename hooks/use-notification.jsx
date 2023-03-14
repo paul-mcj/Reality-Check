@@ -42,6 +42,10 @@ const useNotification = () => {
           Notifications.getAllScheduledNotificationsAsync();
      }, []);
 
+     useEffect(() => {
+          console.log(Notifications.getAllScheduledNotificationsAsync());
+     });
+
      return {
           triggerNotification,
           deleteNotification,
