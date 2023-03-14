@@ -22,17 +22,17 @@ import { ReminderProvider } from "./context/ReminderContext";
 import { AlertProvider } from "./context/AlertContext";
 
 // app can run notifications in background
-const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
-TaskManager.defineTask(
-     BACKGROUND_NOTIFICATION_TASK,
-     ({ data, error, executionInfo }) => {
-          console.log(data);
-          console.log(error);
-          console.log(executionInfo);
-          addNotification(trigger);
-     }
-);
-Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+// const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+// TaskManager.defineTask(
+//      BACKGROUND_NOTIFICATION_TASK,
+//      ({ data, error, executionInfo }) => {
+//           console.log(data);
+//           console.log(error);
+//           console.log(executionInfo);
+//           addNotification(trigger);
+//      }
+// );
+Notifications.registerTaskAsync("BACKGROUND_NOTIFICATION_TASK");
 
 // app can run notification in foreground
 Notifications.setNotificationHandler({

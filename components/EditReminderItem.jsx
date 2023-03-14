@@ -2,6 +2,7 @@
 import AlertContext from "../context/AlertContext";
 import ReminderContext from "../context/ReminderContext";
 import ToastContext from "../context/ToastContext";
+import ModalContext from "../context/ModalContext";
 
 // components
 import TextButton from "./TextButton";
@@ -33,6 +34,7 @@ const EditReminderItem = ({ reminder }) => {
           useContext(ReminderContext);
      const { invokeToast, setMessage: setToastMessage } =
           useContext(ToastContext);
+     const { dispatch: modalDispatch } = useContext(ModalContext);
 
      // hooks
      const { triggerNotification } = useNotification();
@@ -85,13 +87,20 @@ const EditReminderItem = ({ reminder }) => {
                     time: selectedTime,
                     id: reminder.id,
                     active: reminder.active,
+                    // this always needs to trigger a notification by default, as its "re-creating a new object" and to leave it null will cause an error with the object later when changing its active state
                     notificationIdentifier: triggerNotification(selectedTime),
                };
+               // if the updatedReminder object has a false "active" prop state, then delete the notification (otherwise the object will trigger a notification even if its set to off)
+               if (!updatedReminder.active) {
+                    console.log("active was false");
+                    deleteReminder(reminder.id);
+               }
                // add updated reminder object to reminder context
                addReminder(updatedReminder);
                // Toast that new reminder has been created
                setToastMessage(() => "Reminder updated");
                invokeToast();
+               modalDispatch({ type: "CLOSE_MODAL" });
                setDisplayTime(() => updatedReminder.time);
           }
      };
