@@ -1,5 +1,5 @@
 // react and misc.
-import { useContext, useRef } from "react";
+import { useContext, useRef, useCallback } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -66,46 +66,56 @@ const Home = () => {
      };
 
      // function takes the selected time and creates a new reminder object with it, then adds it to reminder context and sets-up the future notification
-     const createReminder = (e, selectedTime) => {
-          // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
-          let timeAlreadyInContext = false;
-          reminders.forEach((item) => {
-               if (formatTime(selectedTime) === formatTime(item.time)) {
-                    timeAlreadyInContext = true;
-                    // dismiss immediately and return to not update Toast if "cancel" is tapped in the timer picker modal
-                    if (e.type === "dismissed") {
-                         return;
+     const createReminder = useCallback(
+          (e, selectedTime) => {
+               // users should not be able to have multiple reminders set at the same time (they must be at least a min apart), so if selectedTime is already in the reminder context then Alert users they cannot make multiple reminders at the same time
+               let timeAlreadyInContext = false;
+               reminders.forEach((item) => {
+                    if (formatTime(selectedTime) === formatTime(item.time)) {
+                         timeAlreadyInContext = true;
+                         // dismiss immediately and return to not update Toast if "cancel" is tapped in the timer picker modal
+                         if (e.type === "dismissed") {
+                              return;
+                         }
+                         // otherwise set Alert state
+                         alertDispatch({
+                              type: "DUPLICATE_REMINDER",
+                              payload: {
+                                   title: "Error",
+                                   message: `There is already a reminder set for ${formatTime(
+                                        selectedTime
+                                   )}. Please select a different time.`,
+                              },
+                         });
                     }
-                    // otherwise set Alert state
-                    alertDispatch({
-                         type: "DUPLICATE_REMINDER",
-                         payload: {
-                              title: "Error",
-                              message: `There is already a reminder set for ${formatTime(
-                                   selectedTime
-                              )}. Please select a different time.`,
-                         },
-                    });
+               });
+               // if this reminder time is unique (ie. not already in the reminder context):
+               if (e.type === "set" && !timeAlreadyInContext) {
+                    // add selected time, unique id, active state (true by default) and a unique identifier (for the notification) to new reminder object
+                    const newReminder = {
+                         time: selectedTime,
+                         id: selectedTime.getTime(),
+                         active: true,
+                         notificationIdentifier:
+                              // this unique prop set for the respective object allows for the notification to occur on user devices
+                              triggerNotification(selectedTime),
+                    };
+                    // add new object to reminder context
+                    addReminder(newReminder);
+                    // Toast that new reminder has been created
+                    setToastMessage(() => "New reminder created");
+                    invokeToast();
                }
-          });
-          // if this reminder time is unique (ie. not already in the reminder context):
-          if (e.type === "set" && !timeAlreadyInContext) {
-               // add selected time, unique id, active state (true by default) and a unique identifier (for the notification) to new reminder object
-               const newReminder = {
-                    time: selectedTime,
-                    id: selectedTime.getTime(),
-                    active: true,
-                    notificationIdentifier:
-                         // this unique prop set for the respective object allows for the notification to occur on user devices
-                         triggerNotification(selectedTime),
-               };
-               // add new object to reminder context
-               addReminder(newReminder);
-               // Toast that new reminder has been created
-               setToastMessage(() => "New reminder created");
-               invokeToast();
-          }
-     };
+          },
+          [
+               addReminder,
+               alertDispatch,
+               invokeToast,
+               reminders,
+               setToastMessage,
+               triggerNotification,
+          ]
+     );
 
      return (
           <>

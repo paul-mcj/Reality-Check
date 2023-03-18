@@ -43,6 +43,7 @@ const useNotification = () => {
      }, []);
 
      useEffect(() => {
+          console.log("first");
           console.log(Notifications.getAllScheduledNotificationsAsync());
      });
 

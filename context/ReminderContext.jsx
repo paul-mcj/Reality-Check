@@ -200,7 +200,6 @@ export const ReminderProvider = ({ children }) => {
                }
           };
 
-          // fixme: usecallback ?
           const getAllRemindersActive = async () => {
                try {
                     const jsonValue = await AsyncStorage.getItem(
@@ -226,6 +225,7 @@ export const ReminderProvider = ({ children }) => {
                     );
                }
           };
+
           getReminders();
           getAllRemindersActive();
      }, []);

@@ -2,7 +2,7 @@
 import ListItem from "./ListItem";
 
 // react native
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 // global static data to display
 const CONTENT = [
@@ -66,14 +66,20 @@ const CONTENT = [
 
 const HomeInfoList = () => {
      return (
-          <View style={{ marginTop: 80, marginBottom: 40 }}>
+          <View style={{ marginTop: 120, marginBottom: 40 }}>
                {CONTENT.map((item) => (
                     <ListItem
                          key={item.id}
                          title={item.title}
                          message={item.message}
+                         multiple={true}
                     />
                ))}
+               <ListItem
+                    multiple={false}
+                    title="About App"
+                    message="Tap here to see application documentation and source code!"
+               />
           </View>
      );
 };

@@ -5,6 +5,9 @@ import PropTypes from "prop-types";
 // components
 import TextButton from "./TextButton";
 
+// expo linking
+import * as Linking from "expo-linking";
+
 // react native
 import { Text, View, Pressable } from "react-native";
 
@@ -12,7 +15,7 @@ import { Text, View, Pressable } from "react-native";
 import { useTheme } from "@react-navigation/native";
 
 // eslint-disable-next-line react/display-name
-const ListItem = ({ title, message }) => {
+const ListItem = ({ title, message, multiple }) => {
      // app theme deconstruction
      const { colors, smallTextNotification, smallTextWhite, border } =
           useTheme();
@@ -46,19 +49,40 @@ const ListItem = ({ title, message }) => {
                          }}
                     >
                          <View style={{ marginTop: 20 }}>
-                              {message.map((item) => (
-                                   // its improper to not have a key for each item while mapping, but since the data is static theres no need:
-                                   // eslint-disable-next-line react/jsx-key
+                              {multiple ? (
+                                   message.map((item) => (
+                                        // its improper to not have a key for each item while mapping, but since the data is static theres no need:
+                                        // eslint-disable-next-line react/jsx-key
+                                        <Pressable
+                                             onPress={() =>
+                                                  setShowContent(
+                                                       () => !showContent
+                                                  )
+                                             }
+                                        >
+                                             <Text style={smallTextWhite}>
+                                                  {item}
+                                             </Text>
+                                        </Pressable>
+                                   ))
+                              ) : (
                                    <Pressable
-                                        onPress={() =>
-                                             setShowContent(() => !showContent)
-                                        }
+                                        onPress={() => {
+                                             Linking.openURL(
+                                                  "https://github.com/paul-mcj/Reality-Check"
+                                             );
+                                             setTimeout(() => {
+                                                  setShowContent(
+                                                       () => !showContent
+                                                  );
+                                             }, 500);
+                                        }}
                                    >
                                         <Text style={smallTextWhite}>
-                                             {item}
+                                             {message}
                                         </Text>
                                    </Pressable>
-                              ))}
+                              )}
                          </View>
                     </View>
                )}
@@ -69,6 +93,7 @@ const ListItem = ({ title, message }) => {
 ListItem.propTypes = {
      title: PropTypes.string.isRequired,
      message: PropTypes.array.isRequired,
+     multiple: PropTypes.bool.isRequired,
 };
 
 export default ListItem;
