@@ -1,13 +1,20 @@
 {
      "expo": {
-          "name": "RealityCheck",
+          "plugins": [
+               "expo-notifications",
+               {
+                    "icon": "./assets/notification.PNG",
+                    "color": "#ffffff"
+               }
+          ],
+          "name": "Reality Check",
           "slug": "RealityCheck",
           "version": "1.0.0",
           "orientation": "portrait",
-          "icon": "./assets/icon.png",
+          "icon": "./assets/reality_check_logo.PNG",
           "userInterfaceStyle": "light",
           "splash": {
-               "image": "./assets/splash.png",
+               "image": "./assets/reality_check_logo.PNG",
                "resizeMode": "contain",
                "backgroundColor": "#ffffff"
           },
@@ -20,13 +27,19 @@
           },
           "android": {
                "adaptiveIcon": {
-                    "foregroundImage": "./assets/adaptive-icon.png",
+                    "foregroundImage": "./assets/reality_check_logo.PNG",
                     "backgroundColor": "#FFFFFF"
                },
-               "useNextNotificationsApi": true
+               "useNextNotificationsApi": true,
+               "package": "com.mcjannetp.RealityCheck"
           },
           "web": {
                "favicon": "./assets/favicon.png"
+          },
+          "extra": {
+               "eas": {
+                    "projectId": "a4c0d3ce-212c-4dc1-a180-6bb9403cacab"
+               }
           }
      }
 }

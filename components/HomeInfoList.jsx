@@ -17,7 +17,7 @@ const CONTENT = [
      {
           title: "When Conscious",
           message: [
-               "To help induce ludic dreaming, you should have your reality checks notify you throughout the day. When one pops-up, concentrate and ask yourself: Am I dreaming?",
+               "To help induce lucid dreaming, you should have your reality checks notify you throughout the day. When one pops-up, concentrate and ask yourself: Am I dreaming?",
                "This is the primary question you should continually ask yourself throughout the day, and its this consistency that will hopefully translate to the dream world and help make you a lucid dreamer!",
           ],
           id: 1,
@@ -29,7 +29,7 @@ const CONTENT = [
                "Some may focus on their own facial features, knowing that if they see themselves in their dream and look different than what they look like in waking life, then that's an indicator they might be dreaming.",
                "Others may continually look at their hands when performing reality checks and compare the number of fingers they have versus when in the dream (if it changes, it may be because they are experiencing a lucid dream).",
                "And there are also those who choose to focus on their feet and keep themselves 'grounded' as to check the reality of their environment.",
-               "These are just some of the techniques you may want to use to help induce ludic dreams.",
+               "These are just some of the techniques you may want to use to help induce lucid dreams.",
           ],
           id: 2,
      },
@@ -37,7 +37,7 @@ const CONTENT = [
           title: "The Dream Journal",
           message: [
                "A dream journal is critical in helping bring about lucid dreams.",
-               "As you record more and more dreams, certain themes/people/places/etc. may become more prevalent, and remembering their reoccurring nature just before sleep can help with lucidity. As such, reading your journal entries should be done frequently, especially before bed.",
+               "As you record more and more dreams, certain themes/people/places/etc. may become more prevalent, and remembering their recurring nature just before sleep can help with lucidity. As such, reading your journal entries should be done frequently, especially before bed.",
                "Always make sure to record your dreams as soon as you become awake in order to get them as detailed as possible for your journal.",
                "Additionally, always make sure to record any time you experience a lucid dream, as well as: how it came about, what you were feeling when it happened, and what made you wake up.",
           ],
