@@ -4,6 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 // expo
 import { StatusBar } from "expo-status-bar";
 
+// react and misc
+import { useEffect } from "react";
+
 // expo notifications
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
@@ -42,6 +45,12 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+     // get all active notifications upon initial render
+     useEffect(() => {
+          // Notifications.cancelAllScheduledNotificationsAsync();
+          Notifications.getAllScheduledNotificationsAsync();
+     }, []);
+
      return (
           <ModalProvider>
                <AlertProvider>

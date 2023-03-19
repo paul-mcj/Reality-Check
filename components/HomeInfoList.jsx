@@ -2,7 +2,7 @@
 import ListItem from "./ListItem";
 
 // react native
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 // global static data to display
 const CONTENT = [

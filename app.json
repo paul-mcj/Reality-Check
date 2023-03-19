@@ -1,24 +1,17 @@
 {
      "expo": {
-          "plugins": [
-               "expo-notifications",
-               {
-                    "icon": "./assets/notification.PNG",
-                    "color": "#ffffff"
-               }
-          ],
           "notification": {
-               "icon": "./assets/notification.PNG",
+               "icon": "./assets/notification.png",
                "color": "#ffffff"
           },
           "name": "Reality Check",
           "slug": "RealityCheck",
           "version": "1.0.0",
           "orientation": "portrait",
-          "icon": "./assets/reality_check_logo.PNG",
+          "icon": "./assets/reality_check_logo.png",
           "userInterfaceStyle": "light",
           "splash": {
-               "image": "./assets/reality_check_logo.PNG",
+               "image": "./assets/reality_check_logo.png",
                "resizeMode": "contain",
                "backgroundColor": "#ffffff"
           },
@@ -31,7 +24,7 @@
           },
           "android": {
                "adaptiveIcon": {
-                    "foregroundImage": "./assets/reality_check_logo.PNG",
+                    "foregroundImage": "./assets/reality_check_logo.png",
                     "backgroundColor": "#FFFFFF"
                },
                "useNextNotificationsApi": true,

@@ -1,6 +1,3 @@
-// react and misc
-import { useEffect } from "react";
-
 // expo notifications
 import * as Notifications from "expo-notifications";
 
@@ -23,29 +20,17 @@ const useNotification = () => {
      // function to delete desired notification
      const deleteNotification = async (notificationIdentifier) => {
           // unique private prop on notification objects for deletion is necessary using expo API:
-          let notificationId = notificationIdentifier._z;
+          // let notificationId = ;
           try {
-               notificationId !== null &&
-                    (await Notifications.cancelScheduledNotificationAsync(
-                         notificationId
-                    ));
+               await Notifications.cancelScheduledNotificationAsync(
+                    notificationIdentifier._z
+               );
           } catch (err) {
                console.log(
                     `error at deleteNotification in use-notification: ${err}`
                );
           }
      };
-
-     // get all active notifications upon initial render
-     useEffect(() => {
-          // Notifications.cancelAllScheduledNotificationsAsync();
-          Notifications.getAllScheduledNotificationsAsync();
-     }, []);
-
-     useEffect(() => {
-          console.log("first");
-          console.log(Notifications.getAllScheduledNotificationsAsync());
-     });
 
      return {
           triggerNotification,
