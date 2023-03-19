@@ -7,6 +7,10 @@
                     "color": "#ffffff"
                }
           ],
+          "notification": {
+               "icon": "./assets/notification.PNG",
+               "color": "#ffffff"
+          },
           "name": "Reality Check",
           "slug": "RealityCheck",
           "version": "1.0.0",
