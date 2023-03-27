@@ -14,7 +14,6 @@ import { Text, View, Pressable } from "react-native";
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
-// eslint-disable-next-line react/display-name
 const ListItem = ({ title, message, multiple }) => {
      // app theme deconstruction
      const { colors, smallTextNotification, smallTextWhite, border } =

@@ -19,10 +19,9 @@ const useNotification = () => {
 
      // function to delete desired notification
      const deleteNotification = async (notificationIdentifier) => {
-          // unique private prop on notification objects for deletion is necessary using expo API:
-          // let notificationId = ;
           try {
                await Notifications.cancelScheduledNotificationAsync(
+                    // unique private prop on notification objects for deletion is necessary using expo API:
                     notificationIdentifier._z
                );
           } catch (err) {

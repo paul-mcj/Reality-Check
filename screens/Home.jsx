@@ -1,5 +1,5 @@
 // react and misc.
-import { useContext, useRef, useCallback } from "react";
+import { useContext, useRef, useCallback, useEffect } from "react";
 
 // react navigation
 import { useTheme, useScrollToTop } from "@react-navigation/native";
@@ -116,6 +116,10 @@ const Home = () => {
                triggerNotification,
           ]
      );
+
+     useEffect(() => {
+          console.log(reminders);
+     }, [reminders]);
 
      return (
           <>

@@ -92,7 +92,6 @@ const EditReminderItem = ({ reminder }) => {
                };
                // if the updatedReminder object has a false "active" prop state, then delete the notification (otherwise the object will trigger a notification even if its set to off)
                if (!updatedReminder.active) {
-                    console.log("active was false");
                     deleteReminder(reminder.id);
                }
                // add updated reminder object to reminder context

@@ -180,14 +180,18 @@ export const ReminderProvider = ({ children }) => {
                }
 
                try {
-                    // now that all reminder keys are found, update context array with those relevant objects
+                    // now that all reminder keys are found, update context array with those relevant objects.
                     await Promise.all(
                          tempKeyArr.map(async (reminder) => {
                               const data = await AsyncStorage.getItem(reminder);
                               let jsonData = JSON.parse(data);
+                              let dataTime = new Date(jsonData.time);
                               const reformatData = {
                                    ...jsonData,
-                                   time: new Date(jsonData.time),
+                                   time: dataTime,
+                                   // it is paramount to trigger a new notification for each reminder object that is about to be put into the reminder context. If this is not done here, then the notificationIdentifier prop would simply be "null" and thus the notification cannot be properly deleted/updated on the backend properly causing massive issues to app functionality.
+                                   notificationIdentifier:
+                                        triggerNotification(dataTime),
                               };
                               tempReminderArr.push(reformatData);
                          })
@@ -228,12 +232,14 @@ export const ReminderProvider = ({ children }) => {
 
           getReminders();
           getAllRemindersActive();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
      }, []);
 
      return (
           <ReminderContext.Provider
                value={{
                     reminders,
+                    setReminders,
                     activeReminders,
                     allRemindersActive,
                     changeAllRemindersActive,
