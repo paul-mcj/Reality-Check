@@ -186,6 +186,8 @@ export const ReminderProvider = ({ children }) => {
                               const data = await AsyncStorage.getItem(reminder);
                               let jsonData = JSON.parse(data);
                               let dataTime = new Date(jsonData.time);
+                              console.log(`data: ${data}`);
+                              // fixme: deleteNotification for each object, giving it a notificationIdentifier??
                               const reformatData = {
                                    ...jsonData,
                                    time: dataTime,
@@ -193,6 +195,8 @@ export const ReminderProvider = ({ children }) => {
                                    notificationIdentifier:
                                         triggerNotification(dataTime),
                               };
+                              console.log("reformatData:");
+                              console.log(reformatData);
                               tempReminderArr.push(reformatData);
                          })
                     );

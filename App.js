@@ -48,8 +48,9 @@ export default function App() {
      // get all active notifications upon initial render
      useEffect(() => {
           // Notifications.cancelAllScheduledNotificationsAsync();
-          Notifications.getAllScheduledNotificationsAsync();
-     }, []);
+          console.log("App: ");
+          console.log(Notifications.getAllScheduledNotificationsAsync());
+     });
 
      return (
           <ModalProvider>
