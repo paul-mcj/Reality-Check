@@ -118,7 +118,6 @@ const Home = () => {
      );
 
      useEffect(() => {
-          console.log("Home:");
           console.log(reminders);
      }, [reminders]);
 

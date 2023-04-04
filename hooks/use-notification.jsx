@@ -9,19 +9,21 @@ const useNotification = () => {
                     title: "Lucid Dream Reminder",
                     body: "Perform daily scheduled reality check!",
                },
-               trigger: {
-                    hour: trigger.getHours(),
-                    minute: trigger.getMinutes(),
-                    repeats: true,
-               },
+               trigger: trigger
+                    ? {
+                           hour: trigger.getHours(),
+                           minute: trigger.getMinutes(),
+                           repeats: true,
+                      }
+                    : 0,
           });
      };
 
      // function to delete desired notification
      const deleteNotification = async (notificationIdentifier) => {
+          // unique private prop on notification objects for deletion is necessary using expo API:
           try {
                await Notifications.cancelScheduledNotificationAsync(
-                    // unique private prop on notification objects for deletion is necessary using expo API:
                     notificationIdentifier._z
                );
           } catch (err) {

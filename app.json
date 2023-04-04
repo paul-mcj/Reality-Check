@@ -1,17 +1,17 @@
 {
      "expo": {
           "notification": {
-               "icon": "./assets/notification.png",
+               "icon": "./assets/reality_check_logo.png",
                "color": "#ffffff"
           },
           "name": "Reality Check",
           "slug": "RealityCheck",
           "version": "1.0.0",
           "orientation": "portrait",
-          "icon": "./assets/reality_check_logo.png",
+          "icon": "./assets/foreground.png",
           "userInterfaceStyle": "light",
           "splash": {
-               "image": "./assets/reality_check_logo.png",
+               "image": "./assets/foreground.png",
                "resizeMode": "contain",
                "backgroundColor": "#ffffff"
           },
@@ -24,10 +24,9 @@
           },
           "android": {
                "adaptiveIcon": {
-                    "foregroundImage": "./assets/reality_check_logo.png",
+                    "foregroundImage": "./assets/foreground.png",
                     "backgroundColor": "#FFFFFF"
                },
-               "useNextNotificationsApi": true,
                "package": "com.mcjannetp.RealityCheck"
           },
           "web": {

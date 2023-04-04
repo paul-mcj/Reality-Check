@@ -29,9 +29,7 @@ const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 TaskManager.defineTask(
      BACKGROUND_NOTIFICATION_TASK,
      ({ data, error, executionInfo }) => {
-          console.log(data);
-          console.log(error);
-          console.log(executionInfo);
+          console.log(data, error, executionInfo);
      }
 );
 Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
@@ -41,16 +39,40 @@ Notifications.setNotificationHandler({
      handleNotification: async () => ({
           shouldShowAlert: true,
           shouldPlaySound: true,
+          shouldSetBadge: true,
      }),
 });
 
 export default function App() {
-     // get all active notifications upon initial render
+     // when the app first loads, make sure to cancel all scheduled notifications
      useEffect(() => {
-          // Notifications.cancelAllScheduledNotificationsAsync();
-          console.log("App: ");
-          console.log(Notifications.getAllScheduledNotificationsAsync());
-     });
+          // const createNotificationChannel = async () => {
+          //      await Notifications.setNotificationChannelAsync("default", {
+          //           name: "test name for app",
+          //           importance: Notifications.AndroidImportance.MAX,
+          //           lockscreenVisibility:
+          //                Notifications.AndroidNotificationVisibility.PUBLIC,
+          //      });
+          // };
+
+          // const requestPermission = async () => {
+          //      const { status } = await Notifications.requestPermissionsAsync();
+          //      if (status !== "granted") {
+          //           alert(
+          //                "Permission to receive notifications had been denied. This may impact application performance."
+          //           );
+          //           return;
+          //      } else {
+          //           console.log("granted permission else here");
+          //           //fixme: check async state if there already permissions accepted-- if not add to async state, if so simply return
+          //      }
+          // };
+
+          // requestPermission();
+          // createNotificationChannel();
+          Notifications.cancelAllScheduledNotificationsAsync();
+          // console.log(Notifications.getNotificationChannelsAsync());
+     }, []);
 
      return (
           <ModalProvider>
