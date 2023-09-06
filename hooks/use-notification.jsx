@@ -7,15 +7,15 @@ const useNotification = () => {
           return await Notifications.scheduleNotificationAsync({
                content: {
                     title: "Lucid Dream Reminder",
-                    body: "Perform daily scheduled reality check!",
+                    body: "Perform daily scheduled reality check!"
                },
                trigger: trigger
                     ? {
                            hour: trigger.getHours(),
                            minute: trigger.getMinutes(),
-                           repeats: true,
+                           repeats: true
                       }
-                    : 0,
+                    : 0
           });
      };
 
@@ -35,7 +35,7 @@ const useNotification = () => {
 
      return {
           triggerNotification,
-          deleteNotification,
+          deleteNotification
      };
 };
 

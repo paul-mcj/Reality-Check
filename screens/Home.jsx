@@ -43,8 +43,7 @@ const Home = () => {
           changeAllRemindersActive,
           addReminder,
      } = useContext(ReminderContext);
-     const { invokeToast, setMessage: setToastMessage } =
-          useContext(ToastContext);
+     const { invokeToast, setMessage: setToastMessage } = useContext(ToastContext);
      const { dispatch: alertDispatch } = useContext(AlertContext);
 
      // hooks
@@ -59,9 +58,7 @@ const Home = () => {
      // run function when local Switch is turned off/on to set all reminders to active or not
      const handleOnValueChange = () => {
           changeAllRemindersActive();
-          setToastMessage(
-               () => `All reminders ${!allRemindersActive ? "on" : "off"}`
-          );
+          setToastMessage(() => `All reminders ${!allRemindersActive ? "on" : "off"}`);
           invokeToast();
      };
 
@@ -107,14 +104,7 @@ const Home = () => {
                     invokeToast();
                }
           },
-          [
-               addReminder,
-               alertDispatch,
-               invokeToast,
-               reminders,
-               setToastMessage,
-               triggerNotification,
-          ]
+          [addReminder, alertDispatch, invokeToast, reminders, setToastMessage, triggerNotification]
      );
 
      useEffect(() => {
@@ -129,13 +119,8 @@ const Home = () => {
                          top: 40,
                          position: "absolute",
                          zIndex: 2,
-                    }}
-               >
-                    <TextButton
-                         minWidth={0}
-                         backgroundColor={colors.accent}
-                         onPress={openMoreInfo}
-                    >
+                    }}>
+                    <TextButton minWidth={0} backgroundColor={colors.accent} onPress={openMoreInfo}>
                          <DotsIcon
                               style={{ padding: 10 }}
                               name="dots-vertical"
@@ -149,15 +134,13 @@ const Home = () => {
                     <View style={{ ...container, marginTop: 80 }}>
                          <Text style={title}>Home</Text>
                          <Text style={{ ...smallTextWhite, marginBottom: 40 }}>
-                              Reality checks can help you become a lucid
-                              dreamer! Create as many daily reminders as you
-                              need!
+                              Reality checks can help you become a lucid dreamer! Create as many
+                              daily reminders as you need!
                          </Text>
                          <TextButton
                               onPress={() => showTimePicker(createReminder)}
                               backgroundColor={colors.notification}
-                              minWidth={150}
-                         >
+                              minWidth={150}>
                               <Text style={smallTextWhite}>Add Reminder</Text>
                          </TextButton>
                     </View>
@@ -165,13 +148,10 @@ const Home = () => {
                          <Text
                               style={{
                                    ...smallTextWhite,
-                              }}
-                         >
+                              }}>
                               {activeReminders === 0 && "No reminders set"}
-                              {activeReminders === 1 &&
-                                   `${activeReminders} reminder set`}
-                              {activeReminders > 1 &&
-                                   `${activeReminders} reminders set`}
+                              {activeReminders === 1 && `${activeReminders} reminder set`}
+                              {activeReminders > 1 && `${activeReminders} reminders set`}
                          </Text>
                          {reminders && reminders?.length !== 0 && (
                               <View
@@ -180,11 +160,8 @@ const Home = () => {
                                         flexDirection: "row",
                                         alignItems: "center",
                                         marginBottom: 10,
-                                   }}
-                              >
-                                   <Text style={smallTextWhite}>
-                                        Turn off/on all reminders
-                                   </Text>
+                                   }}>
+                                   <Text style={smallTextWhite}>Turn off/on all reminders</Text>
                                    <Switch
                                         value={allRemindersActive}
                                         onValueChange={handleOnValueChange}
@@ -193,9 +170,7 @@ const Home = () => {
                                              true: colors.secondary,
                                         }}
                                         thumbColor={
-                                             allRemindersActive
-                                                  ? colors.notification
-                                                  : colors.text
+                                             allRemindersActive ? colors.notification : colors.text
                                         }
                                    />
                               </View>

@@ -5,16 +5,13 @@ import PropTypes from "prop-types";
 // components
 import TextButton from "./TextButton";
 
-// expo linking
-import * as Linking from "expo-linking";
-
 // react native
 import { Text, View, Pressable } from "react-native";
 
 // react navigation
 import { useTheme } from "@react-navigation/native";
 
-const ListItem = ({ title, message, multiple }) => {
+const ListItem = ({ title, message }) => {
      // app theme deconstruction
      const { colors, smallTextNotification, smallTextWhite, border } =
           useTheme();
@@ -29,8 +26,7 @@ const ListItem = ({ title, message, multiple }) => {
                          backgroundColor={colors.white}
                          borderColor={colors.white}
                          onPress={() => setShowContent(() => !showContent)}
-                         minWidth={250}
-                    >
+                         minWidth={250}>
                          <Text style={smallTextNotification}>{title}</Text>
                     </TextButton>
                </View>
@@ -44,44 +40,21 @@ const ListItem = ({ title, message, multiple }) => {
                               borderTopRightRadius: 0,
                               borderBottomStartRadius: 25,
                               borderBottomEndRadius: 25,
-                              marginTop: -20,
-                         }}
-                    >
+                              marginTop: -20
+                         }}>
                          <View style={{ marginTop: 20 }}>
-                              {multiple ? (
-                                   message.map((item) => (
-                                        // its improper to not have a key for each item while mapping, but since the data is static theres no need:
-                                        // eslint-disable-next-line react/jsx-key
-                                        <Pressable
-                                             onPress={() =>
-                                                  setShowContent(
-                                                       () => !showContent
-                                                  )
-                                             }
-                                        >
-                                             <Text style={smallTextWhite}>
-                                                  {item}
-                                             </Text>
-                                        </Pressable>
-                                   ))
-                              ) : (
+                              {message.map((item) => (
+                                   // its improper to not have a key for each item while mapping, but since the data is static theres no need:
+                                   // eslint-disable-next-line react/jsx-key
                                    <Pressable
-                                        onPress={() => {
-                                             Linking.openURL(
-                                                  "https://github.com/paul-mcj/Reality-Check"
-                                             );
-                                             setTimeout(() => {
-                                                  setShowContent(
-                                                       () => !showContent
-                                                  );
-                                             }, 500);
-                                        }}
-                                   >
+                                        onPress={() =>
+                                             setShowContent(() => !showContent)
+                                        }>
                                         <Text style={smallTextWhite}>
-                                             {message}
+                                             {item}
                                         </Text>
                                    </Pressable>
-                              )}
+                              ))}
                          </View>
                     </View>
                )}
@@ -92,7 +65,7 @@ const ListItem = ({ title, message, multiple }) => {
 ListItem.propTypes = {
      title: PropTypes.string.isRequired,
      message: PropTypes.array.isRequired,
-     multiple: PropTypes.bool.isRequired,
+     multiple: PropTypes.bool
 };
 
 export default ListItem;

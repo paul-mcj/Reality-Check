@@ -8,7 +8,7 @@ export const showTimePicker = (handleOnChange, value) =>
           // when the selected time is confirmed by user, make a new reminder obj
           onChange: handleOnChange,
           mode: "time",
-          is24Hour: false,
+          is24Hour: false
      });
 
 // function used to format time into a proper string according to 12-hour clock system

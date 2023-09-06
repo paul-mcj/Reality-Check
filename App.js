@@ -29,7 +29,12 @@ const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
 TaskManager.defineTask(
      BACKGROUND_NOTIFICATION_TASK,
      ({ data, error, executionInfo }) => {
-          console.log(data, error, executionInfo);
+          if (error) {
+               console.log(data, error, executionInfo);
+          }
+          if (data) {
+               console.log(data, error, executionInfo);
+          }
      }
 );
 Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
@@ -39,8 +44,8 @@ Notifications.setNotificationHandler({
      handleNotification: async () => ({
           shouldShowAlert: true,
           shouldPlaySound: true,
-          shouldSetBadge: true,
-     }),
+          shouldSetBadge: true
+     })
 });
 
 export default function App() {
@@ -71,7 +76,7 @@ export default function App() {
           // requestPermission();
           // createNotificationChannel();
           Notifications.cancelAllScheduledNotificationsAsync();
-          // console.log(Notifications.getNotificationChannelsAsync());
+          console.log(Notifications.getNotificationChannelsAsync());
      }, []);
 
      return (

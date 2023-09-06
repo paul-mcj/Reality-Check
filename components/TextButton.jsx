@@ -14,7 +14,7 @@ const TextButton = ({
      backgroundColor,
      borderColor,
      onPress,
-     children,
+     children
 }) => {
      // app theme deconstruction
      const { colors } = useTheme();
@@ -29,10 +29,9 @@ const TextButton = ({
                     backgroundColor: backgroundColor,
                     minWidth: minWidth ?? 250,
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "center"
                }}
-               onPress={onPress || null}
-          >
+               onPress={onPress || null}>
                {children}
           </Pressable>
      );
@@ -43,7 +42,7 @@ TextButton.propTypes = {
      backgroundColor: PropTypes.string.isRequired,
      borderColor: PropTypes.string,
      onPress: PropTypes.func,
-     children: PropTypes.node.isRequired,
+     children: PropTypes.node.isRequired
 };
 
 export default TextButton;
