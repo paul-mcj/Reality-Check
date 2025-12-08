@@ -1,0 +1,30 @@
+# .github/dependabot.yml
+
+version: 2
+updates:
+     # Configuration for JavaScript dependencies (npm/yarn/pnpm)
+     - package-ecosystem: "npm"
+       # Location of package.json and lock files
+       directory: "/"
+       # Check for updates weekly on a low-traffic day (e.g., Sunday)
+       schedule:
+            interval: "weekly"
+            day: "sunday"
+       # Reviewers: Uncomment and set your GitHub username/team
+       # reviewers:
+       #   - "your-github-username"
+       #   - "your-team-name"
+       # Group patch and minor updates to reduce the number of Pull Requests
+       groups:
+            patch-and-minor-updates:
+                 patterns:
+                      - "*"
+                 update-types:
+                      - "patch"
+                      - "minor"
+
+     # Configuration for GitHub Actions (Essential for CI/CD security)
+     - package-ecosystem: "github-actions"
+       directory: "/"
+       schedule:
+            interval: "weekly"
