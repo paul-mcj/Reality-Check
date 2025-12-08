@@ -16,9 +16,9 @@
     "@react-navigation/material-top-tabs": "^6.5.1",
     "@react-navigation/native": "^6.1.1",
     "@react-navigation/native-stack": "^6.9.7",
-    "expo": "~47.0.12",
+    "expo": "~54.0.27",
     "expo-font": "~11.0.1",
-    "expo-notifications": "~0.17.0",
+    "expo-notifications": "~0.32.14",
     "expo-status-bar": "~1.4.2",
     "expo-task-manager": "^11.0.1",
     "prop-types": "^15.8.1",
@@ -32,7 +32,7 @@
     "react-native-tab-view": "^3.3.4",
     "react-native-vector-icons": "^9.2.0",
     "expo-linear-gradient": "~12.0.1",
-    "expo-linking": "~3.3.1",
+    "expo-linking": "~8.0.10",
     "expo-device": "~5.0.0"
   },
   "devDependencies": {
