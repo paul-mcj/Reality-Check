@@ -22,8 +22,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.mcjannetp.RealityCheck"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
