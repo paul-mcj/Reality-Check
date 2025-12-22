@@ -12,3 +12,9 @@ web-build/
 
 # macOS
 .DS_Store
+
+# iOS
+ios/Pods/
+ios/Podfile.lock
+ios/build/
+*.xcworkspace
