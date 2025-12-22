@@ -1,41 +1,46 @@
 {
-     "expo": {
-          "notification": {
-               "icon": "./assets/reality_check_logo.png",
-               "color": "#ffffff"
-          },
-          "name": "Reality Check",
-          "slug": "RealityCheck",
-          "version": "1.0.0",
-          "orientation": "portrait",
-          "icon": "./assets/foreground.png",
-          "userInterfaceStyle": "light",
-          "splash": {
-               "image": "./assets/foreground.png",
-               "resizeMode": "contain",
-               "backgroundColor": "#ffffff"
-          },
-          "updates": {
-               "fallbackToCacheTimeout": 0
-          },
-          "assetBundlePatterns": ["**/*"],
-          "ios": {
-               "supportsTablet": true
-          },
-          "android": {
-               "adaptiveIcon": {
-                    "foregroundImage": "./assets/foreground.png",
-                    "backgroundColor": "#FFFFFF"
-               },
-               "package": "com.mcjannetp.RealityCheck"
-          },
-          "web": {
-               "favicon": "./assets/favicon.png"
-          },
-          "extra": {
-               "eas": {
-                    "projectId": "a4c0d3ce-212c-4dc1-a180-6bb9403cacab"
-               }
-          }
-     }
+  "expo": {
+    "notification": {
+      "icon": "./assets/reality_check_logo.png",
+      "color": "#ffffff"
+    },
+    "name": "Reality Check",
+    "slug": "RealityCheck",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/foreground.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/foreground.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/foreground.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.mcjannetp.RealityCheck"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a4c0d3ce-212c-4dc1-a180-6bb9403cacab"
+      }
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
 }
