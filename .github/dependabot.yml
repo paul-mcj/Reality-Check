@@ -1,0 +1,25 @@
+version: 2
+updates:
+     - package-ecosystem: "npm"
+       directory: "/"
+       schedule:
+            interval: "monthly"
+       groups:
+            root-js:
+                 patterns: ["*"]
+
+     - package-ecosystem: "npm"
+       directory: "/frontend"
+       schedule:
+            interval: "monthly"
+       groups:
+            frontend-js:
+                 patterns: ["*"]
+
+     - package-ecosystem: "pip"
+       directory: "/"
+       schedule:
+            interval: "monthly"
+       groups:
+            python-deps:
+                 patterns: ["*"]

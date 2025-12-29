@@ -1,0 +1,37 @@
+name: Dependabot Secure Automation
+on: pull_request
+
+permissions:
+     contents: write
+     pull-requests: write
+
+jobs:
+     secure-automation:
+          runs-on: ubuntu-latest
+          if: github.event.pull_request.user.login == 'dependabot[bot]'
+          steps:
+               - name: Checkout Code
+                 uses: actions/checkout@v4
+
+               - name: JS Audit
+                 if: hashFiles('**/package.json') != ''
+                 run: npm audit --audit-level=high
+
+               - name: Python Audit
+                 if: hashFiles('**/pyproject.toml') != ''
+                 run: pip install pip-audit && pip-audit
+
+               - name: Fetch Metadata
+                 id: metadata
+                 uses: dependabot/fetch-metadata@v2
+
+               - name: Auto-Approve and Merge
+                 if: |
+                      steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+                      steps.metadata.outputs.update-type == 'version-update:semver-minor'
+                 run: |
+                      gh pr review --approve "$PR_URL"
+                      gh pr merge --auto --squash "$PR_URL"
+                 env:
+                      PR_URL: ${{github.event.pull_request.html_url}}
+                      GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
