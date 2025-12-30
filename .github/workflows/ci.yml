@@ -1,0 +1,46 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+     build:
+          runs-on: ubuntu-latest
+          steps:
+               - uses: actions/checkout@v4
+
+               # --- NODE / JAVASCRIPT SECTION ---
+               - name: Setup Node
+                 if: hashFiles('**/package.json') != ''
+                 uses: actions/setup-node@v4
+                 with:
+                      node-version: 22
+                      cache: "npm"
+
+               - name: Install JS Dependencies
+                 if: hashFiles('**/package.json') != ''
+                 run: npm ci --ignore-scripts
+
+               - name: JS Security Scan
+                 if: hashFiles('**/package.json') != ''
+                 # DIRECT COMMAND: Works even if "security-check" is missing from package.json
+                 run: npm audit --audit-level=high
+
+               - name: JS Build
+                 if: hashFiles('**/package.json') != ''
+                 # SMART COMMAND: Runs "npm run build" ONLY if the script exists
+                 run: |
+                      if npm run | grep -q "build"; then
+                        npm run build
+                      else
+                        echo "No build script found, skipping."
+                      fi
+
+               # --- PYTHON / DJANGO SECTION ---
+               - name: Python Tasks (Only if Poetry exists)
+                 run: |
+                      if [ -f pyproject.toml ]; then
+                        pip install poetry
+                        poetry install --no-root
+                        poetry run black . --check
+                      else
+                        echo "No pyproject.toml found, skipping Python tasks."
+                      fi
